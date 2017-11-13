@@ -1,5 +1,6 @@
 
 import UIKit
+import Coordinator
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -11,6 +12,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let rootViewController = UIViewController()
         window?.rootViewController = rootViewController
         window?.makeKeyAndVisible()
+        
+        let appCoordinator = AppCoordinator()
+        appCoordinator.start(with: EmptyContext(), from: rootViewController)
         
         return true
     }

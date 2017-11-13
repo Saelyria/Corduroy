@@ -14,7 +14,7 @@ import UIKit
  of the coordinator to have the coordinator present its first view controller from the
  given view controller. This `SetupContext` associated type defaults to `EmptySetupContext`
  if no explicit type is set.
-*/
+ */
 public protocol NavigationCoordinator {
     /// The type of the model object that contains all dependencies the coordinator needs
     /// to be properly initialized. Defaults to 'EmptySetupContext' if no explicit type is set.
@@ -47,7 +47,7 @@ public protocol NavigationCoordinator {
  itself and a `FlowCompletionContext` object it defines as an associated type. This context
  type could be, as in the example of authentication, a type that contains information about
  whether the authentication was successful and, if so, the credentials for the authentication.
-*/
+ */
 public protocol NavigationFlowCoordinator: NavigationCoordinator {
     /// The type of the model object that this flow coordinator will return in its completion
     /// block as a result of its flow. Defaults to 'EmptySetupContext' if no explicit type is set.
@@ -75,7 +75,7 @@ public extension NavigationFlowCoordinator {
  
 */
 public protocol NavigationCoordinatorDelegate {
-    func navigationCoordinatorDidStart(_ coordinator: AnyNavigationCoordinator<AnyObject>)
+    func navigationCoordinatorDidStart<SetupType>(_ coordinator: AnyNavigationCoordinator<SetupType>)
 }
 
 public protocol NavigationFlowCoordinatorDelegate: NavigationCoordinatorDelegate {
@@ -83,7 +83,7 @@ public protocol NavigationFlowCoordinatorDelegate: NavigationCoordinatorDelegate
 }
 
 public extension NavigationFlowCoordinatorDelegate {
-    func navigationCoordinatorDidStart(_ coordinator: AnyNavigationCoordinator<AnyObject>) { }
+    func navigationCoordinatorDidStart<SetupType>(_ coordinator: AnyNavigationCoordinator<SetupType>) { }
 }
 
 
@@ -91,19 +91,17 @@ public extension NavigationFlowCoordinatorDelegate {
  A protocol to be implemented by view controllers wishing to be managed by a coordinator.
  
  A view controller implementing this protocol should be managed by a NavigationCoordinator object.
- The conforming view controller must provide the type of the NavigationCoordinator object
- responsible for managing it via its 'ManagingCoordinator' type.
- 
- A view controller implementing this protocol should not implement its own init methods for
- dependency injection; instead, its dependencies should be defined in a type and this type set as
- the view controller's 'SetupContext' associated type. The coordinator will instantiate the view
- controller using its 'create(with:,coordinator:)' factory method, passing in an instance of the
- view controller's defined setup model. This 'SetupContext' associated type defaults to
- 'EmptySetupContext' if no explicit type is set.
-*/
+ It should not implement its own init methods for dependency injection; instead, its dependencies
+ should be defined in a type and this type set as the view controller's 'SetupContext' associated
+ type. The coordinator will instantiate the view controller using its 'create(with:coordinator:)'
+ factory method, passing in an instance of the view controller's defined setup model. This
+ 'SetupContext' associated type defaults to 'EmptySetupContext' if no explicit type is set.
+ */
 public protocol NavigationCoordinatorManageable where Self: UIViewController {
-    /// The type of NavigationCoordinator that this view controller expects to be managed by.
-    associatedtype ManagingCoordinator: NavigationCoordinator
+    /// A type the NavigationCoordinator that manages this view controller should be or conform
+    /// to in order to receive navigation events from this view controller. For better decoupling,
+    /// best practice is for a view controller to have a custom delegate type that this aliases to.
+    associatedtype ManagingCoordinator
     /// The type of the model object that contains all dependencies the view controller needs
     /// to be properly initialized. Defaults to 'EmptySetupContext' if no explicit type is set.
     associatedtype SetupContext = EmptyContext
@@ -123,5 +121,8 @@ public protocol NavigationCoordinatorManageable where Self: UIViewController {
  A struct that can be used as the SetupContext or FlowCompletionContext for a NavigationCoordinator,
  FlowNavigationController, or NavigationCoordinatorManageable that requires no dependencies to be
  initialized.
-*/
-public struct EmptyContext { }
+ */
+public struct EmptyContext {
+    public init() { }
+}
+

@@ -43,7 +43,7 @@ fileprivate class _AnyNavigationFlowCoordinatorBase<GenericSetupContext, Generic
             fatalError("_AnyNavigationCoordinatorBase instances can not be created; create a subclass instance instead.")
         }
     }
-
+    
     func start(with context: GenericSetupContext, from fromVC: UIViewController) {
         fatalError("Must be overwritten.")
     }
@@ -60,12 +60,13 @@ fileprivate final class _AnyNavigationFlowCoordinatorWrapper<UnderlyingCoordinat
         get { return underlyingCoordinator.flowDelegate }
         set { underlyingCoordinator.flowDelegate = newValue }
     }
-
+    
     init(_ underlyingCoordinator: UnderlyingCoordinatorType) {
         self.underlyingCoordinator = underlyingCoordinator
     }
-
+    
     override func start(with context: UnderlyingCoordinatorType.SetupContext, from fromVC: UIViewController) {
         return underlyingCoordinator.start(with: context, from: fromVC)
     }
 }
+

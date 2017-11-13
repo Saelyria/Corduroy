@@ -21,7 +21,7 @@ public final class AnyNavigationCoordinator<SetupContext>: NavigationCoordinator
     
     public func start(with context: SetupContext, from fromVC: UIViewController) {
         return coordinatorWrapper.start(with: context, from: fromVC)
-    }    
+    }
 }
 
 
@@ -30,7 +30,7 @@ public final class AnyNavigationCoordinator<SetupContext>: NavigationCoordinator
  provides a supertype for the _AnyNavigationCoordinatorWrapper that takes the SetupContext as its generic
  so an _AnyNavigationCoordinatorWrapper instance can be created once the underlying coordinator's type is
  known in the AnyNavigationCoordinator's init method.
-*/
+ */
 fileprivate class _AnyNavigationCoordinatorBase<SetupContext>: NavigationCoordinator {
     var delegate: NavigationCoordinatorDelegate?
     
@@ -39,7 +39,7 @@ fileprivate class _AnyNavigationCoordinatorBase<SetupContext>: NavigationCoordin
             fatalError("_AnyNavigationCoordinatorBase instances can not be created; create a subclass instance instead.")
         }
     }
-
+    
     func start(with context: SetupContext, from fromVC: UIViewController) {
         fatalError("Must be overriden by a subclass.")
     }
@@ -48,19 +48,20 @@ fileprivate class _AnyNavigationCoordinatorBase<SetupContext>: NavigationCoordin
 /**
  A wrapper around a NavigationCoordinator object that relays all calls to its NavigationCoordinator requirements
  to this underlying object to implement type erasure.
-*/
+ */
 fileprivate final class _AnyNavigationCoordinatorWrapper<UnderlyingCoordinatorType: NavigationCoordinator>: _AnyNavigationCoordinatorBase<UnderlyingCoordinatorType.SetupContext> {
     var underlyingCoordinator: UnderlyingCoordinatorType
     override var delegate: NavigationCoordinatorDelegate? {
         get { return underlyingCoordinator.delegate }
         set { underlyingCoordinator.delegate = newValue }
     }
-
+    
     init(_ underlyingCoordinator: UnderlyingCoordinatorType) {
         self.underlyingCoordinator = underlyingCoordinator
     }
-
+    
     override func start(with context: SetupContext, from fromVC: UIViewController) {
         return underlyingCoordinator.start(with: context, from: fromVC)
     }
 }
+

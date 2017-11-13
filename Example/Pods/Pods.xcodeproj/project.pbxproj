@@ -7,17 +7,16 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		121EE8FF18E13D7A8DD703E63D048253 /* Coordinator-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 96EEAB0F8E7EF90525FFB249DD3BE878 /* Coordinator-dummy.m */; };
+		0D5060C33B9860C24D2163DB4D901078 /* NavigationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7C602286339A4AA3536E3E4159B044B3 /* NavigationContext.swift */; };
 		2C933E8543E02FC32289C0550C0E036C /* Pods-Coordinator_Example-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = D22D7D05885B502BFA6AB6EA6B28672E /* Pods-Coordinator_Example-dummy.m */; };
-		3424DC34B01CE82C1E76563CAEAD2112 /* AnyNavigationFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2BA3D8AF6F2605A4C31FF7F970A123DC /* AnyNavigationFlowCoordinator.swift */; };
-		728639D470B7E354A3E2EE0DD4AC7A0D /* NavigationContext.swift in Sources */ = {isa = PBXBuildFile; fileRef = B0F818D374EFFDD2EFA875E564E608FA /* NavigationContext.swift */; };
+		39EC87869354A90DA8F941FD663DD368 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
+		558858A71855F57BE2A567D0D5E30535 /* Coordinator-dummy.m in Sources */ = {isa = PBXBuildFile; fileRef = 7E368FCD0CE69666482AC3BA4F92DFEB /* Coordinator-dummy.m */; };
 		77CD6DB8FA835B4E1BE096FF5CC03A8D /* Pods-Coordinator_Example-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 6578D89D907A1931DC53EED006488E7B /* Pods-Coordinator_Example-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		8D8CBDAE9E901170F4FBBC5A5820A0BE /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = BCB6150239E9787F7EFBB494937F742C /* NavigationCoordinator.swift */; };
-		A0B2423C85121556ACD496DEE8C5C5B6 /* Coordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2B6BF9644562203FBBBE060BD0B0B93C /* Coordinator.swift */; };
-		B2FAE45E08285CFF393A2E4E70F5EADE /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
-		F082296AE0444D311FA17DCC8E7BBDC2 /* Coordinator-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 54BA838A3CCFD961C6A27A61491984B2 /* Coordinator-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
-		F08F7E9026513A93830B1BECCC1A431F /* AnyNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 91EFB34A283BEF21AD2A6FCD31EEC133 /* AnyNavigationCoordinator.swift */; };
+		9CE79F82C1DB8163973196969923B3DD /* Coordinator-umbrella.h in Headers */ = {isa = PBXBuildFile; fileRef = 2DD404A81E55237E8A872B3D005B68B3 /* Coordinator-umbrella.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		BB98ACCDEA3EF33C01C16DD98F3C6A33 /* NavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 68620AC242E06A3B5AB45A1B56D1A46C /* NavigationCoordinator.swift */; };
+		F34890AE9D25CE43A695F27CE48111F0 /* AnyNavigationFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = A2BAD344D3EDC913A335CF923FF01F19 /* AnyNavigationFlowCoordinator.swift */; };
 		F504F42EE54E12D6D05879242608B334 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */; };
+		F937251A68F10B003FE39765B45C3BCB /* AnyNavigationCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = D771A02D6FC0EE993B55792F28879C43 /* AnyNavigationCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -25,45 +24,44 @@
 			isa = PBXContainerItemProxy;
 			containerPortal = D41D8CD98F00B204E9800998ECF8427E /* Project object */;
 			proxyType = 1;
-			remoteGlobalIDString = 3E27639638A28A8955053710A8595750;
+			remoteGlobalIDString = 032DF26FF8E8BF910BD2E07A4084EB18;
 			remoteInfo = Coordinator;
 		};
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		2B6BF9644562203FBBBE060BD0B0B93C /* Coordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = Coordinator.swift; path = Coordinator/Classes/Coordinator.swift; sourceTree = "<group>"; };
-		2BA3D8AF6F2605A4C31FF7F970A123DC /* AnyNavigationFlowCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnyNavigationFlowCoordinator.swift; path = Coordinator/Classes/AnyNavigationFlowCoordinator.swift; sourceTree = "<group>"; };
-		2F188246EAE0A94AF3CA1BFC81D9339B /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		34C2B00ED5A0F3203EC7A0A217DDC017 /* Coordinator.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = Coordinator.modulemap; sourceTree = "<group>"; };
+		2DD404A81E55237E8A872B3D005B68B3 /* Coordinator-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Coordinator-umbrella.h"; sourceTree = "<group>"; };
+		318740CA5B9C8DB3E093518A645CDA65 /* Coordinator.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = Coordinator.modulemap; sourceTree = "<group>"; };
 		432EC391128B79BE7C658E6834E16131 /* Pods-Coordinator_Example-acknowledgements.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = "Pods-Coordinator_Example-acknowledgements.plist"; sourceTree = "<group>"; };
-		54BA838A3CCFD961C6A27A61491984B2 /* Coordinator-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Coordinator-umbrella.h"; sourceTree = "<group>"; };
 		5A265B12618E18D0BCBFB87C073FEDE0 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		6578D89D907A1931DC53EED006488E7B /* Pods-Coordinator_Example-umbrella.h */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Pods-Coordinator_Example-umbrella.h"; sourceTree = "<group>"; };
 		6604A7D69453B4569E4E4827FB9155A9 /* Foundation.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = Foundation.framework; path = Platforms/iPhoneOS.platform/Developer/SDKs/iPhoneOS10.3.sdk/System/Library/Frameworks/Foundation.framework; sourceTree = DEVELOPER_DIR; };
-		91EFB34A283BEF21AD2A6FCD31EEC133 /* AnyNavigationCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnyNavigationCoordinator.swift; path = Coordinator/Classes/AnyNavigationCoordinator.swift; sourceTree = "<group>"; };
+		68620AC242E06A3B5AB45A1B56D1A46C /* NavigationCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationCoordinator.swift; path = Coordinator/Classes/NavigationCoordinator.swift; sourceTree = "<group>"; };
+		7C602286339A4AA3536E3E4159B044B3 /* NavigationContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationContext.swift; path = Coordinator/Classes/NavigationContext.swift; sourceTree = "<group>"; };
+		7E368FCD0CE69666482AC3BA4F92DFEB /* Coordinator-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Coordinator-dummy.m"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; lastKnownFileType = text; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		954202FBF4122A30D8AA8A6E41B215DE /* Pods-Coordinator_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; path = "Pods-Coordinator_Example.modulemap"; sourceTree = "<group>"; };
-		96EEAB0F8E7EF90525FFB249DD3BE878 /* Coordinator-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Coordinator-dummy.m"; sourceTree = "<group>"; };
 		A209B7DB2F5B2220BDA4AB14D375933D /* Pods_Coordinator_Example.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Pods_Coordinator_Example.framework; path = "Pods-Coordinator_Example.framework"; sourceTree = BUILT_PRODUCTS_DIR; };
+		A2BAD344D3EDC913A335CF923FF01F19 /* AnyNavigationFlowCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnyNavigationFlowCoordinator.swift; path = Coordinator/Classes/AnyNavigationFlowCoordinator.swift; sourceTree = "<group>"; };
+		A93154C7B84300333121D5083972C3E6 /* Coordinator-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Coordinator-prefix.pch"; sourceTree = "<group>"; };
 		AE7FF3E9AABAC431A62CD92DF53BE52E /* Pods-Coordinator_Example-frameworks.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Coordinator_Example-frameworks.sh"; sourceTree = "<group>"; };
-		B0F818D374EFFDD2EFA875E564E608FA /* NavigationContext.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationContext.swift; path = Coordinator/Classes/NavigationContext.swift; sourceTree = "<group>"; };
-		B3DCE75B88A9D8062997AAE9DBE1431A /* Coordinator-prefix.pch */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.h; path = "Coordinator-prefix.pch"; sourceTree = "<group>"; };
+		B4A7E56C7626A774ED46AC759EC06305 /* Coordinator.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Coordinator.xcconfig; sourceTree = "<group>"; };
 		B8FD987BF3E6F60871ABB7081811EF4C /* Coordinator.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; name = Coordinator.framework; path = Coordinator.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		BCB6150239E9787F7EFBB494937F742C /* NavigationCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = NavigationCoordinator.swift; path = Coordinator/Classes/NavigationCoordinator.swift; sourceTree = "<group>"; };
+		BBF370F063010F9DC4ADC7B97E202C97 /* Info.plist */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		BCD431A2300F95344538A1CD9147D5FB /* Pods-Coordinator_Example-resources.sh */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.script.sh; path = "Pods-Coordinator_Example-resources.sh"; sourceTree = "<group>"; };
 		C9B6E7906BA51E07A803EF86F8961798 /* Pods-Coordinator_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Coordinator_Example.release.xcconfig"; sourceTree = "<group>"; };
-		C9E60B788EF6B19BA3F8AB834D64FF6D /* Coordinator.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = Coordinator.xcconfig; sourceTree = "<group>"; };
 		D22D7D05885B502BFA6AB6EA6B28672E /* Pods-Coordinator_Example-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Pods-Coordinator_Example-dummy.m"; sourceTree = "<group>"; };
 		D2AEBFA3261484F095506DC1F95C780B /* Pods-Coordinator_Example.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; path = "Pods-Coordinator_Example.debug.xcconfig"; sourceTree = "<group>"; };
+		D771A02D6FC0EE993B55792F28879C43 /* AnyNavigationCoordinator.swift */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.swift; name = AnyNavigationCoordinator.swift; path = Coordinator/Classes/AnyNavigationCoordinator.swift; sourceTree = "<group>"; };
 		F06DBA77A28F0CC76D0B784C99CA2CDF /* Pods-Coordinator_Example-acknowledgements.markdown */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text; path = "Pods-Coordinator_Example-acknowledgements.markdown"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
-		7E4F2E6CC5D1DD6461F5A7FF0BF60BE7 /* Frameworks */ = {
+		4518A9A0F13F21609A335AB2A6D6343F /* Frameworks */ = {
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				B2FAE45E08285CFF393A2E4E70F5EADE /* Foundation.framework in Frameworks */,
+				39EC87869354A90DA8F941FD663DD368 /* Foundation.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -78,6 +76,20 @@
 /* End PBXFrameworksBuildPhase section */
 
 /* Begin PBXGroup section */
+		2F4D79BFE0555D88EFB8C0BF68FF2090 /* Support Files */ = {
+			isa = PBXGroup;
+			children = (
+				318740CA5B9C8DB3E093518A645CDA65 /* Coordinator.modulemap */,
+				B4A7E56C7626A774ED46AC759EC06305 /* Coordinator.xcconfig */,
+				7E368FCD0CE69666482AC3BA4F92DFEB /* Coordinator-dummy.m */,
+				A93154C7B84300333121D5083972C3E6 /* Coordinator-prefix.pch */,
+				2DD404A81E55237E8A872B3D005B68B3 /* Coordinator-umbrella.h */,
+				BBF370F063010F9DC4ADC7B97E202C97 /* Info.plist */,
+			);
+			name = "Support Files";
+			path = "Example/Pods/Target Support Files/Coordinator";
+			sourceTree = "<group>";
+		};
 		464ACCC29006D8B9E2F1DA2E30B34A57 /* Products */ = {
 			isa = PBXGroup;
 			children = (
@@ -91,22 +103,21 @@
 			isa = PBXGroup;
 			children = (
 				93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */,
-				E550D4AB147C65E4391733BE417AF481 /* Development Pods */,
+				D108539EA0F25E5D2F457FCE88D1045E /* Development Pods */,
 				BC3CA7F9E30CC8F7E2DD044DD34432FC /* Frameworks */,
 				464ACCC29006D8B9E2F1DA2E30B34A57 /* Products */,
 				F64FFEABE02514123D6F2390A5B10D4A /* Targets Support Files */,
 			);
 			sourceTree = "<group>";
 		};
-		8B7E45E08C9A2B405094BF05746547C1 /* Coordinator */ = {
+		9BBC68A8296156A1ED158A8F0CED46BC /* Coordinator */ = {
 			isa = PBXGroup;
 			children = (
-				91EFB34A283BEF21AD2A6FCD31EEC133 /* AnyNavigationCoordinator.swift */,
-				2BA3D8AF6F2605A4C31FF7F970A123DC /* AnyNavigationFlowCoordinator.swift */,
-				2B6BF9644562203FBBBE060BD0B0B93C /* Coordinator.swift */,
-				B0F818D374EFFDD2EFA875E564E608FA /* NavigationContext.swift */,
-				BCB6150239E9787F7EFBB494937F742C /* NavigationCoordinator.swift */,
-				E067984A0413ADEE96521D88F8EE8B71 /* Support Files */,
+				D771A02D6FC0EE993B55792F28879C43 /* AnyNavigationCoordinator.swift */,
+				A2BAD344D3EDC913A335CF923FF01F19 /* AnyNavigationFlowCoordinator.swift */,
+				7C602286339A4AA3536E3E4159B044B3 /* NavigationContext.swift */,
+				68620AC242E06A3B5AB45A1B56D1A46C /* NavigationCoordinator.swift */,
+				2F4D79BFE0555D88EFB8C0BF68FF2090 /* Support Files */,
 			);
 			name = Coordinator;
 			path = ../..;
@@ -118,6 +129,14 @@
 				D35AF013A5F0BAD4F32504907A52519E /* iOS */,
 			);
 			name = Frameworks;
+			sourceTree = "<group>";
+		};
+		D108539EA0F25E5D2F457FCE88D1045E /* Development Pods */ = {
+			isa = PBXGroup;
+			children = (
+				9BBC68A8296156A1ED158A8F0CED46BC /* Coordinator */,
+			);
+			name = "Development Pods";
 			sourceTree = "<group>";
 		};
 		D2C787CA0B1E51ED142745027955BFF5 /* Pods-Coordinator_Example */ = {
@@ -146,28 +165,6 @@
 			name = iOS;
 			sourceTree = "<group>";
 		};
-		E067984A0413ADEE96521D88F8EE8B71 /* Support Files */ = {
-			isa = PBXGroup;
-			children = (
-				34C2B00ED5A0F3203EC7A0A217DDC017 /* Coordinator.modulemap */,
-				C9E60B788EF6B19BA3F8AB834D64FF6D /* Coordinator.xcconfig */,
-				96EEAB0F8E7EF90525FFB249DD3BE878 /* Coordinator-dummy.m */,
-				B3DCE75B88A9D8062997AAE9DBE1431A /* Coordinator-prefix.pch */,
-				54BA838A3CCFD961C6A27A61491984B2 /* Coordinator-umbrella.h */,
-				2F188246EAE0A94AF3CA1BFC81D9339B /* Info.plist */,
-			);
-			name = "Support Files";
-			path = "Example/Pods/Target Support Files/Coordinator";
-			sourceTree = "<group>";
-		};
-		E550D4AB147C65E4391733BE417AF481 /* Development Pods */ = {
-			isa = PBXGroup;
-			children = (
-				8B7E45E08C9A2B405094BF05746547C1 /* Coordinator */,
-			);
-			name = "Development Pods";
-			sourceTree = "<group>";
-		};
 		F64FFEABE02514123D6F2390A5B10D4A /* Targets Support Files */ = {
 			isa = PBXGroup;
 			children = (
@@ -187,24 +184,24 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		ACD27BC3DC507628688CB271B08C41CA /* Headers */ = {
+		FFCFC31A2C58CFEC41EC638B739AE720 /* Headers */ = {
 			isa = PBXHeadersBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F082296AE0444D311FA17DCC8E7BBDC2 /* Coordinator-umbrella.h in Headers */,
+				9CE79F82C1DB8163973196969923B3DD /* Coordinator-umbrella.h in Headers */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXHeadersBuildPhase section */
 
 /* Begin PBXNativeTarget section */
-		3E27639638A28A8955053710A8595750 /* Coordinator */ = {
+		032DF26FF8E8BF910BD2E07A4084EB18 /* Coordinator */ = {
 			isa = PBXNativeTarget;
-			buildConfigurationList = FA9639EB16A3A12D93415D0B2C5C2EA1 /* Build configuration list for PBXNativeTarget "Coordinator" */;
+			buildConfigurationList = 13D7145B3E71A9691F81F3E9D699C112 /* Build configuration list for PBXNativeTarget "Coordinator" */;
 			buildPhases = (
-				478710DCCB10D3434016B25C2D4771EB /* Sources */,
-				7E4F2E6CC5D1DD6461F5A7FF0BF60BE7 /* Frameworks */,
-				ACD27BC3DC507628688CB271B08C41CA /* Headers */,
+				4834CE9454D2930B31976A5FBF7A3D9E /* Sources */,
+				4518A9A0F13F21609A335AB2A6D6343F /* Frameworks */,
+				FFCFC31A2C58CFEC41EC638B739AE720 /* Headers */,
 			);
 			buildRules = (
 			);
@@ -254,7 +251,7 @@
 			projectDirPath = "";
 			projectRoot = "";
 			targets = (
-				3E27639638A28A8955053710A8595750 /* Coordinator */,
+				032DF26FF8E8BF910BD2E07A4084EB18 /* Coordinator */,
 				93DD931BA79904143E1D3E465E31BCF9 /* Pods-Coordinator_Example */,
 			);
 		};
@@ -269,16 +266,15 @@
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
-		478710DCCB10D3434016B25C2D4771EB /* Sources */ = {
+		4834CE9454D2930B31976A5FBF7A3D9E /* Sources */ = {
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				F08F7E9026513A93830B1BECCC1A431F /* AnyNavigationCoordinator.swift in Sources */,
-				3424DC34B01CE82C1E76563CAEAD2112 /* AnyNavigationFlowCoordinator.swift in Sources */,
-				121EE8FF18E13D7A8DD703E63D048253 /* Coordinator-dummy.m in Sources */,
-				A0B2423C85121556ACD496DEE8C5C5B6 /* Coordinator.swift in Sources */,
-				728639D470B7E354A3E2EE0DD4AC7A0D /* NavigationContext.swift in Sources */,
-				8D8CBDAE9E901170F4FBBC5A5820A0BE /* NavigationCoordinator.swift in Sources */,
+				F937251A68F10B003FE39765B45C3BCB /* AnyNavigationCoordinator.swift in Sources */,
+				F34890AE9D25CE43A695F27CE48111F0 /* AnyNavigationFlowCoordinator.swift in Sources */,
+				558858A71855F57BE2A567D0D5E30535 /* Coordinator-dummy.m in Sources */,
+				0D5060C33B9860C24D2163DB4D901078 /* NavigationContext.swift in Sources */,
+				BB98ACCDEA3EF33C01C16DD98F3C6A33 /* NavigationCoordinator.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -288,7 +284,7 @@
 		F109B8394EEDC5390652D3DEC479DE14 /* PBXTargetDependency */ = {
 			isa = PBXTargetDependency;
 			name = Coordinator;
-			target = 3E27639638A28A8955053710A8595750 /* Coordinator */;
+			target = 032DF26FF8E8BF910BD2E07A4084EB18 /* Coordinator */;
 			targetProxy = 936DAF2D35304CA6839BE3DBF583B11F /* PBXContainerItemProxy */;
 		};
 /* End PBXTargetDependency section */
@@ -354,9 +350,40 @@
 			};
 			name = Debug;
 		};
-		4B7EA3B4E625B66EE11BAEDE3448C2EB /* Release */ = {
+		39A2E4B0ABA9D2F69B27C350E3453F1D /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = C9E60B788EF6B19BA3F8AB834D64FF6D /* Coordinator.xcconfig */;
+			baseConfigurationReference = B4A7E56C7626A774ED46AC759EC06305 /* Coordinator.xcconfig */;
+			buildSettings = {
+				CODE_SIGN_IDENTITY = "";
+				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
+				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
+				CURRENT_PROJECT_VERSION = 1;
+				DEFINES_MODULE = YES;
+				DYLIB_COMPATIBILITY_VERSION = 1;
+				DYLIB_CURRENT_VERSION = 1;
+				DYLIB_INSTALL_NAME_BASE = "@rpath";
+				GCC_PREFIX_HEADER = "Target Support Files/Coordinator/Coordinator-prefix.pch";
+				INFOPLIST_FILE = "Target Support Files/Coordinator/Info.plist";
+				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
+				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
+				MODULEMAP_FILE = "Target Support Files/Coordinator/Coordinator.modulemap";
+				PRODUCT_NAME = Coordinator;
+				SDKROOT = iphoneos;
+				SKIP_INSTALL = YES;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+				VERSIONING_SYSTEM = "apple-generic";
+				VERSION_INFO_PREFIX = "";
+			};
+			name = Debug;
+		};
+		566C4E2CE4B617E2C9B37D58317480C5 /* Release */ = {
+			isa = XCBuildConfiguration;
+			baseConfigurationReference = B4A7E56C7626A774ED46AC759EC06305 /* Coordinator.xcconfig */;
 			buildSettings = {
 				CODE_SIGN_IDENTITY = "";
 				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
@@ -385,37 +412,6 @@
 				VERSION_INFO_PREFIX = "";
 			};
 			name = Release;
-		};
-		6CB9309326F443E9C902F23C58FF2656 /* Debug */ = {
-			isa = XCBuildConfiguration;
-			baseConfigurationReference = C9E60B788EF6B19BA3F8AB834D64FF6D /* Coordinator.xcconfig */;
-			buildSettings = {
-				CODE_SIGN_IDENTITY = "";
-				"CODE_SIGN_IDENTITY[sdk=appletvos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=iphoneos*]" = "";
-				"CODE_SIGN_IDENTITY[sdk=watchos*]" = "";
-				CURRENT_PROJECT_VERSION = 1;
-				DEFINES_MODULE = YES;
-				DYLIB_COMPATIBILITY_VERSION = 1;
-				DYLIB_CURRENT_VERSION = 1;
-				DYLIB_INSTALL_NAME_BASE = "@rpath";
-				GCC_PREFIX_HEADER = "Target Support Files/Coordinator/Coordinator-prefix.pch";
-				INFOPLIST_FILE = "Target Support Files/Coordinator/Info.plist";
-				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
-				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
-				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
-				MODULEMAP_FILE = "Target Support Files/Coordinator/Coordinator.modulemap";
-				PRODUCT_NAME = Coordinator;
-				SDKROOT = iphoneos;
-				SKIP_INSTALL = YES;
-				SWIFT_ACTIVE_COMPILATION_CONDITIONS = "$(inherited) ";
-				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
-				SWIFT_VERSION = 4.0;
-				TARGETED_DEVICE_FAMILY = "1,2";
-				VERSIONING_SYSTEM = "apple-generic";
-				VERSION_INFO_PREFIX = "";
-			};
-			name = Debug;
 		};
 		731DC216E1A58545B559F6E0A2418060 /* Release */ = {
 			isa = XCBuildConfiguration;
@@ -543,6 +539,15 @@
 /* End XCBuildConfiguration section */
 
 /* Begin XCConfigurationList section */
+		13D7145B3E71A9691F81F3E9D699C112 /* Build configuration list for PBXNativeTarget "Coordinator" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				39A2E4B0ABA9D2F69B27C350E3453F1D /* Debug */,
+				566C4E2CE4B617E2C9B37D58317480C5 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
 		2D8E8EC45A3A1A1D94AE762CB5028504 /* Build configuration list for PBXProject "Pods" */ = {
 			isa = XCConfigurationList;
 			buildConfigurations = (
@@ -557,15 +562,6 @@
 			buildConfigurations = (
 				D7D6DAA0D3523A61CD6459FC5C18ED02 /* Debug */,
 				7D7267DBBC7BCE7059326331F03B3799 /* Release */,
-			);
-			defaultConfigurationIsVisible = 0;
-			defaultConfigurationName = Release;
-		};
-		FA9639EB16A3A12D93415D0B2C5C2EA1 /* Build configuration list for PBXNativeTarget "Coordinator" */ = {
-			isa = XCConfigurationList;
-			buildConfigurations = (
-				6CB9309326F443E9C902F23C58FF2656 /* Debug */,
-				4B7EA3B4E625B66EE11BAEDE3448C2EB /* Release */,
 			);
 			defaultConfigurationIsVisible = 0;
 			defaultConfigurationName = Release;

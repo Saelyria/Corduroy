@@ -8,19 +8,19 @@ import UIKit
  into its init method, thus hiding the specifics of the underlying NavigationCoordinator. This underlying
  coordinator must have the same SetupContext type as the set generic type of this class.
  */
-final class AnyNavigationFlowCoordinator<SetupContext, CompletionContext>: NavigationFlowCoordinator {
+public final class AnyNavigationFlowCoordinator<SetupContext, CompletionContext>: NavigationFlowCoordinator {
     private let coordinatorWrapper: _AnyNavigationFlowCoordinatorBase<SetupContext, CompletionContext>
     
-    var flowDelegate: NavigationFlowCoordinatorDelegate? {
+    public var flowDelegate: NavigationFlowCoordinatorDelegate? {
         get { return coordinatorWrapper.flowDelegate }
         set { coordinatorWrapper.flowDelegate = newValue }
     }
     
-    init<UnderlyingCoordinatorType: NavigationFlowCoordinator>(_ navigationCoordinator: UnderlyingCoordinatorType) where UnderlyingCoordinatorType.SetupContext == SetupContext, UnderlyingCoordinatorType.FlowCompletionContext == CompletionContext {
+    public init<UnderlyingCoordinatorType: NavigationFlowCoordinator>(_ navigationCoordinator: UnderlyingCoordinatorType) where UnderlyingCoordinatorType.SetupContext == SetupContext, UnderlyingCoordinatorType.FlowCompletionContext == CompletionContext {
         self.coordinatorWrapper = _AnyNavigationFlowCoordinatorWrapper(navigationCoordinator)
     }
     
-    func start(with context: SetupContext, from fromVC: UIViewController) {
+    public func start(with context: SetupContext, from fromVC: UIViewController) {
         return coordinatorWrapper.start(with: context, from: fromVC)
     }
 }

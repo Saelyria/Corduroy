@@ -1,5 +1,7 @@
 PODS:
-  - Coordinator (0.1.0)
+  - Coordinator (0.1.0):
+    - Coordinator/Core (= 0.1.0)
+  - Coordinator/Core (0.1.0)
 
 DEPENDENCIES:
   - Coordinator (from `../`)
@@ -9,7 +11,7 @@ EXTERNAL SOURCES:
     :path: ../
 
 SPEC CHECKSUMS:
-  Coordinator: 59eccfe84a076eb6ed13d5ad543b61c70a564c82
+  Coordinator: a57e4e205b84be32f264d0714858f45beabc416a
 
 PODFILE CHECKSUM: 42a7d0e3a1f87a4a2009e358be7496a531a4e887
 

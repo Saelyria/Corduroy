@@ -8,18 +8,18 @@ import UIKit
  into its init method, thus hiding the specifics of the underlying NavigationCoordinator. This underlying
  coordinator must have the same SetupContext type as the set generic type of this class.
  */
-final class AnyNavigationCoordinator<SetupContext>: NavigationCoordinator {
+public final class AnyNavigationCoordinator<SetupContext>: NavigationCoordinator {
     private let coordinatorWrapper: _AnyNavigationCoordinatorBase<SetupContext>
-    var delegate: NavigationCoordinatorDelegate? {
+    public var delegate: NavigationCoordinatorDelegate? {
         get { return coordinatorWrapper.delegate }
         set { coordinatorWrapper.delegate = newValue }
     }
     
-    init<UnderlyingCoordinatorType: NavigationCoordinator>(_ navigationCoordinator: UnderlyingCoordinatorType) where UnderlyingCoordinatorType.SetupContext == SetupContext {
+    public init<UnderlyingCoordinatorType: NavigationCoordinator>(_ navigationCoordinator: UnderlyingCoordinatorType) where UnderlyingCoordinatorType.SetupContext == SetupContext {
         self.coordinatorWrapper = _AnyNavigationCoordinatorWrapper(navigationCoordinator)
     }
     
-    func start(with context: SetupContext, from fromVC: UIViewController) {
+    public func start(with context: SetupContext, from fromVC: UIViewController) {
         return coordinatorWrapper.start(with: context, from: fromVC)
     }    
 }

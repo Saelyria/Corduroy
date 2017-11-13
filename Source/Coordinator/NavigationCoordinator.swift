@@ -15,7 +15,7 @@ import UIKit
  given view controller. This `SetupContext` associated type defaults to `EmptySetupContext`
  if no explicit type is set.
 */
-protocol NavigationCoordinator {
+public protocol NavigationCoordinator {
     /// The type of the model object that contains all dependencies the coordinator needs
     /// to be properly initialized. Defaults to 'EmptySetupContext' if no explicit type is set.
     associatedtype SetupContext = EmptyContext
@@ -48,7 +48,7 @@ protocol NavigationCoordinator {
  type could be, as in the example of authentication, a type that contains information about
  whether the authentication was successful and, if so, the credentials for the authentication.
 */
-protocol NavigationFlowCoordinator: NavigationCoordinator {
+public protocol NavigationFlowCoordinator: NavigationCoordinator {
     /// The type of the model object that this flow coordinator will return in its completion
     /// block as a result of its flow. Defaults to 'EmptySetupContext' if no explicit type is set.
     associatedtype FlowCompletionContext = EmptyContext
@@ -58,7 +58,7 @@ protocol NavigationFlowCoordinator: NavigationCoordinator {
     var flowDelegate: NavigationFlowCoordinatorDelegate? { get set }
 }
 
-extension NavigationFlowCoordinator {
+public extension NavigationFlowCoordinator {
     var delegate: NavigationCoordinatorDelegate? {
         get {
             return self.flowDelegate
@@ -74,15 +74,15 @@ extension NavigationFlowCoordinator {
 /**
  
 */
-protocol NavigationCoordinatorDelegate {
+public protocol NavigationCoordinatorDelegate {
     func navigationCoordinatorDidStart(_ coordinator: AnyNavigationCoordinator<AnyObject>)
 }
 
-protocol NavigationFlowCoordinatorDelegate: NavigationCoordinatorDelegate {
+public protocol NavigationFlowCoordinatorDelegate: NavigationCoordinatorDelegate {
     func flowNavigationCoordinator<SetupType, CompletionType>(_ coordinator: AnyNavigationFlowCoordinator<SetupType, CompletionType>, didFinishWithContext completionContext: CompletionType)
 }
 
-extension NavigationFlowCoordinatorDelegate {
+public extension NavigationFlowCoordinatorDelegate {
     func navigationCoordinatorDidStart(_ coordinator: AnyNavigationCoordinator<AnyObject>) { }
 }
 
@@ -101,7 +101,7 @@ extension NavigationFlowCoordinatorDelegate {
  view controller's defined setup model. This 'SetupContext' associated type defaults to
  'EmptySetupContext' if no explicit type is set.
 */
-protocol NavigationCoordinatorManageable where Self: UIViewController {
+public protocol NavigationCoordinatorManageable where Self: UIViewController {
     /// The type of NavigationCoordinator that this view controller expects to be managed by.
     associatedtype ManagingCoordinator: NavigationCoordinator
     /// The type of the model object that contains all dependencies the view controller needs
@@ -124,4 +124,4 @@ protocol NavigationCoordinatorManageable where Self: UIViewController {
  FlowNavigationController, or NavigationCoordinatorManageable that requires no dependencies to be
  initialized.
 */
-struct EmptyContext { }
+public struct EmptyContext { }

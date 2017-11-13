@@ -1,15 +1,15 @@
 {
   "name": "Coordinator",
   "version": "0.1.0",
-  "summary": "A short description of Coordinator.",
-  "description": "TODO: Add long description of the pod here.",
+  "summary": "Simple framework adding navigation coordinators to iOS.",
+  "description": "Coordinator is a series of protocols and extensions that, when implemented, encapsulate\nall navigation logic in 'coordinator' objects that keep view controllers smaller, more\nreusable, and more uniform in terms of dependency declaration and navigation.",
   "homepage": "https://github.com/Saelyria/Coordinator",
   "license": {
     "type": "MIT",
     "file": "LICENSE"
   },
   "authors": {
-    "Saelyria": "aaron.bosnjak707@gmail.com"
+    "Aaron Bosnjak": "aaron.bosnjak707@gmail.com"
   },
   "source": {
     "git": "https://github.com/Saelyria/Coordinator.git",
@@ -18,5 +18,26 @@
   "platforms": {
     "ios": "8.0"
   },
-  "source_files": "Coordinator/Classes/**/*"
+  "default_subspecs": "Core",
+  "subspecs": [
+    {
+      "name": "Core",
+      "source_files": "Source/Coordinator/**/*",
+      "ios": {
+        "frameworks": "UIKit"
+      }
+    },
+    {
+      "name": "RxSwift",
+      "source_files": "Source/RxCoordinator/",
+      "dependencies": {
+        "Coordinator/Core": [
+
+        ],
+        "RxSwift": [
+          "~> 4.0"
+        ]
+      }
+    }
+  ]
 }

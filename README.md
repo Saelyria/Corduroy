@@ -22,7 +22,7 @@ pod 'Coordinator'
 
 ## Author
 
-Saelyria, aaron.bosnjak707@gmail.com
+Aaron Bosnjak (aaron.bosnjak707@gmail.com)
 
 ## License
 

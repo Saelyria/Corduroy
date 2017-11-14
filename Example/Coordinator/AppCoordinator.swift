@@ -20,7 +20,20 @@ class AppCoordinator: NavigationCoordinator {
 
 extension AppCoordinator: LandingViewControllerCoordinator {
     func landingViewControllerDidPressLogin(_ viewController: LandingViewController) {
-        let loginFlowCoordinator = LoginFlowCoordinator()
-        loginFlowCoordinator.start(with: EmptyContext(), from: viewController)
+        let signupFlowCoordinator = SignupFlowCoordinator()
+        signupFlowCoordinator.flowDelegate = self
+        signupFlowCoordinator.start(with: EmptyContext(), from: viewController)
+    }
+    
+    func landingViewControllerDidPressTutorial(_ viewController: LandingViewController) {
+        
+    }
+}
+
+extension AppCoordinator: NavigationFlowCoordinatorDelegate {
+    func flowNavigationCoordinator<SetupType, CompletionType>(_ coordinator: AnyNavigationFlowCoordinator<SetupType, CompletionType>, didFinishWithContext completionContext: CompletionType, from fromVC: UIViewController) {
+        if let signupInfo = completionContext as? SignupInfo {
+            fromVC.dismiss(animated: true, completion: nil)
+        }
     }
 }

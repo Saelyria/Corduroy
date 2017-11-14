@@ -8,19 +8,19 @@ import UIKit
  into its init method, thus hiding the specifics of the underlying NavigationCoordinator. This underlying
  coordinator must have the same SetupContext type as the set generic type of this class.
  */
-public final class AnyNavigationFlowCoordinator<SetupContext, CompletionContext>: NavigationFlowCoordinator {
-    private let coordinatorWrapper: _AnyNavigationFlowCoordinatorBase<SetupContext, CompletionContext>
+public final class AnyNavigationFlowCoordinator<SetupContextType, CompletionContextType>: NavigationFlowCoordinator {
+    private let coordinatorWrapper: _AnyNavigationFlowCoordinatorBase<SetupContextType, CompletionContextType>
     
     public var flowDelegate: NavigationFlowCoordinatorDelegate? {
         get { return coordinatorWrapper.flowDelegate }
         set { coordinatorWrapper.flowDelegate = newValue }
     }
     
-    public init<UnderlyingCoordinatorType: NavigationFlowCoordinator>(_ navigationCoordinator: UnderlyingCoordinatorType) where UnderlyingCoordinatorType.SetupContext == SetupContext, UnderlyingCoordinatorType.FlowCompletionContext == CompletionContext {
+    public init<UnderlyingCoordinatorType: NavigationFlowCoordinator>(_ navigationCoordinator: UnderlyingCoordinatorType) where UnderlyingCoordinatorType.SetupContextType == SetupContextType, UnderlyingCoordinatorType.FlowCompletionContextType == CompletionContextType {
         self.coordinatorWrapper = _AnyNavigationFlowCoordinatorWrapper(navigationCoordinator)
     }
     
-    public func start(with context: SetupContext, from fromVC: UIViewController) {
+    public func start(with context: SetupContextType, from fromVC: UIViewController) {
         return coordinatorWrapper.start(with: context, from: fromVC)
     }
 }
@@ -32,9 +32,9 @@ public final class AnyNavigationFlowCoordinator<SetupContext, CompletionContext>
  so an _AnyNavigationCoordinatorWrapper instance can be created once the underlying coordinator's type is
  known in the AnyNavigationCoordinator's init method.
  */
-fileprivate class _AnyNavigationFlowCoordinatorBase<GenericSetupContext, GenericCompletionContext>: NavigationFlowCoordinator {
-    typealias SetupContext = GenericSetupContext
-    typealias FlowCompletionContext = GenericCompletionContext
+fileprivate class _AnyNavigationFlowCoordinatorBase<GenericSetupContextType, GenericCompletionContextType>: NavigationFlowCoordinator {
+    typealias SetupContextType = GenericSetupContextType
+    typealias FlowCompletionContextType = GenericCompletionContextType
     
     var flowDelegate: NavigationFlowCoordinatorDelegate?
     
@@ -44,7 +44,7 @@ fileprivate class _AnyNavigationFlowCoordinatorBase<GenericSetupContext, Generic
         }
     }
     
-    func start(with context: GenericSetupContext, from fromVC: UIViewController) {
+    func start(with context: GenericSetupContextType, from fromVC: UIViewController) {
         fatalError("Must be overwritten.")
     }
 }
@@ -53,7 +53,7 @@ fileprivate class _AnyNavigationFlowCoordinatorBase<GenericSetupContext, Generic
  A wrapper around a NavigationCoordinator object that relays all calls to its NavigationCoordinator requirements
  to this underlying object to implement type erasure.
  */
-fileprivate final class _AnyNavigationFlowCoordinatorWrapper<UnderlyingCoordinatorType: NavigationFlowCoordinator>: _AnyNavigationFlowCoordinatorBase<UnderlyingCoordinatorType.SetupContext, UnderlyingCoordinatorType.FlowCompletionContext> {
+fileprivate final class _AnyNavigationFlowCoordinatorWrapper<UnderlyingCoordinatorType: NavigationFlowCoordinator>: _AnyNavigationFlowCoordinatorBase<UnderlyingCoordinatorType.SetupContextType, UnderlyingCoordinatorType.FlowCompletionContextType> {
     
     var underlyingCoordinator: UnderlyingCoordinatorType
     override var flowDelegate: NavigationFlowCoordinatorDelegate? {
@@ -65,7 +65,7 @@ fileprivate final class _AnyNavigationFlowCoordinatorWrapper<UnderlyingCoordinat
         self.underlyingCoordinator = underlyingCoordinator
     }
     
-    override func start(with context: UnderlyingCoordinatorType.SetupContext, from fromVC: UIViewController) {
+    override func start(with context: UnderlyingCoordinatorType.SetupContextType, from fromVC: UIViewController) {
         return underlyingCoordinator.start(with: context, from: fromVC)
     }
 }

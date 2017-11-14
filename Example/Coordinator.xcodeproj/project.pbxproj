@@ -13,7 +13,9 @@
 		607FACE01AFB9204008FA782 /* LaunchScreen.xib in Resources */ = {isa = PBXBuildFile; fileRef = 607FACDE1AFB9204008FA782 /* LaunchScreen.xib */; };
 		938386151FBA48FC0018302C /* AppCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 938386141FBA48FC0018302C /* AppCoordinator.swift */; };
 		93D10D501FBA588400539F72 /* LoginFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D10D4F1FBA588400539F72 /* LoginFlowCoordinator.swift */; };
-		93D10D521FBA58D500539F72 /* CreateLoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D10D511FBA58D500539F72 /* CreateLoginViewController.swift */; };
+		93D10D521FBA58D500539F72 /* SignupFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D10D511FBA58D500539F72 /* SignupFormViewController.swift */; };
+		93D10D571FBA743100539F72 /* SignupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D10D561FBA743100539F72 /* SignupCompleteViewController.swift */; };
+		93D10D591FBA773F00539F72 /* SignupSecurityQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93D10D581FBA773F00539F72 /* SignupSecurityQuestionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -30,7 +32,9 @@
 		79CA1448FD5B5120A7FBA2AB /* Pods-Coordinator_Tests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Coordinator_Tests.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Coordinator_Tests/Pods-Coordinator_Tests.debug.xcconfig"; sourceTree = "<group>"; };
 		938386141FBA48FC0018302C /* AppCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppCoordinator.swift; sourceTree = "<group>"; };
 		93D10D4F1FBA588400539F72 /* LoginFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowCoordinator.swift; sourceTree = "<group>"; };
-		93D10D511FBA58D500539F72 /* CreateLoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CreateLoginViewController.swift; sourceTree = "<group>"; };
+		93D10D511FBA58D500539F72 /* SignupFormViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupFormViewController.swift; sourceTree = "<group>"; };
+		93D10D561FBA743100539F72 /* SignupCompleteViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupCompleteViewController.swift; sourceTree = "<group>"; };
+		93D10D581FBA773F00539F72 /* SignupSecurityQuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SignupSecurityQuestionViewController.swift; sourceTree = "<group>"; };
 		E9F538AF147C1D6FDFF0DABA /* README.md */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = net.daringfireball.markdown; name = README.md; path = ../README.md; sourceTree = "<group>"; };
 		F32DCA30662BEF91BAC5E8C1 /* Pods-Coordinator_Example.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Coordinator_Example.release.xcconfig"; path = "Pods/Target Support Files/Pods-Coordinator_Example/Pods-Coordinator_Example.release.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
@@ -110,7 +114,9 @@
 			isa = PBXGroup;
 			children = (
 				93D10D4F1FBA588400539F72 /* LoginFlowCoordinator.swift */,
-				93D10D511FBA58D500539F72 /* CreateLoginViewController.swift */,
+				93D10D511FBA58D500539F72 /* SignupFormViewController.swift */,
+				93D10D581FBA773F00539F72 /* SignupSecurityQuestionViewController.swift */,
+				93D10D561FBA743100539F72 /* SignupCompleteViewController.swift */,
 			);
 			name = "Login Flow";
 			sourceTree = "<group>";
@@ -254,10 +260,12 @@
 			buildActionMask = 2147483647;
 			files = (
 				607FACD81AFB9204008FA782 /* LandingViewController.swift in Sources */,
+				93D10D591FBA773F00539F72 /* SignupSecurityQuestionViewController.swift in Sources */,
+				93D10D571FBA743100539F72 /* SignupCompleteViewController.swift in Sources */,
 				607FACD61AFB9204008FA782 /* AppDelegate.swift in Sources */,
 				93D10D501FBA588400539F72 /* LoginFlowCoordinator.swift in Sources */,
 				938386151FBA48FC0018302C /* AppCoordinator.swift in Sources */,
-				93D10D521FBA58D500539F72 /* CreateLoginViewController.swift in Sources */,
+				93D10D521FBA58D500539F72 /* SignupFormViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

@@ -20,6 +20,9 @@ public protocol NavigationCoordinator {
     /// to be properly initialized. Defaults to 'EmptySetupContext' if no explicit type is set.
     associatedtype SetupContextType = EmptyContext
     
+    /// The delegate the flow coordinator will inform about navigation related events.
+    var delegate: NavigationCoordinatorDelegate? { get }
+    
     /**
      Starts the coordinator from the given view controller.
      - parameter context: The context object containing all dependencies the coordinator needs.
@@ -31,54 +34,16 @@ public protocol NavigationCoordinator {
 
 
 /**
- A protocol describing an object that manages navigation in a user flow.
- 
- A flow coordinator is a specialized navigation coordinator that is responsible for a set of
- view controllers in a user 'flow'. A user flow is any series of view controllers that are
- launched with the intention of completing a specific task or returning a specific value; for
- example, starting a flow to have the user authenticate or starting a flow to upload a picture.
- Flows have a defined start and end.
- 
- Flow coordinators are started by other coordinators and are expected to, once completed,
- call the passed in `completion` closure. In this closure, the flow coordinator passes in
- itself the last view controller in its flow,  and a `FlowCompletionContextType` object it
- defines as an associated type. This context type could be, as in the example of authentication,
- a type that contains information about whether the authentication was successful and, if so, the
- credentials for the authentication.
- 
- By default, a flow coordinator's `start(with:from)` method is unavailable and will cause a fatal
- error in development if called; this method can, however, be provided an implementation if the
- flow has a default destination it can finish its flow to.
+ A protocol describing an object that receives events from a navigation coordinator.
  */
-public protocol NavigationFlowCoordinator: NavigationCoordinator {
-    /// The type of the model object that this flow coordinator will return in its completion containing
-    /// data about or as a result of its flow. Defaults to 'EmptySetupContext' if no explicit type is set.
-    associatedtype FlowCompletionContextType = EmptyContext
-    
+public protocol NavigationCoordinatorDelegate {
     /**
-     The closure the coordinator will call upon completion of its flow.
-     - parameter coordinator: The flow coordinator that just completed.
-     - parameter fromVC: The last view controller of the flow, to be dismissed or presented from.
-     - parameter completionContext: An object of the coordinator's `FlowCompletionContextType` containing
-      information about or as a result of the completed flow.
+     Called when a flow coordinator has completed its flow.
+     - parameter coordinator: The coordinator that handled the navigation.
+     - parameter toVC: The view controller the coordinator navigated to.
      */
-    typealias FlowCompletion = (_ coordinator: Self, _ fromVC: UIViewController, _ completionContext: FlowCompletionContextType) -> Void
-    
-    /**
-     Starts the flow coordinator from the given view controller.
-     - parameter context: The context object containing all dependencies the coordinator needs.
-     - parameter fromVC: The view controller the coordinator should start its navigation from.
-     - parameter completion: The closure the coordinator will call upon completion of its flow.
-     */
-    func startFlow(with context: SetupContextType, from fromVC: UIViewController, completion: @escaping FlowCompletion)
+    func coordinatorDidNavigate<CoordinatorType: NavigationCoordinator>(_ coordinator: CoordinatorType, to toVC: UIViewController)
 }
-
-public extension NavigationFlowCoordinator {
-    func start(with context: SetupContextType, from fromVC: UIViewController) {
-        fatalError("start(with:from:) has not been implemented on this NavigationFlowCoordinator; please use its startFlow(with:from:completion:) method to start instead.")
-    }
-}
-
 
 
 /**

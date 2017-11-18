@@ -9,10 +9,10 @@ final class SignupSecurityQuestionViewController: UIViewController, NavigationCo
     }
     typealias SetupContextType = SetupContext
     
-    var coordinator: SignupFlowCoordinator!
+    private(set) var coordinator: SignupFlowCoordinator!
     
-    fileprivate let securityQuestion: String = "What was the name of your first pet?"
-    fileprivate let securityAnswerTextField = UITextField()
+    private let securityQuestion: String = "What was the name of your first pet?"
+    private let securityAnswerTextField = UITextField()
     
     static func create(with context: SetupContext, coordinator: SignupFlowCoordinator) -> SignupSecurityQuestionViewController {
         let securityQuestionVC = SignupSecurityQuestionViewController()

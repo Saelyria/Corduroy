@@ -3,10 +3,10 @@ import UIKit
 import Coordinator
 
 final class SignupFormViewController: UIViewController, NavigationCoordinatorManageable {
-    var coordinator: SignupFlowCoordinator!
+    private(set) var coordinator: SignupFlowCoordinator!
     
-    fileprivate let usernameTextField = UITextField()
-    fileprivate let passwordTextField = UITextField()
+    private let usernameTextField = UITextField()
+    private let passwordTextField = UITextField()
     
     static func create(with context: EmptyContext, coordinator: SignupFlowCoordinator) -> SignupFormViewController {
         let signupVC = SignupFormViewController()

@@ -5,12 +5,12 @@ import Coordinator
 final class SignupCompleteViewController: UIViewController, NavigationCoordinatorManageable {
     typealias SetupContextType = SignupInfo
     
-    var coordinator: SignupFlowCoordinator!
+    private(set) var coordinator: SignupFlowCoordinator!
     
-    fileprivate let usernameLabel = UILabel()
-    fileprivate let passwordLabel = UILabel()
-    fileprivate let securityQuestionLabel = UILabel()
-    fileprivate let securityAnswerLabel = UILabel()
+    private let usernameLabel = UILabel()
+    private let passwordLabel = UILabel()
+    private let securityQuestionLabel = UILabel()
+    private let securityAnswerLabel = UILabel()
     
     static func create(with context: SignupInfo, coordinator: SignupFlowCoordinator) -> SignupCompleteViewController {
         let signupCompleteVC = SignupCompleteViewController()

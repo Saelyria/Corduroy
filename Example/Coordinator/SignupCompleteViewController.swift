@@ -2,8 +2,8 @@
 import UIKit
 import Coordinator
 
-final class SignupCompleteViewController: UIViewController, NavigationCoordinatorManageable {
-    typealias SetupContextType = SignupInfo
+final class SignupCompleteViewController: UIViewController, CoordinatorManageable {
+    typealias SetupContext = SignupInfo
     
     private(set) var coordinator: SignupFlowCoordinator!
     

@@ -7,7 +7,7 @@ protocol LandingViewControllerCoordinator {
     func landingViewControllerDidPressTutorial(_ viewController: LandingViewController)
 }
 
-final class LandingViewController: UIViewController, NavigationCoordinatorManageable {    
+final class LandingViewController: UIViewController, CoordinatorManageable {
     private(set) var coordinator: LandingViewControllerCoordinator!
     
     static func create(with context: EmptyContext, coordinator: LandingViewControllerCoordinator) -> LandingViewController {

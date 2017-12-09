@@ -2,7 +2,7 @@
 import UIKit
 import Coordinator
 
-final class SignupFormViewController: UIViewController, NavigationCoordinatorManageable {
+final class SignupFormViewController: UIViewController, CoordinatorManageable {
     private(set) var coordinator: SignupFlowCoordinator!
     
     private let usernameTextField = UITextField()

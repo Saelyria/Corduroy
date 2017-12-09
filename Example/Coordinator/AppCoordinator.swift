@@ -2,8 +2,8 @@
 import Foundation
 import Coordinator
 
-class AppCoordinator: NavigationCoordinator {
-    var delegate: NavigationCoordinatorDelegate?
+class AppCoordinator: Coordinator {
+    var delegate: CoordinatorDelegate?
     
     func start(with context: EmptyContext, from fromVC: UIViewController) {
         let viewController = LandingViewController.create(with: EmptyContext(), coordinator: self)
@@ -26,8 +26,8 @@ extension AppCoordinator: LandingViewControllerCoordinator {
     }
 }
 
-extension AppCoordinator: NavigationFlowCoordinatorDelegate {
-    func coordinatorDidCompleteFlow<CoordinatorType: NavigationFlowCoordinator>(_ coordinator: CoordinatorType, from fromVC: UIViewController, with context: CoordinatorType.FlowCompletionContextType) {
+extension AppCoordinator: FlowCoordinatorDelegate {
+    func coordinatorDidCompleteFlow<CoordinatorType: FlowCoordinator>(_ coordinator: CoordinatorType, fromVC: UIViewController, context: CoordinatorType.FlowCompletionContext) {
         fromVC.dismiss(animated: true, completion: nil)
     }
 }

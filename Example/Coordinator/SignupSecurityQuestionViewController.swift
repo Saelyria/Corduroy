@@ -2,12 +2,11 @@
 import UIKit
 import Coordinator
 
-final class SignupSecurityQuestionViewController: UIViewController, NavigationCoordinatorManageable {
+final class SignupSecurityQuestionViewController: UIViewController, CoordinatorManageable {
     struct SetupContext {
         let tempUsername: String
         let tempPassword: String
     }
-    typealias SetupContextType = SetupContext
     
     private(set) var coordinator: SignupFlowCoordinator!
     

@@ -9,11 +9,11 @@ struct SignupInfo {
     let securityAnswer: String
 }
 
-final class SignupFlowCoordinator: NavigationFlowCoordinator {
-    typealias FlowCompletionContextType = SignupInfo
+final class SignupFlowCoordinator: FlowCoordinator {
+    typealias FlowCompletionContext = SignupInfo
     
-    var delegate: NavigationCoordinatorDelegate?
-    var flowDelegate: NavigationFlowCoordinatorDelegate?
+    var delegate: CoordinatorDelegate?
+    var flowDelegate: FlowCoordinatorDelegate?
     
     fileprivate var tempUsername: String?
     fileprivate var tempPassword: String?
@@ -53,6 +53,6 @@ final class SignupFlowCoordinator: NavigationFlowCoordinator {
         }
         
         let signupInfo = SignupInfo(username: username, password: password, securityQuestion: securityQuestion, securityAnswer: securityAnswer)
-        self.flowDelegate?.coordinatorDidCompleteFlow(self, from: signupCompleteVC, with: signupInfo)
+        self.flowDelegate?.coordinatorDidCompleteFlow(self, fromVC: signupCompleteVC, context: signupInfo)
     }
 }

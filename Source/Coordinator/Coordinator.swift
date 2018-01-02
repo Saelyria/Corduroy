@@ -17,8 +17,8 @@ import UIKit
  */
 public protocol Coordinator {
     /// The type of the model object that contains all dependencies the coordinator needs
-    /// to be properly initialized. Defaults to 'EmptyContext' if no explicit type is set.
-    associatedtype SetupContext = EmptyContext
+    /// to be properly initialized. Defaults to 'Void' if no explicit type is set.
+    associatedtype SetupContext = Void
     
     /// The delegate the flow coordinator will inform about navigation related events.
     var delegate: CoordinatorDelegate? { get }
@@ -29,6 +29,16 @@ public protocol Coordinator {
      - parameter fromVC: The view controller the coordinator should start its navigation from.
      */
     func start(with context: SetupContext, from fromVC: UIViewController)
+}
+
+extension Coordinator where Self.SetupContext == Void {
+    /**
+     Starts the coordinator from the given view controller.
+     - parameter fromVC: The view controller the coordinator should start its navigation from.
+     */
+    func start(from fromVC: UIViewController) {
+        self.start(with: (), from: fromVC)
+    }
 }
 
 
@@ -42,15 +52,5 @@ public protocol CoordinatorDelegate {
      - parameter coordinator: The coordinator that handled the navigation.
      - parameter toVC: The view controller the coordinator navigated to.
      */
-    func coordinatorDidNavigate<CoordinatorType: Coordinator>(_ coordinator: CoordinatorType, to toVC: UIViewController)
+    func coordinatorDidNavigate<T: Coordinator>(_ coordinator: T, to toVC: UIViewController)
 }
-
-
-/**
- A struct that can be used as the SetupContext or FlowCompletionContext for a Coordinator, FlowController,
- or CoordinatorManageable that requires no dependencies to be initialized.
- */
-public struct EmptyContext {
-    public init() { }
-}
-

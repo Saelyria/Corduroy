@@ -39,7 +39,7 @@ public protocol CoordinatorManageable where Self: UIViewController {
     
     /// The type of the model object that contains all dependencies the view controller needs
     /// to be properly initialized. Defaults to 'EmptyContext' if no explicit type is set.
-    associatedtype SetupContext = EmptyContext
+    associatedtype SetupContext = Void
     
     /// The coordinator managing the view controller.
     var coordinator: ManagingCoordinator! { get }
@@ -52,4 +52,15 @@ public protocol CoordinatorManageable where Self: UIViewController {
      - parameter coordinator: The coordinator the view controller will be managed by.
      */
     static func create(with context: SetupContext, coordinator: ManagingCoordinator) -> Self
+}
+
+extension CoordinatorManageable where Self.SetupContext == Void {
+    /**
+     Creates an instance of the view controller. In the implemented method, the view controller
+     should be instantiated then have its `coordinator` property set to the provided `coordinator` object.
+     - parameter coordinator: The coordinator the view controller will be managed by.
+     */
+    static func create(coordinator: ManagingCoordinator) -> Self {
+        return Self.create(with: (), coordinator: coordinator)
+    }
 }

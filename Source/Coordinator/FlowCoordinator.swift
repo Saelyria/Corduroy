@@ -24,9 +24,9 @@ public protocol FlowCoordinator: Coordinator {
     /// The type of the model object that this flow coordinator will return in its completion
     /// containing data about or as a result of its flow. Defaults to 'EmptyContext' if no
     /// explicit type is set.
-    associatedtype FlowCompletionContext = EmptyContext
+    associatedtype FlowCompletionContext = Void
     
-    /// The delegate the flow coordinator will inform about flow related events, notable about when its
+    /// The delegate the flow coordinator will inform about flow related events, notably about when its
     /// flow has completed.
     var flowDelegate: FlowCoordinatorDelegate? { get }
 }
@@ -43,5 +43,5 @@ public protocol FlowCoordinatorDelegate {
      - parameter fromVC: The view controller the coordinator finished on.
      - parameter context: The completion context of the coordinator's `FlowCompletionContextType`.
      */
-    func coordinatorDidCompleteFlow<CoordinatorType: FlowCoordinator>(_ coordinator: CoordinatorType, fromVC: UIViewController, context: CoordinatorType.FlowCompletionContext)
+    func coordinatorDidCompleteFlow<T: FlowCoordinator>(_ coordinator: T, from fromVC: UIViewController, context: T.FlowCompletionContext)
 }

@@ -12,16 +12,19 @@ struct SignupInfo {
 final class SignupFlowCoordinator: FlowCoordinator {
     typealias FlowCompletionContext = SignupInfo
     
-    var delegate: CoordinatorDelegate?
-    var flowDelegate: FlowCoordinatorDelegate?
+    var currentViewController: UIViewController?
     
-    fileprivate var tempUsername: String?
-    fileprivate var tempPassword: String?
-    fileprivate var tempSecurityQuestion: String?
-    fileprivate var tempSecurityAnswer: String?
+    private var completion: ((Error?, SignupInfo?) -> Void)!
     
-    func start(with context: EmptyContext, from fromVC: UIViewController) {
-        let signupVC = SignupFormViewController.create(with: EmptyContext(), coordinator: self)
+    private var tempUsername: String?
+    private var tempPassword: String?
+    private var tempSecurityQuestion: String?
+    private var tempSecurityAnswer: String?
+    
+    func startFlow(with: (), from fromVC: UIViewController, completion: @escaping (Error?, SignupInfo?) -> Void) {
+        self.completion = completion
+        
+        let signupVC = SignupFormViewController.create(coordinator: self)
         let navController = UINavigationController(rootViewController: signupVC)
         fromVC.present(navController, animated: true, completion: nil)
     }
@@ -53,6 +56,6 @@ final class SignupFlowCoordinator: FlowCoordinator {
         }
         
         let signupInfo = SignupInfo(username: username, password: password, securityQuestion: securityQuestion, securityAnswer: securityAnswer)
-        self.flowDelegate?.coordinatorDidCompleteFlow(self, fromVC: signupCompleteVC, context: signupInfo)
+        self.completion(nil, signupInfo)
     }
 }

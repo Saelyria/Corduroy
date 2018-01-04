@@ -8,7 +8,7 @@ final class SignupFormViewController: UIViewController, CoordinatorManageable {
     private let usernameTextField = UITextField()
     private let passwordTextField = UITextField()
     
-    static func create(with context: EmptyContext, coordinator: SignupFlowCoordinator) -> SignupFormViewController {
+    static func create(with: (), coordinator: SignupFlowCoordinator) -> SignupFormViewController {
         let signupVC = SignupFormViewController()
         signupVC.coordinator = coordinator
         

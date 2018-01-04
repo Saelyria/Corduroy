@@ -2,15 +2,10 @@
 import UIKit
 import Coordinator
 
-protocol LandingViewControllerCoordinator {
-    func landingViewControllerDidPressLogin(_ viewController: LandingViewController)
-    func landingViewControllerDidPressTutorial(_ viewController: LandingViewController)
-}
-
 final class LandingViewController: UIViewController, CoordinatorManageable {
-    private(set) var coordinator: LandingViewControllerCoordinator!
+    private(set) var coordinator: LandingCoordinator!
     
-    static func create(with context: EmptyContext, coordinator: LandingViewControllerCoordinator) -> LandingViewController {
+    static func create(with: Void, coordinator: LandingCoordinator) -> LandingViewController {
         let viewController = LandingViewController()
         viewController.coordinator = coordinator
         

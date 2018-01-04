@@ -54,7 +54,7 @@ public protocol CoordinatorManageable where Self: UIViewController {
     static func create(with context: SetupContext, coordinator: ManagingCoordinator) -> Self
 }
 
-extension CoordinatorManageable where Self.SetupContext == Void {
+public extension CoordinatorManageable where Self.SetupContext == Void {
     /**
      Creates an instance of the view controller. In the implemented method, the view controller
      should be instantiated then have its `coordinator` property set to the provided `coordinator` object.

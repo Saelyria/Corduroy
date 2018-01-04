@@ -1,6 +1,19 @@
 
 import UIKit
 
+public protocol BaseCoordinator {
+    static var preconditions: [NavigationPrecondition] { get }
+    
+    var currentViewController: UIViewController? { get }
+}
+
+public extension BaseCoordinator {
+    static var preconditions: [NavigationPrecondition] {
+        return []
+    }
+}
+
+
 /**
  A protocol describing an object that manages navigation between view controllers.
  
@@ -12,16 +25,13 @@ import UIKit
  Dependencies for a coordinator can be defined via its `SetupContext` associated type.
  An object of this type is passed in to the `start(context:from:)` method of the
  coordinator to have the coordinator present its first view controller from the given
- view controller. This `SetupContext` associated type defaults to `EmptyContext` if no
+ view controller. This `SetupContext` associated type defaults to `Void` if no
  explicit type is set.
  */
-public protocol Coordinator {
+public protocol Coordinator: BaseCoordinator {
     /// The type of the model object that contains all dependencies the coordinator needs
     /// to be properly initialized. Defaults to 'Void' if no explicit type is set.
     associatedtype SetupContext = Void
-    
-    /// The delegate the flow coordinator will inform about navigation related events.
-    var delegate: CoordinatorDelegate? { get }
     
     /**
      Starts the coordinator from the given view controller.
@@ -31,7 +41,7 @@ public protocol Coordinator {
     func start(with context: SetupContext, from fromVC: UIViewController)
 }
 
-extension Coordinator where Self.SetupContext == Void {
+public extension Coordinator where Self.SetupContext == Void {
     /**
      Starts the coordinator from the given view controller.
      - parameter fromVC: The view controller the coordinator should start its navigation from.
@@ -39,18 +49,4 @@ extension Coordinator where Self.SetupContext == Void {
     func start(from fromVC: UIViewController) {
         self.start(with: (), from: fromVC)
     }
-}
-
-
-
-/**
- A protocol describing an object that receives events from a navigation coordinator.
- */
-public protocol CoordinatorDelegate {
-    /**
-     Called when a flow coordinator has completed its flow.
-     - parameter coordinator: The coordinator that handled the navigation.
-     - parameter toVC: The view controller the coordinator navigated to.
-     */
-    func coordinatorDidNavigate<T: Coordinator>(_ coordinator: T, to toVC: UIViewController)
 }

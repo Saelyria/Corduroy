@@ -20,28 +20,41 @@ import UIKit
  error in development if called; this method can, however, be provided an implementation if the
  flow has a default destination it can finish its flow to.
  */
-public protocol FlowCoordinator: Coordinator {
+public protocol FlowCoordinator: Coordinator, NavigationPrecondition {
     /// The type of the model object that this flow coordinator will return in its completion
     /// containing data about or as a result of its flow. Defaults to 'EmptyContext' if no
     /// explicit type is set.
     associatedtype FlowCompletionContext = Void
     
-    /// The delegate the flow coordinator will inform about flow related events, notably about when its
-    /// flow has completed.
-    var flowDelegate: FlowCoordinatorDelegate? { get }
+    func startFlow(with context: SetupContext, from fromVC: UIViewController, completion: @escaping (Error?, FlowCompletionContext?) -> Void)
 }
 
+public extension FlowCoordinator where Self.FlowCompletionContext == Void, Self.SetupContext == Void {
+    func startFlow(from fromVC: UIViewController, completion: @escaping (Error?) -> Void) {
+        let fullCompletion = { (error: Error?, context: FlowCompletionContext?) in
+            completion(error)
+        }
+        self.startFlow(with: (), from: fromVC, completion: fullCompletion)
+    }
+}
 
+public extension FlowCoordinator where Self.FlowCompletionContext == Void {
+    func startFlow(with context: SetupContext, from fromVC: UIViewController, completion: @escaping (Error?) -> Void) {
+        let fullCompletion = { (error: Error?, context: FlowCompletionContext?) in
+            completion(error)
+        }
+        self.startFlow(with: context, from: fromVC, completion: fullCompletion)
+    }
+}
 
-/**
- A protocol describing an object that receives events from a flow coordinator.
- */
-public protocol FlowCoordinatorDelegate {
-    /**
-     Called when a flow coordinator has completed its flow.
-     - parameter coordinator: The flow coordinator that completed.
-     - parameter fromVC: The view controller the coordinator finished on.
-     - parameter context: The completion context of the coordinator's `FlowCompletionContextType`.
-     */
-    func coordinatorDidCompleteFlow<T: FlowCoordinator>(_ coordinator: T, from fromVC: UIViewController, context: T.FlowCompletionContext)
+public extension FlowCoordinator where Self.SetupContext == Void {
+    func startFlow(from fromVC: UIViewController, completion: @escaping (Error?, FlowCompletionContext?) -> Void) {
+        self.startFlow(with: (), from: fromVC, completion: completion)
+    }
+}
+
+public extension FlowCoordinator {
+    func start(with context: SetupContext, from fromVC: UIViewController) {
+        fatalError("start(with:from:) not implemented; use startFlow(with:from:completion:) instead.")
+    }
 }

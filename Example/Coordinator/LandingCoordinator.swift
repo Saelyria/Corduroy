@@ -5,18 +5,18 @@ import Coordinator
 class LandingCoordinator: Coordinator {
     var currentViewController: UIViewController?
         
-    func start(with context: Void, from fromVC: UIViewController) {
+    func start(with model: (), context: Navigator.NavigationContext) {
         let viewController = LandingViewController.create(coordinator: self)
         
-        fromVC.addChildViewController(viewController)
-        fromVC.view.addSubview(viewController.view)
-        viewController.view.frame = fromVC.view.frame
-        viewController.didMove(toParentViewController: fromVC)
+        context.currentViewController.addChildViewController(viewController)
+        context.currentViewController.view.addSubview(viewController.view)
+        viewController.view.frame = context.currentViewController.view.frame
+        viewController.didMove(toParentViewController: context.currentViewController)
     }
 
     func landingViewControllerDidPressLogin(_ viewController: LandingViewController) {
         let signupFlowCoordinator = SignupFlowCoordinator()
-        signupFlowCoordinator.startFlow(from: viewController) { (error, signupInfo) in
+        AppDelegate.navigator.navigate(to: signupFlowCoordinator, by: .present) { (error, signupInfo) in
             
         }
     }

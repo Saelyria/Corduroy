@@ -2,51 +2,39 @@
 import UIKit
 
 public protocol BaseCoordinator {
-    static var preconditions: [NavigationPrecondition] { get }
-    
     var currentViewController: UIViewController? { get }
 }
-
-public extension BaseCoordinator {
-    static var preconditions: [NavigationPrecondition] {
-        return []
-    }
-}
-
 
 /**
  A protocol describing an object that manages navigation between view controllers.
  
- A coordinator object is responsible for managing the navigation between view controllers,
- containing all navigation logic within itself. Coordinators should act as delegates for
- actions in view controllers (such as a button press or other action the user performed)
- that would trigger navigation to a new view controller.
+ A coordinator object is responsible for managing the navigation between view controllers, containing all navigation
+ logic within itself. Coordinators should act as delegates for actions in view controllers (such as a button press or
+ other action the user performed) that would trigger navigation to a new view controller.
  
- Dependencies for a coordinator can be defined via its `SetupContext` associated type.
- An object of this type is passed in to the `start(context:from:)` method of the
- coordinator to have the coordinator present its first view controller from the given
- view controller. This `SetupContext` associated type defaults to `Void` if no
- explicit type is set.
+ Dependencies for a coordinator can be defined via its `SetupModel` associated type. An object of this type is passed
+ in to the `start(context:from:)` method of the coordinator to have the coordinator present its first view controller
+ from the given view controller. This `SetupModel` associated type defaults to `Void` if no explicit type is set.
  */
 public protocol Coordinator: BaseCoordinator {
-    /// The type of the model object that contains all dependencies the coordinator needs
-    /// to be properly initialized. Defaults to 'Void' if no explicit type is set.
-    associatedtype SetupContext = Void
+    /// The type of the model object that contains all dependencies the coordinator needs to be properly initialized.
+    /// Defaults to 'Void' if no explicit type is set.
+    associatedtype SetupModel = Void
     
     /**
-     Starts the coordinator from the given view controller.
-     - parameter context: The context object containing all dependencies the coordinator needs.
-     - parameter fromVC: The view controller the coordinator should start its navigation from.
+     Starts the coordinator with the given setup model and navigation context.
+     - parameter model: The model object containing all dependencies the coordinator needs.
+     - parameter context: A context object containing the involved coordinators and the view controller to start from.
      */
-    func start(with context: SetupContext, from fromVC: UIViewController)
+    func start(with model: SetupModel, context: Navigator.NavigationContext)
 }
 
-public extension Coordinator where Self.SetupContext == Void {
+public extension Coordinator where Self.SetupModel == Void {
     /**
-     Starts the coordinator from the given view controller.
-     - parameter fromVC: The view controller the coordinator should start its navigation from.
+     Starts the coordinator with the given navigation context.
+     - parameter context: A context object containing the involved coordinators and the view controller to start from.
      */
-    func start(from fromVC: UIViewController) {
-        self.start(with: (), from: fromVC)
+    func start(context: Navigator.NavigationContext) {
+        self.start(with: (), context: context)
     }
 }

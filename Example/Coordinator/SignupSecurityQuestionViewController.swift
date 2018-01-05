@@ -3,14 +3,14 @@ import UIKit
 import Coordinator
 
 final class SignupSecurityQuestionViewController: UIViewController, CoordinatorManageable {
-    typealias SetupContext = (tempUsername: String, tempPassword: String)
-
+    typealias SetupModel = (tempUsername: String, tempPassword: String)
+    
     private(set) var coordinator: SignupFlowCoordinator!
     
     private let securityQuestion: String = "What was the name of your first pet?"
     private let securityAnswerTextField = UITextField()
     
-    static func create(with context: (tempUsername: String, tempPassword: String), coordinator: SignupFlowCoordinator) -> SignupSecurityQuestionViewController {
+    static func create(with model: (tempUsername: String, tempPassword: String), coordinator: SignupFlowCoordinator) -> SignupSecurityQuestionViewController {
         let securityQuestionVC = SignupSecurityQuestionViewController()
         securityQuestionVC.coordinator = coordinator
         

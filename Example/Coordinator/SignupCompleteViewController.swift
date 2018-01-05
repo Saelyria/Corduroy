@@ -3,7 +3,7 @@ import UIKit
 import Coordinator
 
 final class SignupCompleteViewController: UIViewController, CoordinatorManageable {
-    typealias SetupContext = SignupInfo
+    typealias SetupModel = SignupInfo
     
     private(set) var coordinator: SignupFlowCoordinator!
     
@@ -12,12 +12,12 @@ final class SignupCompleteViewController: UIViewController, CoordinatorManageabl
     private let securityQuestionLabel = UILabel()
     private let securityAnswerLabel = UILabel()
     
-    static func create(with context: SignupInfo, coordinator: SignupFlowCoordinator) -> SignupCompleteViewController {
+    static func create(with model: SignupInfo, coordinator: SignupFlowCoordinator) -> SignupCompleteViewController {
         let signupCompleteVC = SignupCompleteViewController()
-        signupCompleteVC.usernameLabel.text = "Username: \"\(context.username)\""
-        signupCompleteVC.passwordLabel.text = "Password: \"\(context.password)\""
-        signupCompleteVC.securityQuestionLabel.text = "Security Question: \"\(context.securityQuestion)\""
-        signupCompleteVC.securityAnswerLabel.text = "Security Question Answer: \"\(context.securityAnswer)\""
+        signupCompleteVC.usernameLabel.text = "Username: \"\(model.username)\""
+        signupCompleteVC.passwordLabel.text = "Password: \"\(model.password)\""
+        signupCompleteVC.securityQuestionLabel.text = "Security Question: \"\(model.securityQuestion)\""
+        signupCompleteVC.securityAnswerLabel.text = "Security Question Answer: \"\(model.securityAnswer)\""
         signupCompleteVC.coordinator = coordinator
         
         return signupCompleteVC

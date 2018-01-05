@@ -9,9 +9,7 @@ struct SignupInfo {
     let securityAnswer: String
 }
 
-final class SignupFlowCoordinator: FlowCoordinator {
-    typealias FlowCompletionContext = SignupInfo
-    
+final class SignupFlowCoordinator: FlowCoordinator {    
     var currentViewController: UIViewController?
     
     private var completion: ((Error?, SignupInfo?) -> Void)!
@@ -21,19 +19,19 @@ final class SignupFlowCoordinator: FlowCoordinator {
     private var tempSecurityQuestion: String?
     private var tempSecurityAnswer: String?
     
-    func startFlow(with: (), from fromVC: UIViewController, completion: @escaping (Error?, SignupInfo?) -> Void) {
+    func start(with: (), context: Navigator.NavigationContext, completion: @escaping (Error?, SignupInfo?) -> Void) {
         self.completion = completion
         
         let signupVC = SignupFormViewController.create(coordinator: self)
         let navController = UINavigationController(rootViewController: signupVC)
-        fromVC.present(navController, animated: true, completion: nil)
+        context.currentViewController.present(navController, animated: true, completion: nil)
     }
     
     func signupFormViewController(_ signupFormVC: SignupFormViewController, didSignUpWithUsername username: String, password: String) {
         self.tempUsername = username
         self.tempPassword = password
         
-        let setupContext = SignupSecurityQuestionViewController.SetupContext(tempUsername: username, tempPassword: password)
+        let setupContext: SignupSecurityQuestionViewController.SetupModel = (username, password)
         let securityQuesstionVC = SignupSecurityQuestionViewController.create(with: setupContext, coordinator: self)
         signupFormVC.navigationController?.pushViewController(securityQuesstionVC, animated: true)
     }

@@ -11,9 +11,16 @@ public protocol NavigationPreconditionRequiring: BaseCoordinator {
 
 /**
  Describes an object that will determine if navigation is allowed.
+ 
+ A `NavigationPrecondition` object is used by the `Navigator` to determine if navigation is allowed to a given
+ coordinator. The navigator will determine this by calling the precondition's `evaluate(context:completion:) block and,
+ based on whether or not an error is returned in the completion closure, will continue with navigation or not to the
+ coordinator being navigated to.
  */
 public protocol NavigationPrecondition {
-    func evaluate(context: Navigator.NavigationContext, completion: @escaping (Error?) -> Void)
+    typealias Completion = (Error?) -> Void
+    
+    func evaluate(context: Navigator.NavigationContext, completion: @escaping Completion)
 }
 
 extension NavigationPrecondition {
@@ -22,10 +29,29 @@ extension NavigationPrecondition {
     }
 }
 
-public extension NavigationPrecondition where Self: FlowCoordinator, Self.SetupModel == Void {
-    func evaluate(context: Navigator.NavigationContext, completion: @escaping (Error?) -> Void) {
-        self.startFlow(context: context) { (error, _) in
-            completion(error)
+/**
+ Describes a navigation precondition that, when a precondition is not already met, will attempt to fulfill it with the
+ result of a flow coordinator.
+ 
+ 
+ */
+public protocol FlowRecoveringNavigationPrecondition: NavigationPrecondition {
+    associatedtype RecoveringFlowCoordinator: FlowCoordinator
+    
+    var preconditionAlreadyPasses: Bool { get }
+    
+    var coordinatorModel: RecoveringFlowCoordinator.SetupModel { get }
+    var coordinatorNavigationMethod: NavigationMethod { get }
+    
+    init(coordinatorModel: RecoveringFlowCoordinator.SetupModel, coordinatorNavigationMethod: NavigationMethod)
+}
+
+extension FlowRecoveringNavigationPrecondition {
+    func evaluate(context: Navigator.NavigationContext, completion: @escaping Completion) {
+        if self.preconditionAlreadyPasses {
+            completion(nil)
+        } else {
+            context.navigator.navigateForPrecondition(self, with: self.coordinatorModel, by: self.coordinatorNavigationMethod, completion: completion)
         }
     }
 }

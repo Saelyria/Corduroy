@@ -6,7 +6,8 @@ class LandingCoordinator: Coordinator {
     var currentViewController: UIViewController?
         
     func start(with model: (), context: Navigator.NavigationContext) {
-        let viewController = LandingViewController.create(coordinator: self)
+        let viewController = LandingViewController()
+        viewController.coordinator = self
         
         context.currentViewController.addChildViewController(viewController)
         context.currentViewController.view.addSubview(viewController.view)

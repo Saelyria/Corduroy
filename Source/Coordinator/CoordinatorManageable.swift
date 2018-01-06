@@ -9,13 +9,6 @@ import UIKit
  navigation to its coordinator. Effectively, the view controller should know when to expect a navigation to happen (for
  example, from a 'Continue' or 'Open Settings' button) and decide to let its coordinator know, but the coordinator
  should ultimately decide whether to go through with that navigation and where to navigate to.
- 
- Additionally, the view controller should not implement or override its own init methods for dependency injection;
- instead, its dependencies should be defined in a type and this type set as the view controller's `SetupModel`
- associated type. The coordinator will instantiate the view controller using its `create(context:coordinator:)` factory
- method, passing in an instance of the view controller's defined setup model. View controllers that don't need any
- dependencies injected can simply ignore this associated type; it will default to `Void` (an empty struct) if no
- explicit type is aliased.
  */
 public protocol CoordinatorManageable where Self: UIViewController {
     /**
@@ -33,29 +26,6 @@ public protocol CoordinatorManageable where Self: UIViewController {
      */
     associatedtype ManagingCoordinator
     
-    /// The type of the model object that contains all dependencies the view controller needs to be properly
-    /// initialized. Defaults to 'Void' if no explicit type is set.
-    associatedtype SetupModel = Void
-    
     /// The coordinator managing the view controller.
-    var coordinator: ManagingCoordinator! { get }
-    
-    /**
-     Creates an instance of the view controller. In the implemented method, the view controller should be instantiated,
-     configured with the given `context` object, then have its `coordinator` property set to the given `coordinator`.
-     - parameter context: The context object containing all dependencies the view controller needs.
-     - parameter coordinator: The coordinator the view controller will be managed by.
-     */
-    static func create(with model: SetupModel, coordinator: ManagingCoordinator) -> Self
-}
-
-public extension CoordinatorManageable where Self.SetupModel == Void {
-    /**
-     Creates an instance of the view controller. In the implemented method, the view controller should be instantiated
-     then have its `coordinator` property set to the given `coordinator`.
-     - parameter coordinator: The coordinator the view controller will be managed by.
-     */
-    static func create(coordinator: ManagingCoordinator) -> Self {
-        return Self.create(with: (), coordinator: coordinator)
-    }
+    var coordinator: ManagingCoordinator? { get set }
 }

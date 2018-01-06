@@ -3,14 +3,7 @@ import UIKit
 import Coordinator
 
 final class LandingViewController: UIViewController, CoordinatorManageable {
-    private(set) var coordinator: LandingCoordinator!
-    
-    static func create(with: Void, coordinator: LandingCoordinator) -> LandingViewController {
-        let viewController = LandingViewController()
-        viewController.coordinator = coordinator
-        
-        return viewController
-    }
+    var coordinator: LandingCoordinator?
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -36,11 +29,11 @@ final class LandingViewController: UIViewController, CoordinatorManageable {
     }
     
     @objc func startLoginPressed(sender: UIButton) {
-        self.coordinator.landingViewControllerDidPressLogin(self)
+        self.coordinator?.landingViewControllerDidPressLogin(self)
     }
     
     @objc func startTutorialPressed(sender: UIButton) {
-        self.coordinator.landingViewControllerDidPressTutorial(self)
+        self.coordinator?.landingViewControllerDidPressTutorial(self)
     }
 }
 

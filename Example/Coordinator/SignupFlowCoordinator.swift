@@ -22,7 +22,8 @@ final class SignupFlowCoordinator: FlowCoordinator {
     func start(with: (), context: Navigator.NavigationContext, completion: @escaping (Error?, SignupInfo?) -> Void) {
         self.completion = completion
         
-        let signupVC = SignupFormViewController.create(coordinator: self)
+        let signupVC = SignupFormViewController()
+        signupVC.coordinator = self
         let navController = UINavigationController(rootViewController: signupVC)
         context.currentViewController.present(navController, animated: true, completion: nil)
     }
@@ -31,8 +32,8 @@ final class SignupFlowCoordinator: FlowCoordinator {
         self.tempUsername = username
         self.tempPassword = password
         
-        let setupContext: SignupSecurityQuestionViewController.SetupModel = (username, password)
-        let securityQuesstionVC = SignupSecurityQuestionViewController.create(with: setupContext, coordinator: self)
+        let securityQuesstionVC = SignupSecurityQuestionViewController()
+        securityQuesstionVC.coordinator = self
         signupFormVC.navigationController?.pushViewController(securityQuesstionVC, animated: true)
     }
     
@@ -44,7 +45,9 @@ final class SignupFlowCoordinator: FlowCoordinator {
             return
         }
         let signupInfo = SignupInfo(username: username, password: password, securityQuestion: question, securityAnswer: answer)
-        let signupCompleteVC = SignupCompleteViewController.create(with: signupInfo, coordinator: self)
+        let signupCompleteVC = SignupCompleteViewController()
+        signupCompleteVC.coordinator = self
+        signupCompleteVC.signupInfo = signupInfo
         securityQuestionVC.navigationController?.pushViewController(signupCompleteVC, animated: true)
     }
     

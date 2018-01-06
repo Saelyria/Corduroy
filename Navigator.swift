@@ -9,8 +9,8 @@ public enum NavigationMethod {
     case addAsChild
     case push
     case pop
-    case present
-    case dismiss
+    case modalPresent
+    case modalDismiss
 }
 
 public enum NavigationParameter {
@@ -41,8 +41,11 @@ public class Navigator {
         public let requestedNavigationMethod: NavigationMethod?
         /// Other parameters for the navigation, such as the requested modal presentation style.
         public let parameters: [NavigationParameter]
+        /// The navigator handling the navigation.
+        public let navigator: Navigator
         
-        fileprivate init(viewController: UIViewController, from: BaseCoordinator?, to: BaseCoordinator, by: NavigationMethod?) {
+        fileprivate init(navigator: Navigator, viewController: UIViewController, from: BaseCoordinator?, to: BaseCoordinator, by: NavigationMethod?) {
+            self.navigator = navigator
             self.currentViewController = viewController
             self.fromCoordinator = from
             self.toCoordinator = to
@@ -56,27 +59,28 @@ public class Navigator {
     
     private var currentCoordinator: BaseCoordinator!
     
-    public convenience init<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T) where T.SetupModel == Void {
+    public convenience init<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) where T.SetupModel == Void {
         self.init(onWindow: window, firstCoordinator: firstCoordinator, with: ())
     }
     
-    public required init<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T, with model: T.SetupModel) {
+    public required init<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type, with model: T.SetupModel) {
         window.rootViewController = self.rootViewController
         window.makeKeyAndVisible()
-        self.currentCoordinator = firstCoordinator
-        let context = NavigationContext(viewController: self.rootViewController, from: nil, to: firstCoordinator, by: .addAsChild)
-        firstCoordinator.start(with: model, context: context)
+        let coordinator = firstCoordinator.create(with: model, navigator: self)
+        self.currentCoordinator = coordinator
+        let context = NavigationContext(navigator: self, viewController: self.rootViewController, from: nil, to: coordinator, by: .addAsChild)
+        coordinator.start(context: context)
     }
     
     // MARK: Coordinator routing methods
     
     /// Navigate to the specified coordinator.
-    public func navigate<T: Coordinator>(to coordinator: T, by navigationMethod: NavigationMethod) where T.SetupModel == Void {
+    public func navigate<T: Coordinator>(to coordinator: T.Type, by navigationMethod: NavigationMethod) where T.SetupModel == Void {
         self.navigate(to: coordinator, with: (), by: navigationMethod)
     }
     
     /// Navigate to the specified coordinator with the given setup model.
-    public func navigate<T: Coordinator>(to coordinator: T, with model: T.SetupModel, by navigationMethod: NavigationMethod) {
+    public func navigate<T: Coordinator>(to coordinator: T.Type, with model: T.SetupModel, by navigationMethod: NavigationMethod) {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -84,39 +88,41 @@ public class Navigator {
             fatalError("The specified coordinator has preconditions for navigation that must be checked - use the throwing `route(to:with)` method instead.")
         }
         
-        let context: NavigationContext = NavigationContext(viewController: viewController, from: self.currentCoordinator, to: coordinator, by: navigationMethod)
+        let coordinator = T.create(with: model, navigator: self)
+        let context: NavigationContext = NavigationContext(navigator: self, viewController: viewController, from: self.currentCoordinator, to: coordinator, by: navigationMethod)
         self.currentCoordinator = coordinator
-        coordinator.start(with: model, context: context)
+        coordinator.start(context: context)
     }
     
     /// Navigate to the specified coordinator, evaluating the coordinator's preconditions and rethrowing any precondition
     /// errors that arise.
-    public func navigate<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T, by navigationMethod: NavigationMethod) throws where T.SetupModel == Void {
+    public func navigate<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navigationMethod: NavigationMethod) throws where T.SetupModel == Void {
         try self.navigate(to: coordinator, with: (), by: navigationMethod)
     }
 
     /// Navigate to the specified coordinator with the given setup model, evaluating the coordinator's preconditions and
     /// rethrowing any precondition errors that arise.
-    public func navigate<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T, with model: T.SetupModel, by navigationMethod: NavigationMethod) throws {
+    public func navigate<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, with model: T.SetupModel, by navigationMethod: NavigationMethod) throws {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
         
+        let coordinator = T.create(with: model, navigator: self)
         try self.evaluatePreconditions(on: coordinator, navigationMethod: navigationMethod)
-        let context: NavigationContext = NavigationContext(viewController: viewController, from: self.currentCoordinator, to: coordinator, by: navigationMethod)
+        let context: NavigationContext = NavigationContext(navigator: self, viewController: viewController, from: self.currentCoordinator, to: coordinator, by: navigationMethod)
         self.currentCoordinator = coordinator
-        coordinator.start(with: model, context: context)
+        coordinator.start(context: context)
     }
     
     // MARK: FlowCoordinator routing methods
     
     /// Navigate to the specified flow coordinator.
-    public func navigate<T: FlowCoordinator>(to flowCoordinator: T, by navigationMethod: NavigationMethod, completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
+    public func navigate<T: FlowCoordinator>(to flowCoordinator: T.Type, by navigationMethod: NavigationMethod, completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
         self.navigate(to: flowCoordinator, with: (), by: navigationMethod, completion: completion)
     }
     
     /// Navigate to the specified flow coordinator.
-    public func navigate<T: FlowCoordinator>(to flowCoordinator: T, with model: T.SetupModel, by navigationMethod: NavigationMethod, completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
+    public func navigate<T: FlowCoordinator>(to flowCoordinator: T.Type, with model: T.SetupModel, by navigationMethod: NavigationMethod, completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -124,28 +130,34 @@ public class Navigator {
             fatalError("The specified coordinator has preconditions for navigation that must be checked - use the throwing `route(to:with)` method instead.")
         }
         
-        let context: NavigationContext = NavigationContext(viewController: viewController, from: self.currentCoordinator, to: flowCoordinator, by: navigationMethod)
+        let flowCoordinator = flowCoordinator.create(with: model, navigator: self)
+        let context: NavigationContext = NavigationContext(navigator: self, viewController: viewController, from: self.currentCoordinator, to: flowCoordinator, by: navigationMethod)
         self.currentCoordinator = flowCoordinator
-        flowCoordinator.start(with: model, context: context, completion: completion)
+        flowCoordinator.start(context: context, completion: completion)
     }
     
     /// Navigate to the specified flow coordinator, evaluating the flow coordinator's preconditions and rethrowing any
     /// precondition errors that arise.
-    public func navigate<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinator: T, by navigationMethod: NavigationMethod, completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) throws where T.SetupModel == Void {
+    public func navigate<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinator: T.Type, by navigationMethod: NavigationMethod, completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) throws where T.SetupModel == Void {
         try self.navigate(to: flowCoordinator, with: (), by: navigationMethod, completion: completion)
     }
     
     /// Navigate to the specified flow coordinator, evaluating the flow coordinator's preconditions and rethrowing any
     /// precondition errors that arise.
-    public func navigate<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinator: T, with model: T.SetupModel, by navigationMethod: NavigationMethod, completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) throws {
+    public func navigate<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinator: T.Type, with model: T.SetupModel, by navigationMethod: NavigationMethod, completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) throws {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
         
+        let flowCoordinator = flowCoordinator.create(with: model, navigator: self)
         try self.evaluatePreconditions(on: flowCoordinator, navigationMethod: navigationMethod)
-        let context: NavigationContext = NavigationContext(viewController: viewController, from: self.currentCoordinator, to: flowCoordinator, by: navigationMethod)
+        let context: NavigationContext = NavigationContext(navigator: self, viewController: viewController, from: self.currentCoordinator, to: flowCoordinator, by: navigationMethod)
         self.currentCoordinator = flowCoordinator
-        flowCoordinator.start(with: model, context: context, completion: completion)
+        flowCoordinator.start(context: context, completion: completion)
+    }
+    
+    func navigateForPrecondition<T: FlowRecoveringNavigationPrecondition>(_ precondition: T, with model: T.RecoveringFlowCoordinator.SetupModel, by navigationMethod: NavigationMethod, completion: FlowRecoveringNavigationPrecondition.Completion) {
+        
     }
     
     private func evaluatePreconditions(on coordinator: NavigationPreconditionRequiring, navigationMethod: NavigationMethod) throws {
@@ -153,7 +165,7 @@ public class Navigator {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
         
-        let context: NavigationContext = NavigationContext(viewController: viewController, from: self.currentCoordinator, to: coordinator, by: navigationMethod)
+        let context: NavigationContext = NavigationContext(navigator: self, viewController: viewController, from: self.currentCoordinator, to: coordinator, by: navigationMethod)
         var preconditionError: Error?
         for precondition: NavigationPrecondition in type(of: coordinator).preconditions {
             precondition.evaluate(context: context, completion: { (error: Error?) in

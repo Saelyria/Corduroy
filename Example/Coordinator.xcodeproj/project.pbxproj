@@ -76,7 +76,7 @@
 				607FACD51AFB9204008FA782 /* AppDelegate.swift */,
 				938386141FBA48FC0018302C /* LandingCoordinator.swift */,
 				607FACD71AFB9204008FA782 /* LandingViewController.swift */,
-				938386171FBA51040018302C /* Login Flow */,
+				938386171FBA51040018302C /* Signup Flow */,
 				607FACD31AFB9204008FA782 /* Supporting Files */,
 			);
 			name = "Example for Coordinator";
@@ -110,7 +110,7 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		938386171FBA51040018302C /* Login Flow */ = {
+		938386171FBA51040018302C /* Signup Flow */ = {
 			isa = PBXGroup;
 			children = (
 				93D10D4F1FBA588400539F72 /* SignupFlowCoordinator.swift */,
@@ -118,7 +118,7 @@
 				93D10D581FBA773F00539F72 /* SignupSecurityQuestionViewController.swift */,
 				93D10D561FBA743100539F72 /* SignupCompleteViewController.swift */,
 			);
-			name = "Login Flow";
+			name = "Signup Flow";
 			sourceTree = "<group>";
 		};
 		BEFE1E26439586DE25460591 /* Pods */ = {

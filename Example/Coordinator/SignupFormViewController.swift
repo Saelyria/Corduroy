@@ -3,18 +3,11 @@ import UIKit
 import Coordinator
 
 final class SignupFormViewController: UIViewController, CoordinatorManageable {
-    private(set) var coordinator: SignupFlowCoordinator!
+    var coordinator: SignupFlowCoordinator?
     
     private let usernameTextField = UITextField()
     private let passwordTextField = UITextField()
-    
-    static func create(with: (), coordinator: SignupFlowCoordinator) -> SignupFormViewController {
-        let signupVC = SignupFormViewController()
-        signupVC.coordinator = coordinator
-        
-        return signupVC
-    }
-    
+
     override func viewDidLoad() {
         super.viewDidLoad()
         
@@ -55,6 +48,6 @@ final class SignupFormViewController: UIViewController, CoordinatorManageable {
             return
         }
         
-        self.coordinator.signupFormViewController(self, didSignUpWithUsername: username, password: password)
+        self.coordinator?.signupFormViewController(self, didSignUpWithUsername: username, password: password)
     }
 }

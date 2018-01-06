@@ -2,20 +2,11 @@
 import UIKit
 import Coordinator
 
-final class SignupSecurityQuestionViewController: UIViewController, CoordinatorManageable {
-    typealias SetupModel = (tempUsername: String, tempPassword: String)
-    
-    private(set) var coordinator: SignupFlowCoordinator!
+final class SignupSecurityQuestionViewController: UIViewController, CoordinatorManageable {    
+    var coordinator: SignupFlowCoordinator?
     
     private let securityQuestion: String = "What was the name of your first pet?"
     private let securityAnswerTextField = UITextField()
-    
-    static func create(with model: (tempUsername: String, tempPassword: String), coordinator: SignupFlowCoordinator) -> SignupSecurityQuestionViewController {
-        let securityQuestionVC = SignupSecurityQuestionViewController()
-        securityQuestionVC.coordinator = coordinator
-        
-        return securityQuestionVC
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -51,6 +42,6 @@ final class SignupSecurityQuestionViewController: UIViewController, CoordinatorM
             return
         }
         
-        self.coordinator.securityQuestionViewController(self, didCreateAnswer: answer, forQuestion: self.securityQuestion)
+        self.coordinator?.securityQuestionViewController(self, didCreateAnswer: answer, forQuestion: self.securityQuestion)
     }
 }

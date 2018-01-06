@@ -3,24 +3,22 @@ import UIKit
 import Coordinator
 
 final class SignupCompleteViewController: UIViewController, CoordinatorManageable {
-    typealias SetupModel = SignupInfo
-    
-    private(set) var coordinator: SignupFlowCoordinator!
+    var coordinator: SignupFlowCoordinator?
     
     private let usernameLabel = UILabel()
     private let passwordLabel = UILabel()
     private let securityQuestionLabel = UILabel()
     private let securityAnswerLabel = UILabel()
     
-    static func create(with model: SignupInfo, coordinator: SignupFlowCoordinator) -> SignupCompleteViewController {
-        let signupCompleteVC = SignupCompleteViewController()
-        signupCompleteVC.usernameLabel.text = "Username: \"\(model.username)\""
-        signupCompleteVC.passwordLabel.text = "Password: \"\(model.password)\""
-        signupCompleteVC.securityQuestionLabel.text = "Security Question: \"\(model.securityQuestion)\""
-        signupCompleteVC.securityAnswerLabel.text = "Security Question Answer: \"\(model.securityAnswer)\""
-        signupCompleteVC.coordinator = coordinator
-        
-        return signupCompleteVC
+    var signupInfo: SignupInfo? {
+        didSet {
+            guard let signupInfo = signupInfo else { return }
+            
+            usernameLabel.text = "Username: \"\(signupInfo.username)\""
+            passwordLabel.text = "Password: \"\(signupInfo.password)\""
+            securityQuestionLabel.text = "Security Question: \"\(signupInfo.securityQuestion)\""
+            securityAnswerLabel.text = "Security Question Answer: \"\(signupInfo.securityAnswer)\""
+        }
     }
     
     override func viewDidLoad() {
@@ -55,6 +53,6 @@ final class SignupCompleteViewController: UIViewController, CoordinatorManageabl
     }
     
     @objc func continuePressed(sender: UIButton) {
-        self.coordinator.signupCompleteViewControllerDidPressContinue(self)
+        self.coordinator?.signupCompleteViewControllerDidPressContinue(self)
     }
 }

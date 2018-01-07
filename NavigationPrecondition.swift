@@ -33,7 +33,8 @@ extension NavigationPrecondition {
  Describes a navigation precondition that, when a precondition is not already met, will attempt to fulfill it with the
  result of a flow coordinator.
  
- 
+ An ideal use case for this protocol would be a login precondition which will pass if the user is already logged in, but
+ will instead start some kind of login flow coordinator if the user is not already logged in.
  */
 public protocol FlowRecoveringNavigationPrecondition: NavigationPrecondition {
     associatedtype RecoveringFlowCoordinator: FlowCoordinator
@@ -51,7 +52,7 @@ extension FlowRecoveringNavigationPrecondition {
         if self.preconditionAlreadyPasses {
             completion(nil)
         } else {
-            context.navigator.navigateForPrecondition(self, with: self.coordinatorModel, by: self.coordinatorNavigationMethod, completion: completion)
+            //context.navigator.navigateForPrecondition(self, by: self.coordinatorNavigationMethod, completion: completion)
         }
     }
 }

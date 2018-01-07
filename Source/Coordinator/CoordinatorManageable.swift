@@ -2,7 +2,7 @@
 import UIKit
 
 /**
- A protocol to be implemented by view controllers wishing to be managed by a coordinator.
+ Describes a view controller wishing to be managed by a coordinator.
  
  A view controller implementing this protocol should be managed by a `Coordinator` object, meaning it should not
  implement any of its own navigation logic and should instead delegate interactions that it expects would start a
@@ -28,4 +28,37 @@ public protocol CoordinatorManageable where Self: UIViewController {
     
     /// The coordinator managing the view controller.
     var coordinator: ManagingCoordinator? { get set }
+}
+
+
+
+/**
+ Describes a view controller that manages its own navigation logic.
+ 
+ A view controller that's fairly simple and is highly coupled to its navigation logic can choose to coordinate itself
+ by implementing this protocol. This view controller can then be treated like any other coordinator - it can be
+ navigated to and from using a navigator, have preconditions for its navigation, and everything else that a coordinator
+ is afforded.
+ 
+ A self-coordinating view controller does not need to implement its `currentViewController` or `coordinator` properties;
+ by default, these will both return `self`. It will still, however, have to implement the `create(with:)` and
+ `start(context:)` methods found on `Coordinator`.
+ */
+public protocol SelfCoordinating: Coordinator, CoordinatorManageable where ManagingCoordinator == Self { }
+
+public extension SelfCoordinating {
+    func start(context: Navigator.NavigationContext) {
+        context.currentViewController.navigate(to: self, by: context.requestedNavigationMethod, parameters: context.parameters)
+    }
+    
+    var currentViewController: UIViewController? {
+        return self
+    }
+    
+    var coordinator: ManagingCoordinator? {
+        get {
+            return self
+        }
+        set { }
+    }
 }

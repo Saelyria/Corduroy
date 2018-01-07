@@ -9,7 +9,8 @@ struct SignupInfo {
     let securityAnswer: String
 }
 
-final class SignupFlowCoordinator: FlowCoordinator {    
+final class SignupFlowCoordinator: FlowCoordinator {
+    var navigator: Navigator!
     var currentViewController: UIViewController?
     
     private var completion: ((Error?, SignupInfo?) -> Void)!
@@ -18,8 +19,8 @@ final class SignupFlowCoordinator: FlowCoordinator {
     private var tempPassword: String?
     private var tempSecurityQuestion: String?
     private var tempSecurityAnswer: String?
-    
-    func start(with: (), context: Navigator.NavigationContext, completion: @escaping (Error?, SignupInfo?) -> Void) {
+
+    func start(context: Navigator.NavigationContext, completion: @escaping (Error?, SignupInfo?) -> Void) {
         self.completion = completion
         
         let signupVC = SignupFormViewController()

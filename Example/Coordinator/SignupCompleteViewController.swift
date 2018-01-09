@@ -36,6 +36,7 @@ final class SignupCompleteViewController: UIViewController, CoordinatorManageabl
         NSLayoutConstraint(item: label, attribute: .top, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1, constant: 100).isActive = true
         
         let stackView = UIStackView(arrangedSubviews: [self.usernameLabel, self.passwordLabel, self.securityQuestionLabel, self.securityAnswerLabel])
+        stackView.translatesAutoresizingMaskIntoConstraints = false
         stackView.alignment = .center
         stackView.spacing = 15
         stackView.axis = .vertical

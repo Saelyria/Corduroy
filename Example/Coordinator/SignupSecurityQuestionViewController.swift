@@ -38,7 +38,7 @@ final class SignupSecurityQuestionViewController: UIViewController, CoordinatorM
     }
     
     @objc func continuePressed(sender: UIButton) {
-        guard let answer = self.securityAnswerTextField.text else {
+        guard let answer = self.securityAnswerTextField.text, answer.count > 5 else {
             return
         }
         

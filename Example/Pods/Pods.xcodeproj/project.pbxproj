@@ -16,7 +16,6 @@
 		933AC93A1FFC53BF005703E5 /* Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933AC9391FFC53BF005703E5 /* Navigator.swift */; };
 		933AC93C1FFC590E005703E5 /* NavigationPrecondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933AC93B1FFC590E005703E5 /* NavigationPrecondition.swift */; };
 		933AC9421FFF3155005703E5 /* UIViewController+NavigationMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933AC9411FFF3155005703E5 /* UIViewController+NavigationMethods.swift */; };
-		933AC9442001B9BC005703E5 /* UINavigationController+Navigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 933AC9432001B9BC005703E5 /* UINavigationController+Navigator.swift */; };
 		B8B34DACD4FEFB0266D4F86463741C3C /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D88AAE1F92055A60CC2FC970D7D34634 /* Foundation.framework */; };
 		D90B2AF1DD1D6627289A86041B9E9294 /* CoordinatorManageable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 313676881DAA425A9638C58F1B7A378C /* CoordinatorManageable.swift */; };
 		F504F42EE54E12D6D05879242608B334 /* Foundation.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D88AAE1F92055A60CC2FC970D7D34634 /* Foundation.framework */; };
@@ -44,7 +43,6 @@
 		933AC9391FFC53BF005703E5 /* Navigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Navigator.swift; sourceTree = "<group>"; };
 		933AC93B1FFC590E005703E5 /* NavigationPrecondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationPrecondition.swift; sourceTree = "<group>"; };
 		933AC9411FFF3155005703E5 /* UIViewController+NavigationMethods.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UIViewController+NavigationMethods.swift"; sourceTree = "<group>"; };
-		933AC9432001B9BC005703E5 /* UINavigationController+Navigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = "UINavigationController+Navigator.swift"; sourceTree = "<group>"; };
 		93A4A3777CF96A4AAC1D13BA6DCCEA73 /* Podfile */ = {isa = PBXFileReference; explicitFileType = text.script.ruby; includeInIndex = 1; name = Podfile; path = ../Podfile; sourceTree = SOURCE_ROOT; xcLanguageSpecificationIdentifier = xcode.lang.ruby; };
 		954202FBF4122A30D8AA8A6E41B215DE /* Pods-Coordinator_Example.modulemap */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = "sourcecode.module-map"; path = "Pods-Coordinator_Example.modulemap"; sourceTree = "<group>"; };
 		9A87055C020180C651F3792EAAE6297E /* Coordinator-dummy.m */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = sourcecode.c.objc; path = "Coordinator-dummy.m"; sourceTree = "<group>"; };
@@ -186,7 +184,6 @@
 				933AC9391FFC53BF005703E5 /* Navigator.swift */,
 				933AC93B1FFC590E005703E5 /* NavigationPrecondition.swift */,
 				933AC9411FFF3155005703E5 /* UIViewController+NavigationMethods.swift */,
-				933AC9432001B9BC005703E5 /* UINavigationController+Navigator.swift */,
 			);
 			name = Core;
 			sourceTree = "<group>";
@@ -292,7 +289,6 @@
 				17D5E60E0F84E01342EEC5F09FC4C681 /* Coordinator.swift in Sources */,
 				933AC93A1FFC53BF005703E5 /* Navigator.swift in Sources */,
 				933AC93C1FFC590E005703E5 /* NavigationPrecondition.swift in Sources */,
-				933AC9442001B9BC005703E5 /* UINavigationController+Navigator.swift in Sources */,
 				D90B2AF1DD1D6627289A86041B9E9294 /* CoordinatorManageable.swift in Sources */,
 				933AC9421FFF3155005703E5 /* UIViewController+NavigationMethods.swift in Sources */,
 			);

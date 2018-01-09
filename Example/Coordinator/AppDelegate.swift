@@ -11,12 +11,11 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         
         // the only things we really need to do to get started are create a navigator (an object that will do all
-        /// navigation for the app), create the first coordinator, then tell the navigator to start with it. In this
-        // example, the landing view controller was pretty simple, so we made it self-coordinating - see the comments
-        // in `LandingViewController` for more info on that.
+        /// navigation for the app) then tell the navigator to start with a given coordinator type. In this example,
+        // the landing view controller was pretty simple, so we made it self-coordinating - see the comments in
+        // `LandingViewController` for more info on that.
         self.navigator = Navigator()
-        let landingCoordinator = LandingViewController.create(with: (), navigator: self.navigator)
-        navigator.start(onWindow: self.window!, firstCoordinator: landingCoordinator)
+        navigator.start(onWindow: self.window!, firstCoordinator: LandingViewController.self, with: ())
         
         return true
     }

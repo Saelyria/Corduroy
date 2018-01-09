@@ -9,8 +9,20 @@ public protocol BaseCoordinator: AnyObject {
     /// The view controller the coordinator is currently presenting and managing. This must be set by the coordinator
     /// whenever it changes the currently presented view controller.
     var currentViewController: UIViewController? { get }
+    
+    /**
+     Called when the coordinator is being navigated away from.
+     - parameter context: A context object containing the involved coordinators.
+     */
+    func dismiss(context: Navigator.NavigationContext)
 }
 
+public extension BaseCoordinator {
+    func dismiss(context: Navigator.NavigationContext) {
+        guard let dismissMethod = context.requestedNavigationMethod as? DismissMethod else { return }
+        self.currentViewController?.dismiss(by: dismissMethod, parameters: context.parameters)
+    }
+}
 
 
 /**
@@ -23,12 +35,15 @@ public protocol BaseCoordinator: AnyObject {
  or 'screen' of an app) instead of between view controllers; this way, a view controller can remain a controller just of
  its view (thus allowing them to be much more reusable) and coordinators can choose between different view controllers
  to display without the outer application knowing. Generally, a coordinator will manage one view controller then maybe
- any view controller that aid that view controller in its task, like a modal error screen or dropdown list.
+ any view controllers that aid that view controller in its task, like a modal error screen or dropdown list. They should
+ generally represent a unique location in your app.
  
  Dependencies for a coordinator can be defined via its `SetupModel` associated type. An object of this type is passed
- in to the `create(with:)` factory method of the coordinator. Beyond this setup model, there should be little to no more
- communication between coordinators - the idea is that a coordinator's setup model includes everything it needs from the
- outer application to do its job. This `SetupModel` associated type defaults to `Void` if no explicit type is set.
+ in to the `create(with:navigator:)` factory method of the coordinator. Beyond this setup model, there should be little
+ to no more communication between coordinators - the idea is that a coordinator's setup model includes everything it
+ needs from the outer application to do its job. This `SetupModel` associated type defaults to `Void` if no explicit
+ type is set. Note that coordinators are instantiated with their class's `create(with:navigator:)` methods, so `init`
+ methods shouldn't be implemented.
  */
 public protocol Coordinator: BaseCoordinator {
     /// The type of the model object that contains all dependencies the coordinator needs to be properly initialized.
@@ -53,12 +68,6 @@ public protocol Coordinator: BaseCoordinator {
      - parameter context: A context object containing the involved coordinators and the view controller to start from.
      */
     func start(context: Navigator.NavigationContext)
-    
-    /**
-     Called when the coordinator is being navigated away from.
-     - parameter context: A context object containing the involved coordinators.
-     */
-    func dismiss(context: Navigator.NavigationContext)
 }
 
 public extension Coordinator where Self.SetupModel == Void {
@@ -67,8 +76,6 @@ public extension Coordinator where Self.SetupModel == Void {
         coordinator.navigator = navigator
         return coordinator
     }
-    
-    func dismiss(context: Navigator.NavigationContext) { }
 }
 
 
@@ -101,8 +108,6 @@ public protocol FlowCoordinator: BaseCoordinator {
     
     var navigator: Navigator! { get set }
     
-    init()
-    
     /**
      Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
      configured with the given `model` object, which is an instance of its aliased `SetupModel` type.
@@ -110,6 +115,8 @@ public protocol FlowCoordinator: BaseCoordinator {
      - parameter navigator: The navigator the coordinator should use to navigate from.
      */
     static func create(with model: SetupModel, navigator: Navigator) -> Self
+    
+    init()
     
     /**
      Starts the coordinator with the given setup model, navigation context, and flow completion handler. Called when the
@@ -119,8 +126,6 @@ public protocol FlowCoordinator: BaseCoordinator {
      - parameter completion: A closure to call after the flow has completed.
      */
     func start(context: Navigator.NavigationContext, completion: @escaping (Error?, FlowCompletionContext?) -> Void)
-    
-    func dismiss(context: Navigator.NavigationContext)
 }
 
 public extension FlowCoordinator {
@@ -135,8 +140,6 @@ public extension FlowCoordinator where Self.SetupModel == Void {
         coordinator.navigator = navigator
         return coordinator
     }
-    
-    func dismiss(context: Navigator.NavigationContext) { }
 }
 
 

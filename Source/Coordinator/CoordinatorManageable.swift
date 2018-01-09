@@ -44,21 +44,24 @@ public protocol CoordinatorManageable where Self: UIViewController {
  by default, these will both return `self`. It will still, however, have to implement the `create(with:)` and
  `start(context:)` methods found on `Coordinator`.
  */
-public protocol SelfCoordinating: Coordinator, CoordinatorManageable where ManagingCoordinator == Self { }
+public protocol SelfCoordinating: Coordinator where Self: UIViewController { }
 
 public extension SelfCoordinating {
     func start(context: Navigator.NavigationContext) {
-        context.currentViewController.navigate(to: self, by: context.requestedNavigationMethod, parameters: context.parameters)
+        guard let presentMethod = context.requestedNavigationMethod as? PresentMethod else { return }
+        context.currentViewController.present(self, by: presentMethod)
     }
     
     var currentViewController: UIViewController? {
         return self
     }
-    
-    var coordinator: ManagingCoordinator? {
-        get {
-            return self
-        }
-        set { }
+}
+
+public extension SelfCoordinating where Self.SetupModel == Void {
+    // NOTE: This default behaviour should be overriden for view controllers that must be initiated from storyboards.
+    static func create(with model: SetupModel, navigator: Navigator) -> Self {
+        let selfCoordinatingVC = Self()
+        selfCoordinatingVC.navigator = navigator
+        return selfCoordinatingVC
     }
 }

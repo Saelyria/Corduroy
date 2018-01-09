@@ -3,7 +3,7 @@ import UIKit
 import Coordinator
 
 /*
- This landing view controller is pretty simple and its two navigation conditions - when its 'Login' button or its
+ This landing view controller is pretty simple and its two navigation conditions - when its 'Sign Up' button or its
  'Start Tutorial' buttons are pressed - are both coupled tightly to the view controller, so we'll make it a
  self-coordinating view controller (by conforming to `SelfCoordinating`) to reduce bloat.
  
@@ -12,55 +12,61 @@ import Coordinator
 */
  
 final class LandingViewController: UIViewController, SelfCoordinating {
-    // there's a couple caveats for implementing `SelfCoordinating` - we need to explicitly set the `ManagingCoordinator`
-    // type to the view controller's type, and we need to declare the `coordinator` property (which will just be a
-    // reference to `self`, but unfortunately, protocol extensions only go so far).
-    typealias ManagingCoordinator = LandingViewController
-
     var navigator: Navigator!
-    var coordinator: LandingViewController?
     
-    // because we haven't defined a `SetupModel` type (we left it as `Void`), a default implementation for
+    private let label = UILabel()
+    private let signupButton = UIButton(type: .system)
+    
+    // Because we haven't defined a `SetupModel` type (we left it as `Void`), a default implementation for
     // `create(with:navigator)` is provided. We can implement it ourselves if we want to, though, like if we needed to
     // instantiate from a storyboard. The default implementation simply calls the view controller's `init()` method.
+    //
+    // static func create(with model: SetupModel, navigator: Navigator) -> LandingViewController { }
     
-    // we also don't need to implement the `start(context:)` on self-coordinating view controllers if we don't plan to
+    // We also don't need to implement the `start(context:)` on self-coordinating view controllers if we don't plan to
     // do anything special - by default, it will perform an appropriate navigation (push, modal present, etc,) based on
     // the passed-in context. For more info, look at the `SelfCoordinating` extension under its declaration and the
     // `UIViewController+Navigator.swift` file.
+    //
+    // func start(context: Navigator.NavigationContext) { }
 
     override func viewDidLoad() {
         super.viewDidLoad()
         self.view.backgroundColor = UIColor.white
         
-        let label = UILabel()
-        label.translatesAutoresizingMaskIntoConstraints = false
-        label.textAlignment = .center
-        label.font = UIFont.systemFont(ofSize: 12)
-        label.numberOfLines = 0
-        label.text = "Welcome to my cool app!\n\nPlease sign up below so we can sell your info online."
-        self.view.addSubview(label)
-        NSLayoutConstraint(item: label, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
-        NSLayoutConstraint(item: label, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1, constant: 0).isActive = true
+        self.label.translatesAutoresizingMaskIntoConstraints = false
+        self.label.textAlignment = .center
+        self.label.font = UIFont.systemFont(ofSize: 12)
+        self.label.numberOfLines = 0
+        self.label.text = "Welcome to my cool app!\n\nPlease sign up below so we can sell your info online."
+        self.view.addSubview(self.label)
+        NSLayoutConstraint(item: self.label, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
+        NSLayoutConstraint(item: self.label, attribute: .centerY, relatedBy: .equal, toItem: self.view, attribute: .centerY, multiplier: 1, constant: 0).isActive = true
         
-        let startLoginButton = UIButton(type: .system)
-        startLoginButton.translatesAutoresizingMaskIntoConstraints = false
-        startLoginButton.setTitle("Sign Up", for: .normal)
-        startLoginButton.addTarget(self, action: #selector(startLoginPressed), for: .touchUpInside)
-        self.view.addSubview(startLoginButton)
-        NSLayoutConstraint(item: startLoginButton, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
-        NSLayoutConstraint(item: startLoginButton, attribute: .top, relatedBy: .equal, toItem: label, attribute: .bottom, multiplier: 1, constant: 40).isActive = true
+        self.signupButton.translatesAutoresizingMaskIntoConstraints = false
+        self.signupButton.setTitle("Sign Up", for: .normal)
+        self.signupButton.addTarget(self, action: #selector(signupPressed), for: .touchUpInside)
+        self.view.addSubview(self.signupButton)
+        NSLayoutConstraint(item: self.signupButton, attribute: .centerX, relatedBy: .equal, toItem: self.view, attribute: .centerX, multiplier: 1, constant: 0).isActive = true
+        NSLayoutConstraint(item: self.signupButton, attribute: .top, relatedBy: .equal, toItem: self.label, attribute: .bottom, multiplier: 1, constant: 40).isActive = true
     }
     
-    @objc func startLoginPressed(sender: UIButton) {
-        let signupFlowCoordinator = SignupFlowCoordinator.create(with: (), navigator: self.navigator)
-        self.navigator.go(to: signupFlowCoordinator, by: .modallyPresenting) { (error, signupInfo) in
+    @objc func signupPressed(sender: UIButton) {
+        // When the 'Sign Up' button is pressed, kick off the signup flow coordinator. Flow coordinators are special
+        // coordinators that are meant to perform a side task, like signing up. When navigating to them, you need to
+        // provide a completion block, where it'll pass in either an error or an object of its `FlowCompletionContext`
+        // associated type. The `SignupFlowCoordinator`'s completion context is a `SignupInfo` object, which we can
+        // use without needing to cast or anything.
+        self.navigator.go(to: SignupFlowCoordinator.self, by: .modallyPresenting, completion: { (error, signupInfo) in
+            if let signupInfo = signupInfo {
+                self.label.text = "Welcome to the app, \(signupInfo.username)!"
+                self.signupButton.isHidden = true
+            }
             
-        }
-    }
-    
-    @objc func startTutorialPressed(sender: UIButton) {
-        
+            // when we want to dismiss a flow coordinator or navigate back on a navigation controller, just call
+            // `goBack()` on the navigator.
+            self.navigator.goBack()
+        })
     }
 }
 

@@ -9,7 +9,7 @@ public extension UIViewController {
         
     }
     
-    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: [NavigationParameter] = []) {
+    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: Set<NavigationParameter> = []) {
         switch presentMethod {
         case .addingAsChild:
             self.addChildViewController(toVC)
@@ -28,7 +28,7 @@ public extension UIViewController {
         self.dismiss(by: dismissMethod, parameters: context.parameters)
     }
     
-    func dismiss(by dismissMethod: DismissMethod, parameters: [NavigationParameter] = []) {
+    func dismiss(by dismissMethod: DismissMethod, parameters: Set<NavigationParameter> = []) {
         switch dismissMethod {
         case .removingFromParent: break
         case .modallyDismissing:

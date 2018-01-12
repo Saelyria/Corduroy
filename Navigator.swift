@@ -31,32 +31,32 @@ public enum DismissMethod: NavigationMethod {
 /**
  An enum describing an additional parameter regarding view controller navigation that a coordinator should follow.
 */
-public enum NavigationParameter: Hashable {
-    case modalTransitionStyle(UIModalTransitionStyle)
-    case modalPresentationStyle(UIModalPresentationStyle)
-    case animateNavigation(Bool)
+public enum NavigationParameterKey: Hashable {
+    case modalTransitionStyle
+    case modalPresentationStyle
+    case animateTransition
     
     public var hashValue: Int {
         switch self {
         case .modalTransitionStyle: return 1
         case .modalPresentationStyle: return 2
-        case .animateNavigation: return 3
+        case .animateTransition: return 3
         }
     }
 }
 
-fileprivate extension NavigationParameter {
-    static var defaultValues: Set<NavigationParameter> {
-        let params: Set<NavigationParameter> = [
-            .modalTransitionStyle(UIModalTransitionStyle.coverVertical),
-            .modalPresentationStyle(UIModalPresentationStyle.none),
-            .animateNavigation(true)
-        ]
-        return params
-    }
-}
+//fileprivate extension NavigationParameter {
+//    static var defaultValues: Set<NavigationParameter> {
+//        let params: Set<NavigationParameter> = [
+//            .modalTransitionStyle(UIModalTransitionStyle.coverVertical),
+//            .modalPresentationStyle(UIModalPresentationStyle.none),
+//            .animateNavigation(true)
+//        ]
+//        return params
+//    }
+//}
 
-public func == (lhs: NavigationParameter, rhs: NavigationParameter) -> Bool {
+public func == (lhs: NavigationParameterKey, rhs: NavigationParameterKey) -> Bool {
     return lhs.hashValue == rhs.hashValue
 }
 
@@ -85,22 +85,39 @@ public class Navigator {
         /// case of either `DismissMethod` or `PresentMethod`.
         public let requestedNavigationMethod: NavigationMethod
         /// Other parameters for the navigation, such as the requested modal presentation style.
-        public let parameters: Set<NavigationParameter>
+        public private(set) var parameters: [NavigationParameterKey: Any] = [
+            .modalTransitionStyle: UIModalTransitionStyle.coverVertical,
+            .modalPresentationStyle: UIModalPresentationStyle.none,
+            .animateTransition: true
+        ]
         /// The navigator handling the navigation.
         public let navigator: Navigator
         
         fileprivate init(navigator: Navigator, viewController: UIViewController, from: BaseCoordinator?,
-                         to: BaseCoordinator, by: NavigationMethod, params: Set<NavigationParameter>) {
+                         to: BaseCoordinator, by: NavigationMethod, params: [NavigationParameterKey: Any]) {
             self.navigator = navigator
             self.currentViewController = viewController
             self.fromCoordinator = from
             self.toCoordinator = to
             self.requestedNavigationMethod = by
-            var fullParams: Set<NavigationParameter> = NavigationParameter.defaultValues
-            for param in params {
-                fullParams.update(with: param)
+
+            if let requestededModalTransitionStyle = params[.modalTransitionStyle] {
+                guard requestededModalTransitionStyle is UIModalTransitionStyle else {
+                    fatalError("Found an object that wasn't a UIModalTransitionStyle in the navigation parameters dictionary under the .modalTransitionStyle key")
+                }
+                self.parameters[.modalTransitionStyle] = requestededModalTransitionStyle
             }
-            self.parameters = fullParams
+            if let requestedModalPresentatinStyle = params[.modalPresentationStyle] {
+                guard requestedModalPresentatinStyle is UIModalPresentationStyle else {
+                    fatalError("Found an object that wasn't a UIModalPresentationStyle in the navigation parameters dictionary under the .modalPresentationStyle key")
+                }
+                self.parameters[.modalPresentationStyle] = requestedModalPresentatinStyle
+            }
+            if let requestedAnimateTransition = params[.animateTransition] {
+                guard requestedAnimateTransition is Bool else {
+                    fatalError("Found an object that wasn't a Bool in the navigation parameters dictionary under the .animateTransition key")
+                }
+            }
         }
     }
     
@@ -156,7 +173,7 @@ public class Navigator {
         window.makeKeyAndVisible()
         self.coordinators.append(firstCoordinator)
         let context = NavigationContext(navigator: self, viewController: self.rootViewController, from: nil,
-                                        to: firstCoordinator, by: PresentMethod.addingAsChild, params: [])
+                                        to: firstCoordinator, by: PresentMethod.addingAsChild, params: [:])
         firstCoordinator.start(context: context)
     }
     
@@ -166,9 +183,10 @@ public class Navigator {
      Navigate to the specified coordinator.
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
+     - parameter parameters: Additional navigation parameters.
      */
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod = .pushing,
-    parameters: Set<NavigationParameter> = []) where T.SetupModel == Void {
+    parameters: [NavigationParameterKey: Any] = [:]) where T.SetupModel == Void {
         self.go(to: coordinator, by: navMethod, with: (), parameters: parameters)
     }
     
@@ -177,9 +195,10 @@ public class Navigator {
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
+     - parameter parameters: Additional navigation parameters.
      */
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod = .pushing, with model: T.SetupModel,
-    parameters: Set<NavigationParameter> = []) {
+    parameters: [NavigationParameterKey: Any] = [:]) {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -200,9 +219,10 @@ public class Navigator {
      errors that arise.
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
+     - parameter parameters: Additional navigation parameters.
      */
     public func go<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navMethod: PresentMethod = .pushing,
-    parameters: Set<NavigationParameter> = []) throws where T.SetupModel == Void {
+    parameters: [NavigationParameterKey: Any] = [:]) throws where T.SetupModel == Void {
         try self.go(to: coordinator, by: navMethod, with: ())
     }
     
@@ -212,9 +232,10 @@ public class Navigator {
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
+     - parameter parameters: Additional navigation parameters.
      */
     public func go<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navMethod: PresentMethod = .pushing,
-    with model: T.SetupModel, parameters: Set<NavigationParameter> = []) throws {
+    with model: T.SetupModel, parameters: [NavigationParameterKey: Any] = [:]) throws {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -234,10 +255,11 @@ public class Navigator {
      Navigate to the specified flow coordinator.
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
+     - parameter parameters: Additional navigation parameters.
      - parameter completion: The completion block the flow coordinator will call when its flow has completed.
      */
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod = .modallyPresenting,
-    parameters: Set<NavigationParameter> = [], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
+    parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
         self.go(to: flowCoordinator, by: navMethod, with: (), completion: completion)
     }
     
@@ -246,10 +268,11 @@ public class Navigator {
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
+     - parameter parameters: Additional navigation parameters.
      - parameter completion: The completion block the flow coordinator will call when its flow has completed.
      */
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod = .modallyPresenting, with model: T.SetupModel,
-    parameters: Set<NavigationParameter> = [], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
+    parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -270,10 +293,11 @@ public class Navigator {
      precondition errors that arise.
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
+     - parameter parameters: Additional navigation parameters.
      - parameter completion: The completion block the flow coordinator will call when its flow has completed.
      */
     public func go<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod = .modallyPresenting,
-    parameters: Set<NavigationParameter> = [], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) throws where T.SetupModel == Void {
+    parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) throws where T.SetupModel == Void {
         try self.go(to: flowCoordinatorType, by: navMethod, with: (), completion: completion)
     }
 	
@@ -283,10 +307,11 @@ public class Navigator {
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
+     - parameter parameters: Additional navigation parameters.
      - parameter completion: The completion block the flow coordinator will call when its flow has completed.
      */
 	public func go<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod = .modallyPresenting,
-    with model: T.SetupModel, parameters: Set<NavigationParameter> = [], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) throws {
+    with model: T.SetupModel, parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) throws {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -304,8 +329,9 @@ public class Navigator {
     
     /**
      Navigate back to the previous coordinator.
+     - parameter parameters: Additional navigation parameters.
      */
-    public func goBack(parameters: Set<NavigationParameter> = []) {
+    public func goBack(parameters: [NavigationParameterKey: Any] = [:]) {
         guard let previousCoordinator = self.previousCoordinator else { return }
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("Attempting to return from a coordinator whose `currentViewController` is not the currently active view controller.")
@@ -314,7 +340,7 @@ public class Navigator {
         
         let dismissMethod = self.inverseDismissMethod(for: coordinatorPresentMethod)
         let context: NavigationContext = NavigationContext(navigator: self, viewController: viewController, from: self.currentCoordinator,
-                                                           to: previousCoordinator, by: dismissMethod, params: [])
+                                                           to: previousCoordinator, by: dismissMethod, params: [:])
         self.coordinators.removeLast()
         self.coordinatorPresentMethods.removeValue(forKey: self.currentCoordinator.identifier)
         self.currentCoordinator.dismiss(context: context)
@@ -323,8 +349,9 @@ public class Navigator {
     /**
      Navigate back to the last coordinator of the specified coordinator type.
      - parameter coordinator: The type of coordinator to navigate back to.
+     - parameter parameters: Additional navigation parameters.
      */
-    public func goBack<T: Coordinator>(to coordinatorType: T.Type, parameters: Set<NavigationParameter> = []) {
+    public func goBack<T: Coordinator>(to coordinatorType: T.Type, parameters: [NavigationParameterKey: Any] = [:]) {
         guard self.coordinators.filter({ $0 is T }).first != nil else {
             return
         }
@@ -340,9 +367,9 @@ public class Navigator {
             guard let presentMethod = self.coordinatorPresentMethods[coordinatorToRemove.identifier] else { return }
             guard let viewController = coordinatorToRemove.currentViewController else { return }
             let dismissMethod = self.inverseDismissMethod(for: presentMethod)
-            let params:  Set<NavigationParameter>
+            let params: [NavigationParameterKey: Any]
             if removedCoordinatorsIndices.contains(previousCoordinatorIndex) {
-                params = [.animateNavigation(false)]
+                params = [.animateTransition: false]
             } else {
                 params = parameters
             }

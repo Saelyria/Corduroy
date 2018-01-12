@@ -9,7 +9,10 @@ public extension UIViewController {
         
     }
     
-    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: Set<NavigationParameter> = []) {
+    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: [NavigationParameterKey: Any] = [:]) {
+        let animated = parameters[.animateTransition] as! Bool
+        let modalTransitionStyle = parameters[.modalTransitionStyle] as! UIModalTransitionStyle
+        let modalPresentationStyle = parameters[.modalPresentationStyle] as! UIModalPresentationStyle
         switch presentMethod {
         case .addingAsChild:
             self.addChildViewController(toVC)
@@ -17,9 +20,11 @@ public extension UIViewController {
             toVC.view.frame = self.view.frame
             toVC.didMove(toParentViewController: self)
         case .modallyPresenting:
-            self.present(toVC, animated: true, completion: nil)
+            toVC.modalPresentationStyle = modalPresentationStyle
+            toVC.modalTransitionStyle = modalTransitionStyle
+            self.present(toVC, animated: animated, completion: nil)
         case .pushing:
-            self.navigationController?.pushViewController(toVC, animated: true)
+            self.navigationController?.pushViewController(toVC, animated: animated)
         }
     }
     
@@ -28,7 +33,7 @@ public extension UIViewController {
         self.dismiss(by: dismissMethod, parameters: context.parameters)
     }
     
-    func dismiss(by dismissMethod: DismissMethod, parameters: Set<NavigationParameter> = []) {
+    func dismiss(by dismissMethod: DismissMethod, parameters: [NavigationParameterKey: Any] = [:]) {
         switch dismissMethod {
         case .removingFromParent: break
         case .modallyDismissing:

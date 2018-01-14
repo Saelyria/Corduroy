@@ -1,0 +1,431 @@
+// !$*UTF8*$!
+{
+	archiveVersion = 1;
+	classes = {
+	};
+	objectVersion = 48;
+	objects = {
+
+/* Begin PBXBuildFile section */
+		93069142200BEC1D00B1C9B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069141200BEC1D00B1C9B9 /* AppDelegate.swift */; };
+		9306914C200BEC1D00B1C9B9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9306914A200BEC1D00B1C9B9 /* LaunchScreen.storyboard */; };
+		93069155200BED0000B1C9B9 /* LandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069154200BECFF00B1C9B9 /* LandingViewController.swift */; };
+		9306915C200BED6D00B1C9B9 /* SignupFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069158200BED6D00B1C9B9 /* SignupFormViewController.swift */; };
+		9306915D200BED6D00B1C9B9 /* SignupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069159200BED6D00B1C9B9 /* SignupCompleteViewController.swift */; };
+		9306915E200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9306915A200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift */; };
+		9306915F200BED6D00B1C9B9 /* SignupFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9306915B200BED6D00B1C9B9 /* SignupFlowCoordinator.swift */; };
+		93069162200BED9F00B1C9B9 /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069160200BED9F00B1C9B9 /* HomeCoordinator.swift */; };
+		93069163200BED9F00B1C9B9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069161200BED9F00B1C9B9 /* HomeViewController.swift */; };
+		930C0891200BFC7100B0B934 /* Corduroy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930C0882200BF6AC00B0B934 /* Corduroy.framework */; };
+		930C0892200BFC7100B0B934 /* Corduroy.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 930C0882200BF6AC00B0B934 /* Corduroy.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+/* End PBXBuildFile section */
+
+/* Begin PBXContainerItemProxy section */
+		930C0881200BF6AC00B0B934 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 930C086B200BF2A600B0B934;
+			remoteInfo = Corduroy;
+		};
+		930C0893200BFC7100B0B934 /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */;
+			proxyType = 1;
+			remoteGlobalIDString = 930C086A200BF2A600B0B934;
+			remoteInfo = Corduroy;
+		};
+/* End PBXContainerItemProxy section */
+
+/* Begin PBXCopyFilesBuildPhase section */
+		930C0895200BFC7100B0B934 /* Embed Frameworks */ = {
+			isa = PBXCopyFilesBuildPhase;
+			buildActionMask = 2147483647;
+			dstPath = "";
+			dstSubfolderSpec = 10;
+			files = (
+				930C0892200BFC7100B0B934 /* Corduroy.framework in Embed Frameworks */,
+			);
+			name = "Embed Frameworks";
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXCopyFilesBuildPhase section */
+
+/* Begin PBXFileReference section */
+		9306913E200BEC1D00B1C9B9 /* CorduroyExample.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CorduroyExample.app; sourceTree = BUILT_PRODUCTS_DIR; };
+		93069141200BEC1D00B1C9B9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
+		9306914B200BEC1D00B1C9B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
+		9306914D200BEC1D00B1C9B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93069154200BECFF00B1C9B9 /* LandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewController.swift; sourceTree = "<group>"; };
+		93069158200BED6D00B1C9B9 /* SignupFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupFormViewController.swift; sourceTree = "<group>"; };
+		93069159200BED6D00B1C9B9 /* SignupCompleteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupCompleteViewController.swift; sourceTree = "<group>"; };
+		9306915A200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupSecurityQuestionViewController.swift; sourceTree = "<group>"; };
+		9306915B200BED6D00B1C9B9 /* SignupFlowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupFlowCoordinator.swift; sourceTree = "<group>"; };
+		93069160200BED9F00B1C9B9 /* HomeCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
+		93069161200BED9F00B1C9B9 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
+		930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Corduroy.xcodeproj; path = ../Corduroy.xcodeproj; sourceTree = "<group>"; };
+/* End PBXFileReference section */
+
+/* Begin PBXFrameworksBuildPhase section */
+		9306913B200BEC1D00B1C9B9 /* Frameworks */ = {
+			isa = PBXFrameworksBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				930C0891200BFC7100B0B934 /* Corduroy.framework in Frameworks */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXFrameworksBuildPhase section */
+
+/* Begin PBXGroup section */
+		93069135200BEC1D00B1C9B9 = {
+			isa = PBXGroup;
+			children = (
+				930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */,
+				93069140200BEC1D00B1C9B9 /* CorduroyExample */,
+				9306913F200BEC1D00B1C9B9 /* Products */,
+			);
+			sourceTree = "<group>";
+		};
+		9306913F200BEC1D00B1C9B9 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				9306913E200BEC1D00B1C9B9 /* CorduroyExample.app */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+		93069140200BEC1D00B1C9B9 /* CorduroyExample */ = {
+			isa = PBXGroup;
+			children = (
+				93069141200BEC1D00B1C9B9 /* AppDelegate.swift */,
+				93069154200BECFF00B1C9B9 /* LandingViewController.swift */,
+				93069156200BED5000B1C9B9 /* Signup Flow */,
+				93069157200BED5900B1C9B9 /* Home */,
+				93069153200BECD500B1C9B9 /* Supporting Files */,
+			);
+			path = CorduroyExample;
+			sourceTree = "<group>";
+		};
+		93069153200BECD500B1C9B9 /* Supporting Files */ = {
+			isa = PBXGroup;
+			children = (
+				9306914D200BEC1D00B1C9B9 /* Info.plist */,
+				9306914A200BEC1D00B1C9B9 /* LaunchScreen.storyboard */,
+			);
+			path = "Supporting Files";
+			sourceTree = "<group>";
+		};
+		93069156200BED5000B1C9B9 /* Signup Flow */ = {
+			isa = PBXGroup;
+			children = (
+				9306915B200BED6D00B1C9B9 /* SignupFlowCoordinator.swift */,
+				93069158200BED6D00B1C9B9 /* SignupFormViewController.swift */,
+				9306915A200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift */,
+				93069159200BED6D00B1C9B9 /* SignupCompleteViewController.swift */,
+			);
+			path = "Signup Flow";
+			sourceTree = "<group>";
+		};
+		93069157200BED5900B1C9B9 /* Home */ = {
+			isa = PBXGroup;
+			children = (
+				93069160200BED9F00B1C9B9 /* HomeCoordinator.swift */,
+				93069161200BED9F00B1C9B9 /* HomeViewController.swift */,
+			);
+			path = Home;
+			sourceTree = "<group>";
+		};
+		930C087E200BF6AC00B0B934 /* Products */ = {
+			isa = PBXGroup;
+			children = (
+				930C0882200BF6AC00B0B934 /* Corduroy.framework */,
+			);
+			name = Products;
+			sourceTree = "<group>";
+		};
+/* End PBXGroup section */
+
+/* Begin PBXNativeTarget section */
+		9306913D200BEC1D00B1C9B9 /* CorduroyExample */ = {
+			isa = PBXNativeTarget;
+			buildConfigurationList = 93069150200BEC1D00B1C9B9 /* Build configuration list for PBXNativeTarget "CorduroyExample" */;
+			buildPhases = (
+				9306913A200BEC1D00B1C9B9 /* Sources */,
+				9306913B200BEC1D00B1C9B9 /* Frameworks */,
+				9306913C200BEC1D00B1C9B9 /* Resources */,
+				930C0895200BFC7100B0B934 /* Embed Frameworks */,
+			);
+			buildRules = (
+			);
+			dependencies = (
+				930C0894200BFC7100B0B934 /* PBXTargetDependency */,
+			);
+			name = CorduroyExample;
+			productName = CorduroyExample;
+			productReference = 9306913E200BEC1D00B1C9B9 /* CorduroyExample.app */;
+			productType = "com.apple.product-type.application";
+		};
+/* End PBXNativeTarget section */
+
+/* Begin PBXProject section */
+		93069136200BEC1D00B1C9B9 /* Project object */ = {
+			isa = PBXProject;
+			attributes = {
+				LastSwiftUpdateCheck = 0920;
+				LastUpgradeCheck = 0920;
+				ORGANIZATIONNAME = "Aaron Bosnjak";
+				TargetAttributes = {
+					9306913D200BEC1D00B1C9B9 = {
+						CreatedOnToolsVersion = 9.2;
+						ProvisioningStyle = Automatic;
+					};
+				};
+			};
+			buildConfigurationList = 93069139200BEC1D00B1C9B9 /* Build configuration list for PBXProject "CorduroyExample" */;
+			compatibilityVersion = "Xcode 8.0";
+			developmentRegion = en;
+			hasScannedForEncodings = 0;
+			knownRegions = (
+				en,
+				Base,
+			);
+			mainGroup = 93069135200BEC1D00B1C9B9;
+			productRefGroup = 9306913F200BEC1D00B1C9B9 /* Products */;
+			projectDirPath = "";
+			projectReferences = (
+				{
+					ProductGroup = 930C087E200BF6AC00B0B934 /* Products */;
+					ProjectRef = 930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */;
+				},
+			);
+			projectRoot = "";
+			targets = (
+				9306913D200BEC1D00B1C9B9 /* CorduroyExample */,
+			);
+		};
+/* End PBXProject section */
+
+/* Begin PBXReferenceProxy section */
+		930C0882200BF6AC00B0B934 /* Corduroy.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Corduroy.framework;
+			remoteRef = 930C0881200BF6AC00B0B934 /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+/* End PBXReferenceProxy section */
+
+/* Begin PBXResourcesBuildPhase section */
+		9306913C200BEC1D00B1C9B9 /* Resources */ = {
+			isa = PBXResourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9306914C200BEC1D00B1C9B9 /* LaunchScreen.storyboard in Resources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXResourcesBuildPhase section */
+
+/* Begin PBXSourcesBuildPhase section */
+		9306913A200BEC1D00B1C9B9 /* Sources */ = {
+			isa = PBXSourcesBuildPhase;
+			buildActionMask = 2147483647;
+			files = (
+				9306915C200BED6D00B1C9B9 /* SignupFormViewController.swift in Sources */,
+				93069155200BED0000B1C9B9 /* LandingViewController.swift in Sources */,
+				9306915F200BED6D00B1C9B9 /* SignupFlowCoordinator.swift in Sources */,
+				93069163200BED9F00B1C9B9 /* HomeViewController.swift in Sources */,
+				93069142200BEC1D00B1C9B9 /* AppDelegate.swift in Sources */,
+				9306915E200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift in Sources */,
+				93069162200BED9F00B1C9B9 /* HomeCoordinator.swift in Sources */,
+				9306915D200BED6D00B1C9B9 /* SignupCompleteViewController.swift in Sources */,
+			);
+			runOnlyForDeploymentPostprocessing = 0;
+		};
+/* End PBXSourcesBuildPhase section */
+
+/* Begin PBXTargetDependency section */
+		930C0894200BFC7100B0B934 /* PBXTargetDependency */ = {
+			isa = PBXTargetDependency;
+			name = Corduroy;
+			targetProxy = 930C0893200BFC7100B0B934 /* PBXContainerItemProxy */;
+		};
+/* End PBXTargetDependency section */
+
+/* Begin PBXVariantGroup section */
+		9306914A200BEC1D00B1C9B9 /* LaunchScreen.storyboard */ = {
+			isa = PBXVariantGroup;
+			children = (
+				9306914B200BEC1D00B1C9B9 /* Base */,
+			);
+			name = LaunchScreen.storyboard;
+			sourceTree = "<group>";
+		};
+/* End PBXVariantGroup section */
+
+/* Begin XCBuildConfiguration section */
+		9306914E200BEC1D00B1C9B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = dwarf;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				ENABLE_TESTABILITY = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_DYNAMIC_NO_PIC = NO;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_OPTIMIZATION_LEVEL = 0;
+				GCC_PREPROCESSOR_DEFINITIONS = (
+					"DEBUG=1",
+					"$(inherited)",
+				);
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = YES;
+				ONLY_ACTIVE_ARCH = YES;
+				SDKROOT = iphoneos;
+				SWIFT_ACTIVE_COMPILATION_CONDITIONS = DEBUG;
+				SWIFT_OPTIMIZATION_LEVEL = "-Onone";
+			};
+			name = Debug;
+		};
+		9306914F200BEC1D00B1C9B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_SEARCH_USER_PATHS = NO;
+				CLANG_ANALYZER_NONNULL = YES;
+				CLANG_ANALYZER_NUMBER_OBJECT_CONVERSION = YES_AGGRESSIVE;
+				CLANG_CXX_LANGUAGE_STANDARD = "gnu++14";
+				CLANG_CXX_LIBRARY = "libc++";
+				CLANG_ENABLE_MODULES = YES;
+				CLANG_ENABLE_OBJC_ARC = YES;
+				CLANG_WARN_BLOCK_CAPTURE_AUTORELEASING = YES;
+				CLANG_WARN_BOOL_CONVERSION = YES;
+				CLANG_WARN_COMMA = YES;
+				CLANG_WARN_CONSTANT_CONVERSION = YES;
+				CLANG_WARN_DIRECT_OBJC_ISA_USAGE = YES_ERROR;
+				CLANG_WARN_DOCUMENTATION_COMMENTS = YES;
+				CLANG_WARN_EMPTY_BODY = YES;
+				CLANG_WARN_ENUM_CONVERSION = YES;
+				CLANG_WARN_INFINITE_RECURSION = YES;
+				CLANG_WARN_INT_CONVERSION = YES;
+				CLANG_WARN_NON_LITERAL_NULL_CONVERSION = YES;
+				CLANG_WARN_OBJC_LITERAL_CONVERSION = YES;
+				CLANG_WARN_OBJC_ROOT_CLASS = YES_ERROR;
+				CLANG_WARN_RANGE_LOOP_ANALYSIS = YES;
+				CLANG_WARN_STRICT_PROTOTYPES = YES;
+				CLANG_WARN_SUSPICIOUS_MOVE = YES;
+				CLANG_WARN_UNGUARDED_AVAILABILITY = YES_AGGRESSIVE;
+				CLANG_WARN_UNREACHABLE_CODE = YES;
+				CLANG_WARN__DUPLICATE_METHOD_MATCH = YES;
+				CODE_SIGN_IDENTITY = "iPhone Developer";
+				COPY_PHASE_STRIP = NO;
+				DEBUG_INFORMATION_FORMAT = "dwarf-with-dsym";
+				ENABLE_NS_ASSERTIONS = NO;
+				ENABLE_STRICT_OBJC_MSGSEND = YES;
+				GCC_C_LANGUAGE_STANDARD = gnu11;
+				GCC_NO_COMMON_BLOCKS = YES;
+				GCC_WARN_64_TO_32_BIT_CONVERSION = YES;
+				GCC_WARN_ABOUT_RETURN_TYPE = YES_ERROR;
+				GCC_WARN_UNDECLARED_SELECTOR = YES;
+				GCC_WARN_UNINITIALIZED_AUTOS = YES_AGGRESSIVE;
+				GCC_WARN_UNUSED_FUNCTION = YES;
+				GCC_WARN_UNUSED_VARIABLE = YES;
+				IPHONEOS_DEPLOYMENT_TARGET = 11.2;
+				MTL_ENABLE_DEBUG_INFO = NO;
+				SDKROOT = iphoneos;
+				SWIFT_OPTIMIZATION_LEVEL = "-Owholemodule";
+				VALIDATE_PRODUCT = YES;
+			};
+			name = Release;
+		};
+		93069151200BEC1D00B1C9B9 /* Debug */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HE8Y2NA5B5;
+				INFOPLIST_FILE = "$(SRCROOT)/CorduroyExample/Supporting Files/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.CorduroyExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Debug;
+		};
+		93069152200BEC1D00B1C9B9 /* Release */ = {
+			isa = XCBuildConfiguration;
+			buildSettings = {
+				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
+				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = HE8Y2NA5B5;
+				INFOPLIST_FILE = "$(SRCROOT)/CorduroyExample/Supporting Files/Info.plist";
+				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
+				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.CorduroyExample;
+				PRODUCT_NAME = "$(TARGET_NAME)";
+				SWIFT_VERSION = 4.0;
+				TARGETED_DEVICE_FAMILY = "1,2";
+			};
+			name = Release;
+		};
+/* End XCBuildConfiguration section */
+
+/* Begin XCConfigurationList section */
+		93069139200BEC1D00B1C9B9 /* Build configuration list for PBXProject "CorduroyExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				9306914E200BEC1D00B1C9B9 /* Debug */,
+				9306914F200BEC1D00B1C9B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+		93069150200BEC1D00B1C9B9 /* Build configuration list for PBXNativeTarget "CorduroyExample" */ = {
+			isa = XCConfigurationList;
+			buildConfigurations = (
+				93069151200BEC1D00B1C9B9 /* Debug */,
+				93069152200BEC1D00B1C9B9 /* Release */,
+			);
+			defaultConfigurationIsVisible = 0;
+			defaultConfigurationName = Release;
+		};
+/* End XCConfigurationList section */
+	};
+	rootObject = 93069136200BEC1D00B1C9B9 /* Project object */;
+}

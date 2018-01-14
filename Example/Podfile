@@ -1,5 +1,0 @@
-use_frameworks!
-
-target 'Coordinator_Example' do
-  pod 'Coordinator', :path => '../'
-end

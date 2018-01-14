@@ -10,14 +10,23 @@ public protocol BaseCoordinator: AnyObject {
     /// whenever it changes the currently presented view controller.
     var currentViewController: UIViewController? { get }
     
+    /// Whether this coordinator can be navigated back to (i.e. if it should be skipped over when its navigator's
+    /// `goBack(to:)` method is called). This can be useful, for example, for precondition recovering flow coordinators
+    /// or login view controllers after a user has logged in. Defaults to `true`.
+    var canBeNavigatedBackTo: Bool { get }
+    
     /**
      Called when the coordinator is being navigated away from.
-     - parameter context: A context object containing the involved coordinators.
+     - parameter context: A context object containing details about the navigation, such as the involved coordinators.
      */
     func dismiss(context: Navigator.NavigationContext)
 }
 
 public extension BaseCoordinator {
+    var canBeNavigatedBackTo: Bool {
+        return true
+    }
+    
     func dismiss(context: Navigator.NavigationContext) {
         guard let dismissMethod = context.requestedNavigationMethod as? DismissMethod else { return }
         self.currentViewController?.dismiss(by: dismissMethod, parameters: context.parameters)
@@ -50,11 +59,14 @@ public protocol Coordinator: BaseCoordinator {
     /// Defaults to 'Void' if no explicit type is set.
     associatedtype SetupModel = Void
     
+    /// The navigator managing navigation to this coordinator and that it should use to perform navigation to other
+    /// coordinators.
     var navigator: Navigator! { get set }
     
     /**
      Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
-     configured with the given `model` object, which is an instance of its aliased `SetupModel` type.
+     configured with the given `model` object, which is an instance of its aliased `SetupModel` type. A basic
+     implementation of this method is provided if the `SetupModel` type is `Void`.
      - parameter model: The context object containing all dependencies the view controller needs.
      - parameter navigator: The navigator the coordinator should use to navigate from.
      */
@@ -103,14 +115,14 @@ public protocol FlowCoordinator: BaseCoordinator {
     /// as a result of its flow. Defaults to 'EmptyContext' if no explicit type is set.
     associatedtype FlowCompletionContext = Void
     
-    // TODO: implement this and all the other stuff (like reference to view controllers) that this would require.
-    var shouldBeRemovedFromNavStackOnCompletion: Bool { get }
-    
+    /// The navigator managing navigation to this coordinator and that it should use to perform navigation to other
+    /// coordinators.
     var navigator: Navigator! { get set }
     
     /**
      Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
-     configured with the given `model` object, which is an instance of its aliased `SetupModel` type.
+     configured with the given `model` object, which is an instance of its aliased `SetupModel` type. A basic
+     implementation of this method is provided if the `SetupModel` type is `Void`.
      - parameter model: The context object containing all dependencies the view controller needs.
      - parameter navigator: The navigator the coordinator should use to navigate from.
      */
@@ -126,12 +138,6 @@ public protocol FlowCoordinator: BaseCoordinator {
      - parameter completion: A closure to call after the flow has completed.
      */
     func start(context: Navigator.NavigationContext, completion: @escaping (Error?, FlowCompletionContext?) -> Void)
-}
-
-public extension FlowCoordinator {
-    var shouldBeRemovedFromNavStackOnCompletion: Bool {
-        return true
-    }
 }
 
 public extension FlowCoordinator where Self.SetupModel == Void {

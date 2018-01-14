@@ -10,9 +10,11 @@ public extension UIViewController {
     }
     
     func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: [NavigationParameterKey: Any] = [:]) {
-        let animated = parameters[.animateTransition] as! Bool
-        let modalTransitionStyle = parameters[.modalTransitionStyle] as! UIModalTransitionStyle
-        let modalPresentationStyle = parameters[.modalPresentationStyle] as! UIModalPresentationStyle
+        let allParameters = NavigationParameterKey.defaultParameters(withOverrides: parameters)
+        let animated = allParameters[.animateTransition] as! Bool
+        let modalTransitionStyle = allParameters[.modalTransitionStyle] as! UIModalTransitionStyle
+        let modalPresentationStyle = allParameters[.modalPresentationStyle] as! UIModalPresentationStyle
+        
         switch presentMethod {
         case .addingAsChild:
             self.addChildViewController(toVC)
@@ -34,12 +36,15 @@ public extension UIViewController {
     }
     
     func dismiss(by dismissMethod: DismissMethod, parameters: [NavigationParameterKey: Any] = [:]) {
+        let allParameters = NavigationParameterKey.defaultParameters(withOverrides: parameters)
+        let animated = allParameters[.animateTransition] as! Bool
+        
         switch dismissMethod {
         case .removingFromParent: break
         case .modallyDismissing:
-            self.dismiss(animated: true, completion: nil)
+            self.dismiss(animated: animated, completion: nil)
         case .popping:
-            self.navigationController?.popViewController(animated: true)
+            self.navigationController?.popViewController(animated: animated)
         }
     }
 }

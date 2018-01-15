@@ -31,7 +31,8 @@ class MyCoordinator: Coordinator {
     // which has properties like the previous coordinator and the presentation method, among other things.
     func start(with context: Navigator.NavigationContext) {
         let previousVC = context.fromCoordinator?.currentViewController
-        let profileVC = ProfileViewController.create(with: username, coordinator: self)
+        let profileVC = ProfileViewController()
+        profileVC.coordinator = self
         previousVC?.present(profileVC, animated: true, completion: nil)
         self.currentViewController = profileVC
     }

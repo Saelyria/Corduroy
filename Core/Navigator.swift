@@ -334,14 +334,13 @@ public class Navigator {
         var preconditionErrors: [Error] = []
         var requiresRecovery: Bool = false
         
-        // instantiate an instance of each precondition and evaluate them. For those that fail, if they're recovering
-        // preconditions, attempt their recovery in a dispatch group and tell the caller that asynchronous recovery
-        // is required via the return value.
+        // instantiate an instance of each precondition and evaluate them
         for preconditionType: NavigationPrecondition.Type in type(of: coordinator).preconditions {
             let precondition = preconditionType.init()
             do {
                 try precondition.evaluate(context: context)
             } catch {
+                // if it's a recovering precondition, set requiredRecovery to try so the caller knows then try to recover
                 if let recoveringPrecondition = precondition as? RecoveringNavigationPrecondition {
                     requiresRecovery = true
                     dispatchGroup.enter()
@@ -351,12 +350,14 @@ public class Navigator {
                         }
                         dispatchGroup.leave()
                     })
+                // otherwise, add an error to the array of errors
                 } else {
                     preconditionErrors.append(error)
                 }
             }
         }
         
+        // call the completion block once all the async tasks are complete
         dispatchGroup.notify(queue: .main) {
             if preconditionErrors.count > 1 {
                 let aggregateError = AggregateError(underlyingErrors: preconditionErrors)

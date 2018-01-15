@@ -26,9 +26,12 @@ final class LandingViewController: UIViewController, SelfCoordinating {
     // We also don't need to implement the `start(context:)` on self-coordinating view controllers if we don't plan to
     // do anything special - by default, it will perform an appropriate navigation (push, modal present, etc,) based on
     // the passed-in context. For more info, look at the `SelfCoordinating` extension under its declaration and the
-    // `UIViewController+Navigator.swift` file.
-    //
-    // func start(context: Navigator.NavigationContext) { }
+    // `UIViewController+Navigator.swift` file. Here, however, we want the view controller in a nav controller, so we
+    // create that and present it from the context's `currentViewController`.
+    func start(context: Navigator.NavigationContext) {
+        let navController = UINavigationController(rootViewController: self)
+        context.currentViewController.present(navController, context: context)
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()

@@ -3,7 +3,7 @@ Pod::Spec.new do |s|
   s.version          = '0.1.0'
   s.summary          = 'Advanced navigation framework for iOS.'
   s.description      = <<-DESC
-  Coordinator is a series of protocols and clases that, when implemented, encapsulate
+  Corduroy is a series of protocols and clases that, when implemented, encapsulate
   all navigation logic in 'coordinator' objects that keep view controllers smaller, more
   reusable, and more uniform in terms of dependency declaration and navigation. It also
   adds advanced navigation features like preconditions and type-safe dependency injection.

@@ -93,7 +93,7 @@ public extension FlowRecoveringNavigationPrecondition {
 
 
 /// An error representing an aggregate of underlying errors.
-struct AggregateError: Error {
-    let underlyingErrors: [Error]
+public struct AggregateError: Error {
+    public let underlyingErrors: [Error]
 }
 

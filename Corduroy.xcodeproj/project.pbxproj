@@ -14,6 +14,7 @@
 		930C088D200BFA1B00B0B934 /* NavigationPrecondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069167200BEEBD00B1C9B9 /* NavigationPrecondition.swift */; };
 		930C088E200BFA1D00B0B934 /* UIViewController+NavigationMethods.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9306916A200BEEBD00B1C9B9 /* UIViewController+NavigationMethods.swift */; };
 		930C088F200BFA8300B0B934 /* Corduroy.h in Headers */ = {isa = PBXBuildFile; fileRef = 930C0888200BF95A00B0B934 /* Corduroy.h */; settings = {ATTRIBUTES = (Public, ); }; };
+		930C0899200C132400B0B934 /* CoordinatedNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -26,6 +27,7 @@
 		930C0864200BF21000B0B934 /* Info.plist */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		930C086B200BF2A600B0B934 /* Corduroy.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Corduroy.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		930C0888200BF95A00B0B934 /* Corduroy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Corduroy.h; sourceTree = "<group>"; };
+		930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatedNavigationController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +65,7 @@
 				93069166200BEEBD00B1C9B9 /* Navigator.swift */,
 				93069169200BEEBD00B1C9B9 /* NavigationParameter.swift */,
 				93069167200BEEBD00B1C9B9 /* NavigationPrecondition.swift */,
+				930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */,
 				9306916A200BEEBD00B1C9B9 /* UIViewController+NavigationMethods.swift */,
 				930C0864200BF21000B0B934 /* Info.plist */,
 				930C0888200BF95A00B0B934 /* Corduroy.h */,
@@ -151,6 +154,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				930C0899200C132400B0B934 /* CoordinatedNavigationController.swift in Sources */,
 				930C0889200BFA1200B0B934 /* CoordinatorManageable.swift in Sources */,
 				930C088A200BFA1400B0B934 /* Coordinator.swift in Sources */,
 				930C088B200BFA1600B0B934 /* Navigator.swift in Sources */,

@@ -2,39 +2,6 @@
 import UIKit
 
 /**
- A basic protocol that all coordinator types implement. This is mostly used internally and should not be implemented on
- its own - instead, implement one of either `Coordinator`, `FlowCoordinator`, or `SelfCoordinating`.
- */
-public protocol BaseCoordinator: AnyObject {
-    /// The view controller the coordinator is currently presenting and managing. This must be set by the coordinator
-    /// whenever it changes the currently presented view controller.
-    var currentViewController: UIViewController? { get }
-    
-    /// Whether this coordinator can be navigated back to (i.e. if it should be skipped over when its navigator's
-    /// `goBack(to:)` method is called). This can be useful, for example, for precondition recovering flow coordinators
-    /// or login view controllers after a user has logged in. Defaults to `true`.
-    var canBeNavigatedBackTo: Bool { get }
-    
-    /**
-     Called when the coordinator is being navigated away from.
-     - parameter context: A context object containing details about the navigation, such as the involved coordinators.
-     */
-    func dismiss(context: Navigator.NavigationContext)
-}
-
-public extension BaseCoordinator {
-    var canBeNavigatedBackTo: Bool {
-        return true
-    }
-    
-    func dismiss(context: Navigator.NavigationContext) {
-        guard let dismissMethod = context.requestedNavigationMethod as? DismissMethod else { return }
-        self.currentViewController?.dismiss(by: dismissMethod, parameters: context.parameters)
-    }
-}
-
-
-/**
  A protocol describing an object that manages navigation logic.
  
  A coordinator object is responsible for managing the navigation between view controllers, containing all navigation
@@ -79,7 +46,7 @@ public protocol Coordinator: BaseCoordinator {
      controller and push/present it from the context's `currentViewController`.
      - parameter context: A context object containing the involved coordinators and the view controller to start from.
      */
-    func start(context: Navigator.NavigationContext)
+    func presentFirstViewController(context: Navigator.NavigationContext)
 }
 
 public extension Coordinator where Self.SetupModel == Void {
@@ -132,12 +99,13 @@ public protocol FlowCoordinator: BaseCoordinator {
     
     /**
      Starts the coordinator with the given setup model, navigation context, and flow completion handler. Called when the
-     coordinator is being navigated to.
+     coordinator is being navigated to. In this method, the coordinator should instantiate its first view controller and
+     push/present it from the context's `currentViewController`.
      - parameter model: The model object containing all dependencies the coordinator needs.
      - parameter context: A context object containing the involved coordinators and the view controller to start from.
-     - parameter completion: A closure to call after the flow has completed.
+     - parameter flowCompletion: A closure to call after the flow has completed.
      */
-    func start(context: Navigator.NavigationContext, completion: @escaping (Error?, FlowCompletionContext?) -> Void)
+    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionContext?) -> Void)
 }
 
 public extension FlowCoordinator where Self.SetupModel == Void {
@@ -148,4 +116,58 @@ public extension FlowCoordinator where Self.SetupModel == Void {
     }
 }
 
+
+
+/**
+ A basic protocol that all coordinator types implement. This is mostly used internally and should not be implemented on
+ its own - instead, implement one of either `Coordinator`, `FlowCoordinator`, or `SelfCoordinating`.
+ */
+public protocol BaseCoordinator: AnyObject {
+    /// The view controller the coordinator is currently presenting and managing. This must be set by the coordinator
+    /// whenever it changes the currently presented view controller.
+    var currentViewController: UIViewController? { get }
+    
+    /// Whether this coordinator can be navigated back to (i.e. if it should be skipped over when its navigator's
+    /// `goBack(to:)` method is called). This can be useful, for example, for precondition recovering flow coordinators
+    /// or login view controllers after a user has logged in. Defaults to `true`.
+    var canBeNavigatedBackTo: Bool { get }
+    
+    /**
+     Called when the navigator wants to dismiss the view controller(s) managed by this coordinator. In this method, the
+     coordinator should dismiss any view controllers it is managing. A default implementation is provided.
+     
+     Note that this method may not always be called on the coordinator on its dismissal; the main case for when this
+     method is not called is when navigation back is done by a `UINavigationController`, in which case dismissal of the
+     view controller is handled by the navigation controller.
+     - parameter context: A context object containing details about the navigation, such as the involved coordinators.
+     */
+    func dismissViewControllers(context: Navigator.NavigationContext)
+    
+    /**
+     Optional event method called when the navigator has been dismissed by the navigator or by a navigation controller.
+     */
+    func onDismissal()
+    
+    /**
+     Optional event method called when the navigator has started evaluating an asynchronous precondition on a navigation
+     started by this coordinator. This method can be used to start tasks indicating to the user that an asynchronous
+     task has started, such as starting a loading indicator.
+     */
+    func onAsyncPreconditionEvaluationDidStart()
+}
+
+public extension BaseCoordinator {
+    func onDismissal() { }
+    
+    func onAsyncPreconditionEvaluationDidStart() { }
+    
+    var canBeNavigatedBackTo: Bool {
+        return true
+    }
+    
+    func dismissViewControllers(context: Navigator.NavigationContext) {
+        guard let dismissMethod = context.requestedNavigationMethod as? DismissMethod else { return }
+        self.currentViewController?.dismiss(by: dismissMethod, parameters: context.parameters)
+    }
+}
 

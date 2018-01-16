@@ -10,7 +10,7 @@ import UIKit
  example, from a 'Continue' or 'Open Settings' button) and decide to let its coordinator know, but the coordinator
  should ultimately decide whether to go through with that navigation and where to navigate to.
  */
-public protocol CoordinatorManageable where Self: UIViewController {
+public protocol CoordinatorManageable: CoordinatedViewController {
     /**
      A type the `NavigationCoordinator` that manages this view controller should be or conform to in order to receive
      navigation events from this view controller. For better decoupling, best practice is for a view controller to have
@@ -24,10 +24,16 @@ public protocol CoordinatorManageable where Self: UIViewController {
      coordinator, unless tighter coupling is desired to ensure the view controller can only be handled by a specific
      `Coordinator`.
      */
-    associatedtype ManagingCoordinator
+    associatedtype ManagingCoordinator: BaseCoordinator
     
     /// The coordinator managing the view controller.
     var coordinator: ManagingCoordinator? { get set }
+}
+
+public extension CoordinatorManageable where Self: UIViewController {
+    var baseCoordinator: BaseCoordinator? {
+        return self.coordinator
+    }
 }
 
 
@@ -44,12 +50,16 @@ public protocol CoordinatorManageable where Self: UIViewController {
  by default, these will both return `self`. It will still, however, have to implement the `create(with:)` and
  `start(context:)` methods found on `Coordinator`.
  */
-public protocol SelfCoordinating: Coordinator where Self: UIViewController { }
+public protocol SelfCoordinating: Coordinator, CoordinatedViewController { }
 
-public extension SelfCoordinating {
-    func start(context: Navigator.NavigationContext) {
+public extension SelfCoordinating where Self: UIViewController {
+    func presentFirstViewController(context: Navigator.NavigationContext) {
         guard let presentMethod = context.requestedNavigationMethod as? PresentMethod else { return }
         context.currentViewController.present(self, by: presentMethod)
+    }
+    
+    var baseCoordinator: BaseCoordinator? {
+        return self
     }
     
     var currentViewController: UIViewController? {
@@ -57,11 +67,21 @@ public extension SelfCoordinating {
     }
 }
 
-public extension SelfCoordinating where Self.SetupModel == Void {
+public extension SelfCoordinating where Self: UIViewController, Self.SetupModel == Void {
     // NOTE: This default behaviour should be overriden for view controllers that must be initiated from storyboards.
     static func create(with model: SetupModel, navigator: Navigator) -> Self {
         let selfCoordinatingVC = Self()
         selfCoordinatingVC.navigator = navigator
         return selfCoordinatingVC
     }
+}
+
+
+/**
+ A basic protocol that all coordinated view controller types implement. This is mostly used internally and should not be
+ implemented on its own nor should a different value for `baseCoordinator` be provided other than the default - instead,
+ implement one of either `CoordinatorManageable` or `SelfCoordinating` for your view controllers.
+ */
+public protocol CoordinatedViewController {
+    var baseCoordinator: BaseCoordinator? { get }
 }

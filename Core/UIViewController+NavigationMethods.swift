@@ -9,12 +9,7 @@ public extension UIViewController {
         
     }
     
-    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: [NavigationParameterKey: Any] = [:]) {
-        let allParameters = NavigationParameterKey.defaultParameters(withOverrides: parameters)
-        let animated = allParameters[.animateTransition] as! Bool
-        let modalTransitionStyle = allParameters[.modalTransitionStyle] as! UIModalTransitionStyle
-        let modalPresentationStyle = allParameters[.modalPresentationStyle] as! UIModalPresentationStyle
-        
+    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
         switch presentMethod {
         case .addingAsChild:
             self.addChildViewController(toVC)
@@ -22,11 +17,11 @@ public extension UIViewController {
             toVC.view.frame = self.view.frame
             toVC.didMove(toParentViewController: self)
         case .modallyPresenting:
-            toVC.modalPresentationStyle = modalPresentationStyle
-            toVC.modalTransitionStyle = modalTransitionStyle
-            self.present(toVC, animated: animated, completion: nil)
+            toVC.modalPresentationStyle = parameters.modalPresentationStyle
+            toVC.modalTransitionStyle = parameters.modalTransitionStyle
+            self.present(toVC, animated: parameters.animateTransition, completion: nil)
         case .pushing:
-            self.navigationController?.pushViewController(toVC, animated: animated)
+            self.navigationController?.pushViewController(toVC, animated: parameters.animateTransition)
         }
     }
     
@@ -35,16 +30,13 @@ public extension UIViewController {
         self.dismiss(by: dismissMethod, parameters: context.parameters)
     }
     
-    func dismiss(by dismissMethod: DismissMethod, parameters: [NavigationParameterKey: Any] = [:]) {
-        let allParameters = NavigationParameterKey.defaultParameters(withOverrides: parameters)
-        let animated = allParameters[.animateTransition] as! Bool
-        
+    func dismiss(by dismissMethod: DismissMethod, parameters: NavigationParameters = NavigationParameters()) {
         switch dismissMethod {
         case .removingFromParent: break
         case .modallyDismissing:
-            self.dismiss(animated: animated, completion: nil)
+            self.dismiss(animated: parameters.animateTransition, completion: nil)
         case .popping:
-            self.navigationController?.popViewController(animated: animated)
+            self.navigationController?.popViewController(animated: parameters.animateTransition)
         }
     }
 }

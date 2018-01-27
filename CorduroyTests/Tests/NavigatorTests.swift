@@ -11,15 +11,12 @@ class NavigatorTests: XCTestCase {
     override func setUp() {
         super.setUp()
         self.navigator = Navigator()
-        self.applicaton = XCUIApplication()
-        
-//        _ = self.window
+        self.window = UIApplication.shared.delegate!.window!
     }
     
     override func tearDown() {
         super.tearDown()
         self.navigator = nil
-//        self.window.rootViewController = nil
     }
 
     

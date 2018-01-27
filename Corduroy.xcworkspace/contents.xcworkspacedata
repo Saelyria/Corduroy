@@ -14,9 +14,9 @@
       location = "group:Corduroy.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:CorduroyExample/CorduroyExample.xcodeproj">
+      location = "group:CorduroyTests/CorduroyTests.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:Pods/Pods.xcodeproj">
+      location = "group:CorduroyExample/CorduroyExample.xcodeproj">
    </FileRef>
 </Workspace>

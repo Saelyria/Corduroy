@@ -10,7 +10,7 @@ class NavigationContextTests: XCTestCase {
     override func setUp() {
         super.setUp()
         self.navigator = Navigator()
-        self.window = UIWindow()
+        self.window = UIApplication.shared.delegate!.window!
     }
     
     override func tearDown() {

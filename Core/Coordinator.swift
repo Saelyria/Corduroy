@@ -166,7 +166,7 @@ public extension BaseCoordinator {
     }
     
     func dismissViewControllers(context: Navigator.NavigationContext) {
-        guard let dismissMethod = context.requestedNavigationMethod as? DismissMethod else { return }
+        guard let dismissMethod = context.requestedDismissMethod else { return }
         self.currentViewController?.dismiss(by: dismissMethod, parameters: context.parameters)
     }
 }

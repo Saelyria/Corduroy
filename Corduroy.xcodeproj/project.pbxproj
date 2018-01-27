@@ -18,8 +18,10 @@
 		930C0899200C132400B0B934 /* CoordinatedNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */; };
 		930C08A1200D85EC00B0B934 /* NavigatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930C08A0200D85EC00B0B934 /* NavigatorTests.swift */; };
 		930C08A3200D85EC00B0B934 /* Corduroy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930C086B200BF2A600B0B934 /* Corduroy.framework */; };
-		934847C8201CDEA50032332E /* TestCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934847C7201CDEA50032332E /* TestCoordinators.swift */; };
-		934847CA201CE2EE0032332E /* NavigationParameterTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934847C9201CE2EE0032332E /* NavigationParameterTests.swift */; };
+		934847D3201D11C20032332E /* TestCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934847D2201D11C20032332E /* TestCoordinators.swift */; };
+		934847D5201D11CD0032332E /* TestFlowCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934847D4201D11CD0032332E /* TestFlowCoordinators.swift */; };
+		934847D7201D11D70032332E /* TestPreconditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934847D6201D11D70032332E /* TestPreconditions.swift */; };
+		934847D9201D1B050032332E /* NavigationContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934847D8201D1B050032332E /* NavigationContextTests.swift */; };
 		FBCC5E0707643763E39619C1 /* Pods_CorduroyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 6B620E9FF5C62C8FE02613AB /* Pods_CorduroyTests.framework */; };
 /* End PBXBuildFile section */
 
@@ -52,8 +54,10 @@
 		930C089E200D85EC00B0B934 /* CorduroyTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CorduroyTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		930C08A0200D85EC00B0B934 /* NavigatorTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorTests.swift; sourceTree = "<group>"; };
 		930C08A2200D85EC00B0B934 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		934847C7201CDEA50032332E /* TestCoordinators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCoordinators.swift; sourceTree = "<group>"; };
-		934847C9201CE2EE0032332E /* NavigationParameterTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationParameterTests.swift; sourceTree = "<group>"; };
+		934847D2201D11C20032332E /* TestCoordinators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestCoordinators.swift; sourceTree = "<group>"; };
+		934847D4201D11CD0032332E /* TestFlowCoordinators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestFlowCoordinators.swift; sourceTree = "<group>"; };
+		934847D6201D11D70032332E /* TestPreconditions.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestPreconditions.swift; sourceTree = "<group>"; };
+		934847D8201D1B050032332E /* NavigationContextTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationContextTests.swift; sourceTree = "<group>"; };
 		9A0A0BDED7F5998048131A84 /* Pods-Corduroy.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-Corduroy.debug.xcconfig"; path = "Pods/Target Support Files/Pods-Corduroy/Pods-Corduroy.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -117,12 +121,22 @@
 		930C089F200D85EC00B0B934 /* CorduroyTests */ = {
 			isa = PBXGroup;
 			children = (
-				934847C7201CDEA50032332E /* TestCoordinators.swift */,
+				934847D1201D11B40032332E /* Test Objects */,
 				930C08A0200D85EC00B0B934 /* NavigatorTests.swift */,
-				934847C9201CE2EE0032332E /* NavigationParameterTests.swift */,
+				934847D8201D1B050032332E /* NavigationContextTests.swift */,
 				930C08A2200D85EC00B0B934 /* Info.plist */,
 			);
 			path = CorduroyTests;
+			sourceTree = "<group>";
+		};
+		934847D1201D11B40032332E /* Test Objects */ = {
+			isa = PBXGroup;
+			children = (
+				934847D2201D11C20032332E /* TestCoordinators.swift */,
+				934847D4201D11CD0032332E /* TestFlowCoordinators.swift */,
+				934847D6201D11D70032332E /* TestPreconditions.swift */,
+			);
+			path = "Test Objects";
 			sourceTree = "<group>";
 		};
 		A5541435B853134677AE22A1 /* Pods */ = {
@@ -362,9 +376,11 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				934847C8201CDEA50032332E /* TestCoordinators.swift in Sources */,
+				934847D5201D11CD0032332E /* TestFlowCoordinators.swift in Sources */,
+				934847D7201D11D70032332E /* TestPreconditions.swift in Sources */,
+				934847D3201D11C20032332E /* TestCoordinators.swift in Sources */,
 				930C08A1200D85EC00B0B934 /* NavigatorTests.swift in Sources */,
-				934847CA201CE2EE0032332E /* NavigationParameterTests.swift in Sources */,
+				934847D9201D1B050032332E /* NavigationContextTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

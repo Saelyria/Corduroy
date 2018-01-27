@@ -3,10 +3,8 @@ import UIKit
 
 public extension UIViewController {
     func present(_ toVC: UIViewController, context: Navigator.NavigationContext) {
-        guard let presentMethod = context.requestedNavigationMethod as? PresentMethod else { return }
-        
+        guard let presentMethod = context.requestedPresentMethod else { return }
         self.present(toVC, by: presentMethod, parameters: context.parameters)
-        
     }
     
     func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
@@ -26,7 +24,7 @@ public extension UIViewController {
     }
     
     func dismiss(context: Navigator.NavigationContext) {
-        guard let dismissMethod = context.requestedNavigationMethod as? DismissMethod else { return }
+        guard let dismissMethod = context.requestedDismissMethod else { return }
         self.dismiss(by: dismissMethod, parameters: context.parameters)
     }
     

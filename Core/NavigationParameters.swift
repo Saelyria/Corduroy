@@ -2,16 +2,10 @@
 import UIKit
 
 /**
- An enum describing a type of navigation between view controllers, such as a navigation controller push/pop or modal
- present/dismiss. Can be either `PresentMethod` or `DismissMethod`.
- */
-public protocol NavigationMethod { }
-
-/**
  An enum describing a type of presentation between view controllers, such as a navigation controller push or modal
  present.
  */
-public enum PresentMethod: NavigationMethod {
+public enum PresentMethod {
     case pushing
     case modallyPresenting
     case addingAsChild
@@ -32,7 +26,7 @@ public enum PresentMethod: NavigationMethod {
  An enum describing a type of dismissal between view controllers, such as a navigation controller pop or modal
  dismiss.
  */
-public enum DismissMethod: NavigationMethod {
+public enum DismissMethod {
     case popping
     case modallyDismissing
     case removingFromParent
@@ -46,17 +40,23 @@ public enum DismissMethod: NavigationMethod {
  Note that its initializer contains the default values used by UIKit - you only need to provide an argument to the
  initializer for values different from the default.
  */
-public struct NavigationParameters {
+public struct NavigationParameters: Equatable {
     let modalTransitionStyle: UIModalTransitionStyle
     let modalPresentationStyle: UIModalPresentationStyle
     let animateTransition: Bool
     
     public init(modalTransitionStyle: UIModalTransitionStyle = .coverVertical,
-         modalPresentationStyle: UIModalPresentationStyle = .none,
+         modalPresentationStyle: UIModalPresentationStyle = .overFullScreen,
          animateTransition: Bool = true)
     {
         self.modalTransitionStyle = modalTransitionStyle
         self.modalPresentationStyle = modalPresentationStyle
         self.animateTransition = animateTransition
+    }
+    
+    public static func == (lhs: NavigationParameters, rhs: NavigationParameters) -> Bool {
+        return lhs.modalTransitionStyle == rhs.modalTransitionStyle &&
+            lhs.modalPresentationStyle == rhs.modalPresentationStyle &&
+            lhs.animateTransition == rhs.animateTransition
     }
 }

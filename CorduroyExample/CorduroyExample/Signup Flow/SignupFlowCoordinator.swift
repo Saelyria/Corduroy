@@ -24,13 +24,13 @@ final class SignupFlowCoordinator: FlowCoordinator {
     private var tempSecurityQuestion: String?
     private var tempSecurityAnswer: String?
 
-    func start(context: Navigator.NavigationContext, completion: @escaping (Error?, SignupInfo?) -> Void) {
-        self.completion = completion
+    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, SignupInfo?) -> Void) {
+        self.completion = flowCompletion
         
         let signupVC = SignupFormViewController()
         signupVC.coordinator = self
-        let navController = UINavigationController(rootViewController: signupVC)
-        context.currentViewController.present(navController, animated: true, completion: nil)
+        let navController = CoordinatedNavigationController(rootViewController: signupVC, navigator: self.navigator)
+        context.currentViewController.present(navController, context: context)
         self.currentViewController = navController
     }
     

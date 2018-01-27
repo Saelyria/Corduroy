@@ -23,13 +23,13 @@ final class LandingViewController: UIViewController, SelfCoordinating {
     //
     // static func create(with model: SetupModel, navigator: Navigator) -> LandingViewController { }
     
-    // We also don't need to implement the `start(context:)` on self-coordinating view controllers if we don't plan to
-    // do anything special - by default, it will perform an appropriate navigation (push, modal present, etc,) based on
-    // the passed-in context. For more info, look at the `SelfCoordinating` extension under its declaration and the
-    // `UIViewController+Navigator.swift` file. Here, however, we want the view controller in a nav controller, so we
-    // create that and present it from the context's `currentViewController`.
-    func start(context: Navigator.NavigationContext) {
-        let navController = UINavigationController(rootViewController: self)
+    // We also don't need to implement the `presentFirstViewController(context:)` on self-coordinating view controllers
+    // if we don't plan to do anything special - by default, it will perform an appropriate navigation (push, modal
+    // present, etc.) based on the passed-in context. For more info, look at the `SelfCoordinating` extension under its
+    // declaration and the `UIViewController+Navigator.swift` file. Here, however, we want the view controller in a nav
+    // controller, so we create that and present it from the context's `currentViewController`.
+    func presentFirstViewController(context: Navigator.NavigationContext) {
+        let navController = CoordinatedNavigationController(rootViewController: self, navigator: self.navigator)
         context.currentViewController.present(navController, context: context)
     }
 
@@ -55,21 +55,23 @@ final class LandingViewController: UIViewController, SelfCoordinating {
     }
     
     @objc func signupPressed(sender: UIButton) {
+        self.navigator.go(to: HomeCoordinator.self, by: .pushing)
+        
         // When the 'Sign Up' button is pressed, kick off the signup flow coordinator. Flow coordinators are special
         // coordinators that are meant to perform a side task, like signing up. When navigating to them, you need to
         // provide a completion block, where it'll pass in either an error or an object of its `FlowCompletionContext`
         // associated type. The `SignupFlowCoordinator`'s completion context is a `SignupInfo` object, which we can
         // use without needing to cast or anything.
-        self.navigator.go(to: SignupFlowCoordinator.self, by: .modallyPresenting, completion: { (error, signupInfo) in
-            if let signupInfo = signupInfo {
-                self.label.text = "Welcome to the app, \(signupInfo.username)!"
-                self.signupButton.isHidden = true
-            }
-            
-            // when we want to dismiss a flow coordinator or navigate back on a navigation controller, just call
-            // `goBack()` on the navigator.
-            self.navigator.goBack()
-        })
+//        self.navigator.go(to: SignupFlowCoordinator.self, by: .modallyPresenting, completion: { (error, signupInfo) in
+//            if let signupInfo = signupInfo {
+//                self.label.text = "Welcome to the app, \(signupInfo.username)!"
+//                self.signupButton.isHidden = true
+//            }
+//
+//            // when we want to dismiss a flow coordinator or navigate back on a navigation controller, just call
+//            // `goBack()` on the navigator.
+//            self.navigator.goBack()
+//        })
     }
 }
 

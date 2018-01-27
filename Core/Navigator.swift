@@ -52,13 +52,19 @@ public class Navigator {
         let coordinators: [BaseCoordinator] = self.navigationStack.map({ $0.coordinator })
         return coordinators
     }
-    
-    private var navigationStack: [NavStackItem] = []
-    private var hasStarted: Bool = false
     private var previousCoordinator: BaseCoordinator? {
         guard self.coordinators.count >= 2 else { return nil }
         return self.coordinators[self.coordinators.count-2]
     }
+    
+    private var navigationStack: [NavStackItem] = []
+    private var hasStarted: Bool = false
+    
+    // There's no reliable way to determine whether a back navigation from a UINavigationController was started by it
+    // being explicitly told to do it vs. the back button of its nav bar being pressed, so we need this flag to
+    // determine whether or not we should ignore calls to our `coordinatedNavControllerDidPopCoordinators` method so we
+    // don't end up with duplicate calls.
+    private var shouldIgnoreNavControllerPopRequests: Bool = false
     
     /// Initialize a new Navigator object.
     public init() { }
@@ -68,8 +74,9 @@ public class Navigator {
      - parameter window: The root window that view controllers should be presented on.
      - parameter firstCoordinator: The type of coordinator to start the app from.
      */
-    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) where T.SetupModel == Void {
-        self.start(onWindow: window, firstCoordinator: firstCoordinator, with: ())
+    @discardableResult
+    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) -> T where T.SetupModel == Void {
+        return self.start(onWindow: window, firstCoordinator: firstCoordinator, with: ())
     }
     
     /**
@@ -78,11 +85,14 @@ public class Navigator {
      - parameter firstCoordinator: The type of coordinator to start the app from.
      - parameter model: A model of the given coordinator's setup model type.
      */
-    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type, with model: T.SetupModel) {
+    @discardableResult
+    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type, with model: T.SetupModel) -> T {
         guard !(firstCoordinator is NavigationPreconditionRequiring.Type) else {
             fatalError("The first coordinator of the app should not have navigation preconditions.")
         }
-        guard self.hasStarted == false else { return }
+        guard self.hasStarted == false else {
+            fatalError("The navigator's `start(onWindow:firstCoordinator:with:)` method was already called.")
+        }
         self.hasStarted = true
         
         let firstCoordinator = firstCoordinator.create(with: model, navigator: self)
@@ -92,7 +102,9 @@ public class Navigator {
         self.navigationStack.append(stackItem)
         let context = NavigationContext(navigator: self, viewController: self.rootViewController, from: nil,
                                         to: firstCoordinator, by: PresentMethod.addingAsChild, params: [:])
-        firstCoordinator.start(context: context)
+        firstCoordinator.presentFirstViewController(context: context)
+        
+        return firstCoordinator
     }
     
     // MARK: Coordinator navigation methods
@@ -101,11 +113,12 @@ public class Navigator {
      Navigate to the specified coordinator.
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
-     - parameter parameters: Additional navigation parameters.
+     - parameter parameters: Additional navigation parameters. Optional.
      */
+    @discardableResult
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod = .pushing,
-    parameters: [NavigationParameterKey: Any] = [:]) where T.SetupModel == Void {
-        self.go(to: coordinator, by: navMethod, with: (), parameters: parameters)
+    parameters: [NavigationParameterKey: Any] = [:]) -> T where T.SetupModel == Void {
+        return self.go(to: coordinator, by: navMethod, with: (), parameters: parameters)
     }
     
     /**
@@ -113,10 +126,11 @@ public class Navigator {
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
-     - parameter parameters: Additional navigation parameters.
+     - parameter parameters: Additional navigation parameters. Optional.
      */
+    @discardableResult
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
-    parameters: [NavigationParameterKey: Any] = [:]) {
+    parameters: [NavigationParameterKey: Any] = [:]) -> T {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -129,7 +143,9 @@ public class Navigator {
                                         to: coordinator, by: navMethod, params: parameters)
         let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
         self.navigationStack.append(stackItem)
-        coordinator.start(context: context)
+        coordinator.presentFirstViewController(context: context)
+        
+        return coordinator
     }
     
     /**
@@ -137,11 +153,13 @@ public class Navigator {
      errors that arise.
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
-     - parameter parameters: Additional navigation parameters.
+     - parameter parameters: Additional navigation parameters. Optional.
+     - parameter evaluationCompletion: The block called when the navigator has completed evaluation of preconditions,
+        passing in either an error or the created coordinator.
      */
     public func evaluatePreconditionsAndGo<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navMethod: PresentMethod,
-    parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?) -> Void) where T.SetupModel == Void {
-        self.evaluatePreconditionsAndGo(to: coordinator, by: navMethod, with: (), completion: completion)
+    parameters: [NavigationParameterKey: Any] = [:], evaluationCompletion: @escaping (Error?, T?) -> Void) where T.SetupModel == Void {
+        self.evaluatePreconditionsAndGo(to: coordinator, by: navMethod, with: (), evaluationCompletion: evaluationCompletion)
     }
     
     /**
@@ -150,10 +168,12 @@ public class Navigator {
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
-     - parameter parameters: Additional navigation parameters.
+     - parameter parameters: Additional navigation parameters. Optional.
+     - parameter evaluationCompletion: The block called when the navigator has completed evaluation of preconditions,
+        passing in either an error or the created coordinator.
      */
     public func evaluatePreconditionsAndGo<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navMethod: PresentMethod,
-    with model: T.SetupModel, parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?) -> Void) {
+    with model: T.SetupModel, parameters: [NavigationParameterKey: Any] = [:], evaluationCompletion: @escaping (Error?, T?) -> Void) {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -162,14 +182,22 @@ public class Navigator {
         let context = NavigationContext(navigator: self, viewController: viewController, from: self.currentCoordinator,
                                         to: coordinator, by: navMethod, params: parameters)
         let requiresRecovery = self.evaluatePreconditions(on: coordinator, context: context, completion: { (error: Error?) in
-            if let error = error {
-                completion(error)
-            } else {
-                let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
-                self.navigationStack.append(stackItem)
-                coordinator.start(context: context)
+            DispatchQueue.main.async {
+                if let error = error {
+                    evaluationCompletion(error, nil)
+                } else {
+                    let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
+                    self.navigationStack.append(stackItem)
+                    
+                    evaluationCompletion(nil, coordinator)
+                    coordinator.presentFirstViewController(context: context)
+                }
             }
         })
+        
+        if requiresRecovery {
+            self.currentCoordinator.onAsyncPreconditionEvaluationDidStart()
+        }
     }
     
     // MARK: FlowCoordinator navigation methods
@@ -178,12 +206,12 @@ public class Navigator {
      Navigate to the specified flow coordinator.
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
-     - parameter parameters: Additional navigation parameters.
-     - parameter completion: The completion block the flow coordinator will call when its flow has completed.
+     - parameter parameters: Additional navigation parameters. Optional.
+     - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
      */
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod,
-    parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
-        self.go(to: flowCoordinator, by: navMethod, with: (), completion: completion)
+    parameters: [NavigationParameterKey: Any] = [:], flowCompletion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
+        self.go(to: flowCoordinator, by: navMethod, with: (), flowCompletion: flowCompletion)
     }
     
     /**
@@ -191,11 +219,11 @@ public class Navigator {
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
-     - parameter parameters: Additional navigation parameters.
-     - parameter completion: The completion block the flow coordinator will call when its flow has completed.
+     - parameter parameters: Additional navigation parameters. Optional.
+     - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
      */
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
-    parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
+    parameters: [NavigationParameterKey: Any] = [:], flowCompletion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -208,7 +236,7 @@ public class Navigator {
                                                            to: flowCoordinator, by: navMethod, params: parameters)
         let stackItem = NavStackItem(coordinator: flowCoordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
         self.navigationStack.append(stackItem)
-        flowCoordinator.start(context: context, completion: completion)
+        flowCoordinator.presentFirstViewController(context: context, flowCompletion: flowCompletion)
     }
     
     /**
@@ -216,12 +244,15 @@ public class Navigator {
      precondition errors that arise.
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
-     - parameter parameters: Additional navigation parameters.
-     - parameter completion: The completion block the flow coordinator will call when its flow has completed.
+     - parameter parameters: Additional navigation parameters. Optional.
+     - parameter evaluationCompletion: The block called when the navigator has completed evaluation of preconditions,
+        passing in either an error or the created coordinator.
+     - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
      */
     public func evaluatePreconditionsAndGo<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
-    parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
-        self.evaluatePreconditionsAndGo(to: flowCoordinatorType, by: navMethod, with: (), completion: completion)
+    parameters: [NavigationParameterKey: Any] = [:], evaluationCompletion: @escaping (Error?, T?) -> Void,
+    flowCompletion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
+        self.evaluatePreconditionsAndGo(to: flowCoordinatorType, by: navMethod, with: (), evaluationCompletion: evaluationCompletion, flowCompletion: flowCompletion)
     }
 	
     /**
@@ -230,11 +261,14 @@ public class Navigator {
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
-     - parameter parameters: Additional navigation parameters.
-     - parameter completion: The completion block the flow coordinator will call when its flow has completed.
+     - parameter parameters: Additional navigation parameters. Optional.
+     - parameter evaluationCompletion: The block called when the navigator has completed evaluation of preconditions,
+        passing in either an error or the created coordinator.
+     - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
      */
 	public func evaluatePreconditionsAndGo<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
-    with model: T.SetupModel, parameters: [NavigationParameterKey: Any] = [:], completion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
+    with model: T.SetupModel, parameters: [NavigationParameterKey: Any] = [:], evaluationCompletion: @escaping (Error?, T?) -> Void,
+    flowCompletion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")
         }
@@ -243,23 +277,32 @@ public class Navigator {
         let context: NavigationContext = NavigationContext(navigator: self, viewController: viewController, from: self.currentCoordinator,
                                                            to: flowCoordinator, by: navMethod, params: parameters)
         let requiresRecovery = self.evaluatePreconditions(on: flowCoordinator, context: context, completion: { (error: Error?) in
-            if let error = error {
-                completion(error, nil)
-            } else {
-                let stackItem = NavStackItem(coordinator: flowCoordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
-                self.navigationStack.append(stackItem)
-                flowCoordinator.start(context: context, completion: completion)
+            DispatchQueue.main.async {
+                if let error = error {
+                    evaluationCompletion(error, nil)
+                } else {
+                    let stackItem = NavStackItem(coordinator: flowCoordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
+                    self.navigationStack.append(stackItem)
+                    evaluationCompletion(nil, flowCoordinator)
+                    flowCoordinator.presentFirstViewController(context: context, flowCompletion: flowCompletion)
+                }
             }
         })
+        
+        if requiresRecovery {
+            self.currentCoordinator.onAsyncPreconditionEvaluationDidStart()
+        }
     }
     
     // MARK: Backwards navigation methods
     
     /**
      Navigate back to the previous coordinator.
-     - parameter parameters: Additional navigation parameters.
+     - parameter parameters: Additional navigation parameters. Optional.
      */
     public func goBack(parameters: [NavigationParameterKey: Any] = [:]) {
+        self.shouldIgnoreNavControllerPopRequests = true
+        
         guard let previousCoordinator = self.previousCoordinator else { return }
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("Attempting to return from a coordinator whose `currentViewController` is not set.")
@@ -270,41 +313,72 @@ public class Navigator {
         let context: NavigationContext = NavigationContext(navigator: self, viewController: viewController, from: self.currentCoordinator,
                                                            to: previousCoordinator, by: dismissMethod, params: [:])
         self.navigationStack.removeLast()
-        self.currentCoordinator.dismiss(context: context)
+        self.currentCoordinator.dismissViewControllers(context: context)
+        self.currentCoordinator.onDismissal()
+        
+        self.shouldIgnoreNavControllerPopRequests = false
     }
     
     /**
      Navigate back to the last coordinator of the specified coordinator type.
-     - parameter coordinator: The type of coordinator to navigate back to.
-     - parameter parameters: Additional navigation parameters.
+     - parameter coordinatorType: The coordinator type to navigate back to.
+     - parameter parameters: Additional navigation parameters. Optional.
      */
-    public func goBack<T: Coordinator>(to coordinatorType: T.Type, parameters: [NavigationParameterKey: Any] = [:]) {
-        guard self.coordinators.filter({ $0 is T }).first != nil else {
-            return
+    public func goBack<T: BaseCoordinator>(toLast coordinatorType: T.Type, parameters: [NavigationParameterKey: Any] = [:]) {
+        if let coordinatorIndex = self.coordinators.index(where: { $0 is T }) {
+            let coordinator: BaseCoordinator = self.coordinators[coordinatorIndex]
+            self.goBack(to: coordinator, parameters: parameters)
         }
-        // get the coordinators to be removed in order from the end and call their `dismiss(context:)` methods
-        let removedCoordinatorsIndices = self.coordinators.indices.reversed().prefix(while: { !($0 is T) })
+    }
+    
+    /**
+     Navigate back to the specified coordinator.
+     - parameter coordinator: The coordinator to navigate back to.
+     - parameter parameters: Additional navigation parameters. Optional.
+     */
+    public func goBack(to coordinator: BaseCoordinator, parameters: [NavigationParameterKey: Any] = [:]) {
+        // start ignoring calls to 'go back' so we don't call it twice. See comment on `shouldIgnoreNavControllerPopRequests`'s declaration.
+        self.shouldIgnoreNavControllerPopRequests = true
         
-        for coordinatorIndex in removedCoordinatorsIndices {
-            let previousCoordinatorIndex = coordinatorIndex - 1
-            
-            let coordinatorToRemove = self.coordinators[coordinatorIndex]
-            let previousCoordinator = self.coordinators[previousCoordinatorIndex]
-            
-            let presentMethod = self.navigationStack[coordinatorIndex].presentMethod
-            guard let viewController = coordinatorToRemove.currentViewController else { return }
-            let dismissMethod = presentMethod.inverseDismissMethod
+        // get the coordinators to be removed in order from the end and call their `dismiss(context:)` methods
+        guard let coordinatorIndex = self.coordinators.index(where: { $0 === coordinator }) else { return }
+        
+        for index in stride(from: self.navigationStack.count-1, to: coordinatorIndex, by: -1) {
+            let navStackItem = self.navigationStack[index]
+            guard let viewController = navStackItem.coordinator.currentViewController else {
+                fatalError("The currentViewController on a \(type(of: navStackItem.coordinator)) was nil")
+            }
+            let dismissMethod = navStackItem.presentMethod.inverseDismissMethod
+            let coordinatorToRemove: BaseCoordinator = navStackItem.coordinator
+            let coordinatorBeforeRemovedCoordinator: BaseCoordinator = self.coordinators[index-1]
             let params: [NavigationParameterKey: Any]
-            if removedCoordinatorsIndices.contains(previousCoordinatorIndex) {
-                params = [.animateTransition: false]
+            if index == coordinatorIndex+1 {
+                params = [NavigationParameterKey.animateTransition: false]
             } else {
                 params = parameters
             }
-            
             let context = NavigationContext(navigator: self, viewController: viewController, from: coordinatorToRemove,
-                                            to: previousCoordinator, by: dismissMethod, params: params)
-            self.navigationStack.remove(at: coordinatorIndex)
-            coordinatorToRemove.dismiss(context: context)
+                                            to: coordinatorBeforeRemovedCoordinator, by: dismissMethod, params: params)
+            self.navigationStack.remove(at: index)
+            coordinatorToRemove.dismissViewControllers(context: context)
+            coordinatorToRemove.onDismissal()
+        }
+        
+        self.shouldIgnoreNavControllerPopRequests = false
+    }
+    
+    // MARK: UINavigationController methods
+    
+    internal func coordinatedNavControllerDidPopCoordinators(_ coordinators: [BaseCoordinator]) {
+        guard self.shouldIgnoreNavControllerPopRequests == false else { return }
+        
+        for coordinator in coordinators {
+            guard let lastCoordinator = self.navigationStack.last?.coordinator, lastCoordinator === coordinator else {
+                fatalError("Misalignment of popped coordinators and the navigator's nav stack.")
+            }
+            
+            self.navigationStack.removeLast()
+            coordinator.onDismissal()
         }
     }
     
@@ -316,7 +390,7 @@ public class Navigator {
             fatalError("The flow coordinator for a flow recovering precondition must not require preconditions of its own.")
         }
         
-        self.go(to: T.RecoveringFlowCoordinator.self, by: precondition.recoveryCoordinatorPresentMethod, completion: { (error: Error?, _) in
+        self.go(to: T.RecoveringFlowCoordinator.self, by: precondition.recoveryCoordinatorPresentMethod, flowCompletion: { (error: Error?, _) in
             completion(error)
         })
     }
@@ -379,8 +453,12 @@ public class Navigator {
  An internal view controller type used as the root view controller of the window. This view controller ensures that the
  status bar style and hidden state are set by its child view controller.
  */
-fileprivate class RootViewController: UIViewController {
+fileprivate class RootViewController: UIViewController, CoordinatedViewController {
     var childViewController: UIViewController?
+    
+    var baseCoordinator: BaseCoordinator? {
+        return nil
+    }
     
     override var childViewControllerForStatusBarStyle: UIViewController? {
         return self.childViewController

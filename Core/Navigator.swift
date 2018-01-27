@@ -337,34 +337,32 @@ public class Navigator {
      - parameter parameters: Additional navigation parameters. Optional.
      */
     public func goBack(to coordinator: BaseCoordinator, parameters: [NavigationParameterKey: Any] = [:]) {
+        // start ignoring calls to 'go back' so we don't call it twice. See comment on `shouldIgnoreNavControllerPopRequests`'s declaration.
         self.shouldIgnoreNavControllerPopRequests = true
         
         // get the coordinators to be removed in order from the end and call their `dismiss(context:)` methods
         guard let coordinatorIndex = self.coordinators.index(where: { $0 === coordinator }) else { return }
-        let removedCoordinators = self.coordinators.suffix(from: coordinatorIndex).reversed()
-        let reversedCoordinators = self.coordinators.reversed()
         
-//        for removedCoordinator in removedCoordinators {
-//            guard let removedCoordinatorIndex = self.coordinators.index(where: { $0 === removedCoordinator }) else { return }
-//            let nextCoordinatorIndex = removedCoordinatorIndex + 1
-//            let nextCoordinator = reversedCoordinators[nextCoordinatorIndex]
-//            
-//            let presentMethod = self.navigationStack[coordinatorIndex].presentMethod
-//            guard let viewController = coordinatorToRemove.currentViewController else { return }
-//            let dismissMethod = presentMethod.inverseDismissMethod
-//            let params: [NavigationParameterKey: Any]
-//            if removedCoordinatorsIndices.contains(previousCoordinatorIndex) {
-//                params = [.animateTransition: false]
-//            } else {
-//                params = parameters
-//            }
-//            
-//            let context = NavigationContext(navigator: self, viewController: viewController, from: coordinatorToRemove,
-//                                            to: previousCoordinator, by: dismissMethod, params: params)
-//            self.navigationStack.remove(at: coordinatorIndex)
-//            coordinatorToRemove.dismissViewControllers(context: context)
-//            coordinatorToRemove.onDismissal()
-//        }
+        for index in stride(from: self.navigationStack.count-1, to: coordinatorIndex, by: -1) {
+            let navStackItem = self.navigationStack[index]
+            guard let viewController = navStackItem.coordinator.currentViewController else {
+                fatalError("The currentViewController on a \(type(of: navStackItem.coordinator)) was nil")
+            }
+            let dismissMethod = navStackItem.presentMethod.inverseDismissMethod
+            let coordinatorToRemove: BaseCoordinator = navStackItem.coordinator
+            let coordinatorBeforeRemovedCoordinator: BaseCoordinator = self.coordinators[index-1]
+            let params: [NavigationParameterKey: Any]
+            if index == coordinatorIndex+1 {
+                params = [NavigationParameterKey.animateTransition: false]
+            } else {
+                params = parameters
+            }
+            let context = NavigationContext(navigator: self, viewController: viewController, from: coordinatorToRemove,
+                                            to: coordinatorBeforeRemovedCoordinator, by: dismissMethod, params: params)
+            self.navigationStack.remove(at: index)
+            coordinatorToRemove.dismissViewControllers(context: context)
+            coordinatorToRemove.onDismissal()
+        }
         
         self.shouldIgnoreNavControllerPopRequests = false
     }

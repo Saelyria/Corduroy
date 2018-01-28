@@ -30,7 +30,7 @@ final class SignupFlowCoordinator: FlowCoordinator {
         let signupVC = SignupFormViewController()
         signupVC.coordinator = self
         let navController = CoordinatedNavigationController(rootViewController: signupVC, navigator: self.navigator)
-        context.currentViewController.present(navController, context: context)
+        UIViewController.present(navController, context: context)
         self.currentViewController = navController
     }
     

@@ -30,7 +30,7 @@ final class LandingViewController: UIViewController, SelfCoordinating {
     // controller, so we create that and present it from the context's `currentViewController`.
     func presentFirstViewController(context: Navigator.NavigationContext) {
         let navController = CoordinatedNavigationController(rootViewController: self, navigator: self.navigator)
-        context.currentViewController.present(navController, context: context)
+        UIViewController.present(navController, context: context)
     }
 
     override func viewDidLoad() {

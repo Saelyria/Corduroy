@@ -15,7 +15,8 @@ public class Navigator {
      */
     public struct NavigationContext {
         /// The current view controller managed by the from coordinator that the to coordinator should navigate from.
-        public let currentViewController: UIViewController
+        /// Will be `nil` if this is the first coordinator navigation.
+        public let currentViewController: UIViewController?
         /// The coordinator being navigated away from. Will be `nil` if this is the first coordinator navigation.
         public let fromCoordinator: BaseCoordinator?
         /// The coordinator being navigated to.
@@ -31,7 +32,7 @@ public class Navigator {
         /// The navigator handling the navigation.
         public let navigator: Navigator
         
-        internal init(navigator: Navigator, viewController: UIViewController, from: BaseCoordinator?,
+        internal init(navigator: Navigator, viewController: UIViewController?, from: BaseCoordinator?,
                       to: BaseCoordinator, present: PresentMethod?, dismiss: DismissMethod?, params: NavigationParameters) {
             self.navigator = navigator
             self.currentViewController = viewController
@@ -42,9 +43,6 @@ public class Navigator {
             self.parameters = params
         }
     }
-    
-    /// The root view controller set as the main window's root view controller.
-    public let rootViewController: UIViewController = RootViewController()
     
     /// The coordinator coordinating the currently shown view controller.
     public var currentCoordinator: BaseCoordinator {
@@ -96,11 +94,10 @@ public class Navigator {
         self.hasStarted = true
         
         let firstCoordinator = firstCoordinator.create(with: model, navigator: self)
-        window.rootViewController = self.rootViewController
-        let stackItem = NavStackItem(coordinator: firstCoordinator, presentMethod: .addingAsChild, canBeNavigatedBackTo: true)
+        let stackItem = NavStackItem(coordinator: firstCoordinator, presentMethod: .addingAsRoot(window: window), canBeNavigatedBackTo: true)
         self.navigationStack.append(stackItem)
-        let context = NavigationContext(navigator: self, viewController: self.rootViewController, from: nil,
-                                        to: firstCoordinator, present: PresentMethod.addingAsChild, dismiss: nil, params: NavigationParameters())
+        let context = NavigationContext(navigator: self, viewController: nil, from: nil,
+            to: firstCoordinator, present: .addingAsRoot(window: window), dismiss: nil, params: NavigationParameters())
         firstCoordinator.presentFirstViewController(context: context)
         
         return firstCoordinator
@@ -195,7 +192,7 @@ public class Navigator {
         })
         
         if requiresRecovery {
-            self.currentCoordinator.onAsyncPreconditionEvaluationDidStart()
+            self.currentCoordinator.onRecoveringPreconditionEvaluationDidStart()
         }
     }
     
@@ -289,7 +286,7 @@ public class Navigator {
         })
         
         if requiresRecovery {
-            self.currentCoordinator.onAsyncPreconditionEvaluationDidStart()
+            self.currentCoordinator.onRecoveringPreconditionEvaluationDidStart()
         }
     }
     
@@ -310,8 +307,10 @@ public class Navigator {
      - parameter parameters: Additional navigation parameters. Optional.
      */
     public func goBack<T: BaseCoordinator>(toLast coordinatorType: T.Type, parameters: NavigationParameters = NavigationParameters()) {
-        if let coordinatorIndex = self.coordinators.index(where: { $0 is T }) {
-            let coordinator: BaseCoordinator = self.coordinators[coordinatorIndex]
+        let coordinator = self.coordinators.reversed().first(where: { (coordinator) -> Bool in
+            return coordinator is T && coordinator !== self.coordinators.last
+        })
+        if let coordinator = coordinator {
             self.goBack(to: coordinator, parameters: parameters)
         }
     }
@@ -432,31 +431,6 @@ public class Navigator {
         }
         
         return requiresRecovery
-    }
-}
-
-/**
- An internal view controller type used as the root view controller of the window. This view controller ensures that the
- status bar style and hidden state are set by its child view controller.
- */
-fileprivate class RootViewController: UIViewController, CoordinatedViewController {
-    var childViewController: UIViewController?
-    
-    var baseCoordinator: BaseCoordinator? {
-        return nil
-    }
-    
-    override var childViewControllerForStatusBarStyle: UIViewController? {
-        return self.childViewController
-    }
-    
-    override var childViewControllerForStatusBarHidden: UIViewController? {
-        return self.childViewController
-    }
-    
-    override func addChildViewController(_ childController: UIViewController) {
-        super.addChildViewController(childController)
-        self.childViewController = childController
     }
 }
 

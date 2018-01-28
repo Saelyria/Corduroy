@@ -2,39 +2,44 @@
 import UIKit
 
 public extension UIViewController {
-    func present(_ toVC: UIViewController, context: Navigator.NavigationContext) {
+    static func present(_ toVC: UIViewController, context: Navigator.NavigationContext) {
         guard let presentMethod = context.requestedPresentMethod else { return }
-        self.present(toVC, by: presentMethod, parameters: context.parameters)
-    }
-    
-    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
+        let parameters = context.parameters
+        
         switch presentMethod {
         case .addingAsChild:
-            self.addChildViewController(toVC)
-            self.view.addSubview(toVC.view)
-            toVC.view.frame = self.view.frame
-            toVC.didMove(toParentViewController: self)
+            guard let currentVC = context.currentViewController else { return }
+            currentVC.addChildViewController(toVC)
+            currentVC.view.addSubview(toVC.view)
+            toVC.view.frame = currentVC.view.frame
+            toVC.didMove(toParentViewController: currentVC)
         case .modallyPresenting:
+            guard let currentVC = context.currentViewController else { return }
             toVC.modalPresentationStyle = parameters.modalPresentationStyle
             toVC.modalTransitionStyle = parameters.modalTransitionStyle
-            self.present(toVC, animated: parameters.animateTransition, completion: nil)
+            currentVC.present(toVC, animated: parameters.animateTransition, completion: nil)
         case .pushing:
-            self.navigationController?.pushViewController(toVC, animated: parameters.animateTransition)
+            guard let currentVC = context.currentViewController else { return }
+            if let navController = currentVC as? UINavigationController {
+                navController.pushViewController(toVC, animated: parameters.animateTransition)
+            } else {
+                currentVC.navigationController?.pushViewController(toVC, animated: parameters.animateTransition)
+            }
+        case .addingAsRoot(let window):
+            window.rootViewController = toVC
         }
     }
-    
-    func dismiss(context: Navigator.NavigationContext) {
+
+    static func dismiss(context: Navigator.NavigationContext) {
         guard let dismissMethod = context.requestedDismissMethod else { return }
-        self.dismiss(by: dismissMethod, parameters: context.parameters)
-    }
-    
-    func dismiss(by dismissMethod: DismissMethod, parameters: NavigationParameters = NavigationParameters()) {
+        let parameters = context.parameters
+        
         switch dismissMethod {
         case .removingFromParent: break
         case .modallyDismissing:
-            self.dismiss(animated: parameters.animateTransition, completion: nil)
+            context.currentViewController?.dismiss(animated: parameters.animateTransition, completion: nil)
         case .popping:
-            self.navigationController?.popViewController(animated: parameters.animateTransition)
+            context.currentViewController?.navigationController?.popViewController(animated: parameters.animateTransition)
         }
     }
 }

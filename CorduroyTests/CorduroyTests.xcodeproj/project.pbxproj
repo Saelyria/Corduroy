@@ -10,6 +10,8 @@
 		934847E7201D34F50032332E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934847E6201D34F50032332E /* AppDelegate.swift */; };
 		934847EE201D34F50032332E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 934847ED201D34F50032332E /* Assets.xcassets */; };
 		934847F1201D34F50032332E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934847EF201D34F50032332E /* LaunchScreen.storyboard */; };
+		9349369D201D6552005106FE /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 935395A1201D60FB005F584E /* Nimble.framework */; };
+		934936A0201E52B2005106FE /* TestViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349369F201E52B2005106FE /* TestViewControllers.swift */; };
 		93539565201D5020005F584E /* NavigationContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539563201D5020005F584E /* NavigationContextTests.swift */; };
 		93539566201D5020005F584E /* NavigatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539564201D5020005F584E /* NavigatorTests.swift */; };
 		9353956C201D5027005F584E /* TestPreconditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539569201D5026005F584E /* TestPreconditions.swift */; };
@@ -96,6 +98,7 @@
 		934847ED201D34F50032332E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		934847F0201D34F50032332E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		934847F2201D34F50032332E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		9349369F201E52B2005106FE /* TestViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewControllers.swift; sourceTree = "<group>"; };
 		93539559201D4FF6005F584E /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9353955D201D4FF6005F584E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93539563201D5020005F584E /* NavigationContextTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationContextTests.swift; sourceTree = "<group>"; };
@@ -120,6 +123,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				9349369D201D6552005106FE /* Nimble.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -172,6 +176,7 @@
 		93539567201D5026005F584E /* Test Objects */ = {
 			isa = PBXGroup;
 			children = (
+				9349369F201E52B2005106FE /* TestViewControllers.swift */,
 				9353956A201D5026005F584E /* TestCoordinators.swift */,
 				93539568201D5026005F584E /* TestFlowCoordinators.swift */,
 				93539569201D5026005F584E /* TestPreconditions.swift */,
@@ -384,6 +389,7 @@
 				9353956E201D502B005F584E /* TestFlowCoordinators.swift in Sources */,
 				93539566201D5020005F584E /* NavigatorTests.swift in Sources */,
 				9353956D201D5027005F584E /* TestCoordinators.swift in Sources */,
+				934936A0201E52B2005106FE /* TestViewControllers.swift in Sources */,
 				93539565201D5020005F584E /* NavigationContextTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -522,10 +528,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Mock App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -541,10 +544,7 @@
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = "Mock App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -562,10 +562,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.Tests;
@@ -583,10 +580,7 @@
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
 				DEVELOPMENT_TEAM = "";
-				FRAMEWORK_SEARCH_PATHS = (
-					"$(inherited)",
-					"$(PROJECT_DIR)/Frameworks",
-				);
+				FRAMEWORK_SEARCH_PATHS = "$(inherited)";
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.Tests;

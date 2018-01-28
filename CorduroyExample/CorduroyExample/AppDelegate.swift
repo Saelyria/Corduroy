@@ -9,6 +9,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     
     func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
         window = UIWindow(frame: UIScreen.main.bounds)
+        window?.makeKeyAndVisible()
         
         // the only things we really need to do to get started are create a navigator (an object that will do all
         /// navigation for the app) then tell the navigator to start with a given coordinator type. In this example,

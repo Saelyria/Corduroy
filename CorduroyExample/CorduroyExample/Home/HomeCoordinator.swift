@@ -12,7 +12,7 @@ final class HomeCoordinator: Coordinator {
         let homeViewController = HomeViewController()
         homeViewController.coordinator = self
         self.currentViewController = homeViewController
-        context.currentViewController.present(homeViewController, context: context)
+        UIViewController.present(homeViewController, context: context)
     }
     
     func buttonPressed() {

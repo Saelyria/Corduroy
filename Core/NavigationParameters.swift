@@ -5,10 +5,11 @@ import UIKit
  An enum describing a type of presentation between view controllers, such as a navigation controller push or modal
  present.
  */
-public enum PresentMethod {
+public enum PresentMethod: Equatable {
     case pushing
     case modallyPresenting
     case addingAsChild
+    case addingAsRoot(window: UIWindow)
     
     public var inverseDismissMethod: DismissMethod {
         switch self {
@@ -18,6 +19,23 @@ public enum PresentMethod {
             return .modallyDismissing
         case .pushing:
             return .popping
+        case .addingAsRoot:
+            fatalError("No inverse dismiss method to adding as the root view controller of a window.")
+        }
+    }
+    
+    public static func ==(lhs: PresentMethod, rhs: PresentMethod) -> Bool {
+        switch (lhs, rhs) {
+        case (.pushing, .pushing):
+            return true
+        case (.modallyPresenting, .modallyPresenting):
+            return true
+        case (.addingAsChild, .addingAsChild):
+            return true
+        case (.addingAsRoot, .addingAsRoot):
+            return true
+        default:
+            return false
         }
     }
 }

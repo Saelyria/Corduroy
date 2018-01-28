@@ -153,21 +153,20 @@ public protocol BaseCoordinator: AnyObject {
      started by this coordinator. This method can be used to start tasks indicating to the user that an asynchronous
      task has started, such as starting a loading indicator.
      */
-    func onAsyncPreconditionEvaluationDidStart()
+    func onRecoveringPreconditionEvaluationDidStart()
 }
 
 public extension BaseCoordinator {
     func onDismissal() { }
     
-    func onAsyncPreconditionEvaluationDidStart() { }
+    func onRecoveringPreconditionEvaluationDidStart() { }
     
     var canBeNavigatedBackTo: Bool {
         return true
     }
     
     func dismissViewControllers(context: Navigator.NavigationContext) {
-        guard let dismissMethod = context.requestedDismissMethod else { return }
-        self.currentViewController?.dismiss(by: dismissMethod, parameters: context.parameters)
+        UIViewController.dismiss(context: context)
     }
 }
 

@@ -1,7 +1,8 @@
-/*
+
 import XCTest
 import Nimble
 import Corduroy
+@testable import CorduroyTests
 
 class NavigatorTests: XCTestCase {
     var navigator: Navigator!
@@ -46,7 +47,7 @@ class NavigatorTests: XCTestCase {
         }.to(throwAssertion())
         
     }
-    
+
     func testGoToCoordinatorFailsWhenNoViewController() {
         navigator.start(onWindow: window, firstCoordinator: TestCoordinatorVoidSetup.self)
         expect {
@@ -79,4 +80,3 @@ class NavigatorTests: XCTestCase {
         //expect(secondCoordinatorVC.presentingViewController).toEventually(be(firstCoordinatorVC), timeout: 3)
     }
 }
-*/

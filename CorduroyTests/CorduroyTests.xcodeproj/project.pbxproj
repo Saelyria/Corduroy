@@ -15,9 +15,6 @@
 		9353956C201D5027005F584E /* TestPreconditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539569201D5026005F584E /* TestPreconditions.swift */; };
 		9353956D201D5027005F584E /* TestCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353956A201D5026005F584E /* TestCoordinators.swift */; };
 		9353956E201D502B005F584E /* TestFlowCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539568201D5026005F584E /* TestFlowCoordinators.swift */; };
-		93539578201D5440005F584E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93539577201D5440005F584E /* Nimble.framework */; };
-		93539579201D544F005F584E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93539577201D5440005F584E /* Nimble.framework */; };
-		9353957A201D544F005F584E /* Nimble.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 93539577201D5440005F584E /* Nimble.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9384A44F201D41EF00B9AFE7 /* Corduroy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9384A44E201D41E000B9AFE7 /* Corduroy.framework */; };
 /* End PBXBuildFile section */
 
@@ -28,6 +25,48 @@
 			proxyType = 1;
 			remoteGlobalIDString = 934847E2201D34F50032332E;
 			remoteInfo = CorduroyTests;
+		};
+		9353959C201D60FB005F584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93539592201D60FB005F584E /* Nimble.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1F925EAD195C0D6300ED456B;
+			remoteInfo = "Nimble-macOS";
+		};
+		9353959E201D60FB005F584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93539592201D60FB005F584E /* Nimble.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1F925EB7195C0D6300ED456B;
+			remoteInfo = "Nimble-macOSTests";
+		};
+		935395A0201D60FB005F584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93539592201D60FB005F584E /* Nimble.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1F1A74291940169200FFFC47;
+			remoteInfo = "Nimble-iOS";
+		};
+		935395A2201D60FB005F584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93539592201D60FB005F584E /* Nimble.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1F1A74341940169200FFFC47;
+			remoteInfo = "Nimble-iOSTests";
+		};
+		935395A4201D60FB005F584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93539592201D60FB005F584E /* Nimble.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1F5DF1551BDCA0CE00C3A531;
+			remoteInfo = "Nimble-tvOS";
+		};
+		935395A6201D60FB005F584E /* PBXContainerItemProxy */ = {
+			isa = PBXContainerItemProxy;
+			containerPortal = 93539592201D60FB005F584E /* Nimble.xcodeproj */;
+			proxyType = 2;
+			remoteGlobalIDString = 1F5DF15E1BDCA0CE00C3A531;
+			remoteInfo = "Nimble-tvOSTests";
 		};
 		9384A44D201D41E000B9AFE7 /* PBXContainerItemProxy */ = {
 			isa = PBXContainerItemProxy;
@@ -45,7 +84,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				9353957A201D544F005F584E /* Nimble.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -65,7 +103,7 @@
 		93539568201D5026005F584E /* TestFlowCoordinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFlowCoordinators.swift; sourceTree = "<group>"; };
 		93539569201D5026005F584E /* TestPreconditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPreconditions.swift; sourceTree = "<group>"; };
 		9353956A201D5026005F584E /* TestCoordinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCoordinators.swift; sourceTree = "<group>"; };
-		93539577201D5440005F584E /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Nimble.framework; sourceTree = "<group>"; };
+		93539592201D60FB005F584E /* Nimble.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Nimble.xcodeproj; path = "../../../../Downloads/Nimble-master/Nimble.xcodeproj"; sourceTree = "<group>"; };
 		9384A449201D41E000B9AFE7 /* Corduroy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Corduroy.xcodeproj; path = ../Corduroy.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -75,7 +113,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9384A44F201D41EF00B9AFE7 /* Corduroy.framework in Frameworks */,
-				93539579201D544F005F584E /* Nimble.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -83,7 +120,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				93539578201D5440005F584E /* Nimble.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -93,8 +129,8 @@
 		934847DA201D34F50032332E = {
 			isa = PBXGroup;
 			children = (
+				93539592201D60FB005F584E /* Nimble.xcodeproj */,
 				9384A449201D41E000B9AFE7 /* Corduroy.xcodeproj */,
-				9353956F201D50DA005F584E /* Frameworks */,
 				934847E5201D34F50032332E /* Mock App */,
 				9353955A201D4FF6005F584E /* Tests */,
 				934847E4201D34F50032332E /* Products */,
@@ -143,12 +179,17 @@
 			path = "Test Objects";
 			sourceTree = "<group>";
 		};
-		9353956F201D50DA005F584E /* Frameworks */ = {
+		93539593201D60FB005F584E /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				93539577201D5440005F584E /* Nimble.framework */,
+				9353959D201D60FB005F584E /* Nimble.framework */,
+				9353959F201D60FB005F584E /* NimbleTests.xctest */,
+				935395A1201D60FB005F584E /* Nimble.framework */,
+				935395A3201D60FB005F584E /* NimbleTests.xctest */,
+				935395A5201D60FB005F584E /* Nimble.framework */,
+				935395A7201D60FB005F584E /* NimbleTests.xctest */,
 			);
-			path = Frameworks;
+			name = Products;
 			sourceTree = "<group>";
 		};
 		9384A44A201D41E000B9AFE7 /* Products */ = {
@@ -242,6 +283,10 @@
 					ProductGroup = 9384A44A201D41E000B9AFE7 /* Products */;
 					ProjectRef = 9384A449201D41E000B9AFE7 /* Corduroy.xcodeproj */;
 				},
+				{
+					ProductGroup = 93539593201D60FB005F584E /* Products */;
+					ProjectRef = 93539592201D60FB005F584E /* Nimble.xcodeproj */;
+				},
 			);
 			projectRoot = "";
 			targets = (
@@ -252,6 +297,48 @@
 /* End PBXProject section */
 
 /* Begin PBXReferenceProxy section */
+		9353959D201D60FB005F584E /* Nimble.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Nimble.framework;
+			remoteRef = 9353959C201D60FB005F584E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		9353959F201D60FB005F584E /* NimbleTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = NimbleTests.xctest;
+			remoteRef = 9353959E201D60FB005F584E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		935395A1201D60FB005F584E /* Nimble.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Nimble.framework;
+			remoteRef = 935395A0201D60FB005F584E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		935395A3201D60FB005F584E /* NimbleTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = NimbleTests.xctest;
+			remoteRef = 935395A2201D60FB005F584E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		935395A5201D60FB005F584E /* Nimble.framework */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.framework;
+			path = Nimble.framework;
+			remoteRef = 935395A4201D60FB005F584E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
+		935395A7201D60FB005F584E /* NimbleTests.xctest */ = {
+			isa = PBXReferenceProxy;
+			fileType = wrapper.cfbundle;
+			path = NimbleTests.xctest;
+			remoteRef = 935395A6201D60FB005F584E /* PBXContainerItemProxy */;
+			sourceTree = BUILT_PRODUCTS_DIR;
+		};
 		9384A44E201D41E000B9AFE7 /* Corduroy.framework */ = {
 			isa = PBXReferenceProxy;
 			fileType = wrapper.framework;
@@ -471,8 +558,10 @@
 		93539561201D4FF6005F584E /* Debug */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",
@@ -490,8 +579,10 @@
 		93539562201D4FF6005F584E /* Release */ = {
 			isa = XCBuildConfiguration;
 			buildSettings = {
+				ARCHS = "$(ARCHS_STANDARD)";
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				DEVELOPMENT_TEAM = "";
 				FRAMEWORK_SEARCH_PATHS = (
 					"$(inherited)",
 					"$(PROJECT_DIR)/Frameworks",

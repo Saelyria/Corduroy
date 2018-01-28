@@ -7,11 +7,10 @@
 	objects = {
 
 /* Begin PBXBuildFile section */
-		4DE896E8B9B0EF03D47DB5D3 /* Pods_CorduroyTestsTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AFD9BCAE270F8A9254428BF1 /* Pods_CorduroyTestsTests.framework */; };
-		776B8F5210F60E8C4BBF5CEC /* Pods_CorduroyTests.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 8724F9A308F992CDB5390F9A /* Pods_CorduroyTests.framework */; };
 		934847E7201D34F50032332E /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934847E6201D34F50032332E /* AppDelegate.swift */; };
 		934847EE201D34F50032332E /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = 934847ED201D34F50032332E /* Assets.xcassets */; };
 		934847F1201D34F50032332E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934847EF201D34F50032332E /* LaunchScreen.storyboard */; };
+		93539526201D4DDF005F584E /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 93539525201D4DDF005F584E /* Nimble.framework */; };
 		9384A44F201D41EF00B9AFE7 /* Corduroy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9384A44E201D41E000B9AFE7 /* Corduroy.framework */; };
 		9384B24F201D3AA20000A41E /* NavigationContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9384B24D201D3AA20000A41E /* NavigationContextTests.swift */; };
 		9384B250201D3AA20000A41E /* NavigatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9384B24E201D3AA20000A41E /* NavigatorTests.swift */; };
@@ -38,9 +37,6 @@
 /* End PBXContainerItemProxy section */
 
 /* Begin PBXFileReference section */
-		3113BE88A65516C737CC6252 /* Pods-CorduroyTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CorduroyTests.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-CorduroyTests/Pods-CorduroyTests.debug.xcconfig"; sourceTree = "<group>"; };
-		7BD2EA78F5808F6581069877 /* Pods-CorduroyTestsTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CorduroyTestsTests.release.xcconfig"; path = "../Pods/Target Support Files/Pods-CorduroyTestsTests/Pods-CorduroyTestsTests.release.xcconfig"; sourceTree = "<group>"; };
-		8724F9A308F992CDB5390F9A /* Pods_CorduroyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CorduroyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		934847E3201D34F50032332E /* CorduroyTests.app */ = {isa = PBXFileReference; explicitFileType = wrapper.application; includeInIndex = 0; path = CorduroyTests.app; sourceTree = BUILT_PRODUCTS_DIR; };
 		934847E6201D34F50032332E /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		934847ED201D34F50032332E /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
@@ -48,15 +44,13 @@
 		934847F2201D34F50032332E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		934847F7201D34F50032332E /* CorduroyTestsTests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = CorduroyTestsTests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		934847FD201D34F50032332E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
+		93539525201D4DDF005F584E /* Nimble.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; path = Nimble.framework; sourceTree = "<group>"; };
 		9384A449201D41E000B9AFE7 /* Corduroy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Corduroy.xcodeproj; path = ../Corduroy.xcodeproj; sourceTree = "<group>"; };
 		9384B24D201D3AA20000A41E /* NavigationContextTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationContextTests.swift; sourceTree = "<group>"; };
 		9384B24E201D3AA20000A41E /* NavigatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorTests.swift; sourceTree = "<group>"; };
 		9384B254201D3F480000A41E /* TestFlowCoordinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFlowCoordinators.swift; sourceTree = "<group>"; };
 		9384B255201D3F480000A41E /* TestPreconditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPreconditions.swift; sourceTree = "<group>"; };
 		9384B256201D3F480000A41E /* TestCoordinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCoordinators.swift; sourceTree = "<group>"; };
-		AFD9BCAE270F8A9254428BF1 /* Pods_CorduroyTestsTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CorduroyTestsTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
-		E91EDBB0D55033D1D5742E4B /* Pods-CorduroyTests.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CorduroyTests.release.xcconfig"; path = "../Pods/Target Support Files/Pods-CorduroyTests/Pods-CorduroyTests.release.xcconfig"; sourceTree = "<group>"; };
-		F8AF2BBC169DFD0299B3F2D0 /* Pods-CorduroyTestsTests.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-CorduroyTestsTests.debug.xcconfig"; path = "../Pods/Target Support Files/Pods-CorduroyTestsTests/Pods-CorduroyTestsTests.debug.xcconfig"; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -65,7 +59,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				9384A44F201D41EF00B9AFE7 /* Corduroy.framework in Frameworks */,
-				776B8F5210F60E8C4BBF5CEC /* Pods_CorduroyTests.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -73,7 +66,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				4DE896E8B9B0EF03D47DB5D3 /* Pods_CorduroyTestsTests.framework in Frameworks */,
+				93539526201D4DDF005F584E /* Nimble.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -84,10 +77,10 @@
 			isa = PBXGroup;
 			children = (
 				9384A449201D41E000B9AFE7 /* Corduroy.xcodeproj */,
-				934847E5201D34F50032332E /* MockApp */,
+				93539524201D4DCA005F584E /* Frameworks */,
+				934847E5201D34F50032332E /* Mock App */,
 				934847FA201D34F50032332E /* Tests */,
 				934847E4201D34F50032332E /* Products */,
-				C91623AA043F3AFA659077F8 /* Pods */,
 				9C9ADCA6C16ED15C6E516CF6 /* Frameworks */,
 			);
 			sourceTree = "<group>";
@@ -101,7 +94,7 @@
 			name = Products;
 			sourceTree = "<group>";
 		};
-		934847E5201D34F50032332E /* MockApp */ = {
+		934847E5201D34F50032332E /* Mock App */ = {
 			isa = PBXGroup;
 			children = (
 				934847E6201D34F50032332E /* AppDelegate.swift */,
@@ -109,7 +102,7 @@
 				934847EF201D34F50032332E /* LaunchScreen.storyboard */,
 				934847F2201D34F50032332E /* Info.plist */,
 			);
-			path = MockApp;
+			path = "Mock App";
 			sourceTree = "<group>";
 		};
 		934847FA201D34F50032332E /* Tests */ = {
@@ -121,6 +114,14 @@
 				934847FD201D34F50032332E /* Info.plist */,
 			);
 			path = Tests;
+			sourceTree = "<group>";
+		};
+		93539524201D4DCA005F584E /* Frameworks */ = {
+			isa = PBXGroup;
+			children = (
+				93539525201D4DDF005F584E /* Nimble.framework */,
+			);
+			path = Frameworks;
 			sourceTree = "<group>";
 		};
 		9384A44A201D41E000B9AFE7 /* Products */ = {
@@ -144,21 +145,8 @@
 		9C9ADCA6C16ED15C6E516CF6 /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
-				8724F9A308F992CDB5390F9A /* Pods_CorduroyTests.framework */,
-				AFD9BCAE270F8A9254428BF1 /* Pods_CorduroyTestsTests.framework */,
 			);
 			name = Frameworks;
-			sourceTree = "<group>";
-		};
-		C91623AA043F3AFA659077F8 /* Pods */ = {
-			isa = PBXGroup;
-			children = (
-				3113BE88A65516C737CC6252 /* Pods-CorduroyTests.debug.xcconfig */,
-				E91EDBB0D55033D1D5742E4B /* Pods-CorduroyTests.release.xcconfig */,
-				F8AF2BBC169DFD0299B3F2D0 /* Pods-CorduroyTestsTests.debug.xcconfig */,
-				7BD2EA78F5808F6581069877 /* Pods-CorduroyTestsTests.release.xcconfig */,
-			);
-			name = Pods;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -168,12 +156,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 93484800201D34F50032332E /* Build configuration list for PBXNativeTarget "CorduroyTests" */;
 			buildPhases = (
-				AD98EACE75D956E902A12EAC /* [CP] Check Pods Manifest.lock */,
 				934847DF201D34F50032332E /* Sources */,
 				934847E0201D34F50032332E /* Frameworks */,
 				934847E1201D34F50032332E /* Resources */,
-				EF2CF723C84DBDBDA5D1F0B6 /* [CP] Embed Pods Frameworks */,
-				E368CFC2CE15A6B511327E30 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -188,12 +173,9 @@
 			isa = PBXNativeTarget;
 			buildConfigurationList = 93484803201D34F50032332E /* Build configuration list for PBXNativeTarget "CorduroyTestsTests" */;
 			buildPhases = (
-				3A67FF7D3B36E3A539F67C63 /* [CP] Check Pods Manifest.lock */,
 				934847F3201D34F50032332E /* Sources */,
 				934847F4201D34F50032332E /* Frameworks */,
 				934847F5201D34F50032332E /* Resources */,
-				732789B9674A468F9CB46190 /* [CP] Embed Pods Frameworks */,
-				F01CA925EEEA8B100A269133 /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -279,111 +261,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXResourcesBuildPhase section */
-
-/* Begin PBXShellScriptBuildPhase section */
-		3A67FF7D3B36E3A539F67C63 /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CorduroyTestsTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		732789B9674A468F9CB46190 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/../Pods/Target Support Files/Pods-CorduroyTestsTests/Pods-CorduroyTestsTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-CorduroyTestsTests/Pods-CorduroyTestsTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		AD98EACE75D956E902A12EAC /* [CP] Check Pods Manifest.lock */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${PODS_PODFILE_DIR_PATH}/Podfile.lock",
-				"${PODS_ROOT}/Manifest.lock",
-			);
-			name = "[CP] Check Pods Manifest.lock";
-			outputPaths = (
-				"$(DERIVED_FILE_DIR)/Pods-CorduroyTests-checkManifestLockResult.txt",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		E368CFC2CE15A6B511327E30 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-CorduroyTests/Pods-CorduroyTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		EF2CF723C84DBDBDA5D1F0B6 /* [CP] Embed Pods Frameworks */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-				"${SRCROOT}/../Pods/Target Support Files/Pods-CorduroyTests/Pods-CorduroyTests-frameworks.sh",
-				"${BUILT_PRODUCTS_DIR}/Nimble/Nimble.framework",
-			);
-			name = "[CP] Embed Pods Frameworks";
-			outputPaths = (
-				"${TARGET_BUILD_DIR}/${FRAMEWORKS_FOLDER_PATH}/Nimble.framework",
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-CorduroyTests/Pods-CorduroyTests-frameworks.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-		F01CA925EEEA8B100A269133 /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/../Pods/Target Support Files/Pods-CorduroyTestsTests/Pods-CorduroyTestsTests-resources.sh\"\n";
-			showEnvVarsInLog = 0;
-		};
-/* End PBXShellScriptBuildPhase section */
 
 /* Begin PBXSourcesBuildPhase section */
 		934847DF201D34F50032332E /* Sources */ = {
@@ -537,11 +414,14 @@
 		};
 		93484801201D34F50032332E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 3113BE88A65516C737CC6252 /* Pods-CorduroyTests.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = CorduroyTests/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				INFOPLIST_FILE = "Mock App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.CorduroyTests;
@@ -553,11 +433,14 @@
 		};
 		93484802201D34F50032332E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = E91EDBB0D55033D1D5742E4B /* Pods-CorduroyTests.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
 				CODE_SIGN_STYLE = Automatic;
-				INFOPLIST_FILE = CorduroyTests/Info.plist;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
+				INFOPLIST_FILE = "Mock App/Info.plist";
 				IPHONEOS_DEPLOYMENT_TARGET = 9.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.CorduroyTests;
@@ -569,11 +452,14 @@
 		};
 		93484804201D34F50032332E /* Debug */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = F8AF2BBC169DFD0299B3F2D0 /* Pods-CorduroyTestsTests.debug.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.CorduroyTestsTests;
@@ -586,11 +472,14 @@
 		};
 		93484805201D34F50032332E /* Release */ = {
 			isa = XCBuildConfiguration;
-			baseConfigurationReference = 7BD2EA78F5808F6581069877 /* Pods-CorduroyTestsTests.release.xcconfig */;
 			buildSettings = {
 				ALWAYS_EMBED_SWIFT_STANDARD_LIBRARIES = YES;
 				BUNDLE_LOADER = "$(TEST_HOST)";
 				CODE_SIGN_STYLE = Automatic;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/Frameworks",
+				);
 				INFOPLIST_FILE = Tests/Info.plist;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.CorduroyTestsTests;

@@ -1,4 +1,4 @@
-
+/*
 import XCTest
 import Nimble
 import Corduroy
@@ -79,3 +79,4 @@ class NavigatorTests: XCTestCase {
         //expect(secondCoordinatorVC.presentingViewController).toEventually(be(firstCoordinatorVC), timeout: 3)
     }
 }
+*/

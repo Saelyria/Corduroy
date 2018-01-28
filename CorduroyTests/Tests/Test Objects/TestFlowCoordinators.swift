@@ -30,3 +30,4 @@ final class TestFlowCoordinatorVoidSetupStringCompletion: TestFlowCoordinator {
         self.flowCompletion = flowCompletion
     }
 }
+

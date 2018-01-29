@@ -3,7 +3,12 @@ import XCTest
 import Nimble
 import Corduroy
 
+// basic test coordinator. Takes the view controller it should use as its first view controller via its SetupModel.
 final class TestCoordinator: Coordinator {
+    final class TestViewController: UIViewController, CoordinatorManageable {
+        var coordinator: TestCoordinator?
+    }
+    
     typealias SetupModel = UIViewController? //the VC to use as the first VC
 
     var navigator: Navigator!
@@ -23,6 +28,9 @@ final class TestCoordinator: Coordinator {
     }
     
     func presentFirstViewController(context: Navigator.NavigationContext) {
+        if let vc = self.firstViewController as? TestViewController {
+            vc.coordinator = self
+        }
         if let vc = self.firstViewController {
             UIViewController.present(vc, context: context)
         }
@@ -36,27 +44,37 @@ final class TestCoordinator: Coordinator {
     }
 }
 
-// a copy of 'TestCoordinator' for type difference testing
-final class TestCoordinator2: Coordinator {
-    typealias SetupModel = UIViewController? //the VC to use as the first VC
+// a test coordinator that takes its first view controller and a string as its setup model
+final class TestCoordinatorStringSetup: Coordinator {
+    final class TestViewController: UIViewController, CoordinatorManageable {
+        var coordinator: TestCoordinatorStringSetup?
+    }
+    
+    typealias SetupModel = (firstVC: UIViewController?, string: String)
     
     var navigator: Navigator!
     var currentViewController: UIViewController?
     
     var firstViewController: UIViewController?
+    var setupString: String!
     var navContext: Navigator.NavigationContext!
     var createCallCount: Int = 0
     var presentFirstVCCallCount: Int = 0
     var onDismissalCallCount: Int = 0
     
-    static func create(with firstViewController: UIViewController?, navigator: Navigator) -> TestCoordinator2 {
-        let coordinator = TestCoordinator2()
-        coordinator.firstViewController = firstViewController
+    static func create(with model: SetupModel, navigator: Navigator) -> TestCoordinatorStringSetup {
+        let coordinator = TestCoordinatorStringSetup()
+        coordinator.navigator = navigator
+        coordinator.firstViewController = model.firstVC
         coordinator.createCallCount += 1
+        coordinator.setupString = model.string
         return coordinator
     }
     
     func presentFirstViewController(context: Navigator.NavigationContext) {
+        if let vc = self.firstViewController as? TestViewController {
+            vc.coordinator = self
+        }
         if let vc = self.firstViewController {
             UIViewController.present(vc, context: context)
         }
@@ -70,7 +88,13 @@ final class TestCoordinator2: Coordinator {
     }
 }
 
+
+// test coordinator whose SetupModel is left as Void.
 final class TestCoordinatorVoidSetup: Coordinator {
+    final class TestViewController: UIViewController, CoordinatorManageable {
+        var coordinator: TestCoordinatorVoidSetup?
+    }
+    
     var navigator: Navigator!
     var currentViewController: UIViewController?
     
@@ -96,43 +120,11 @@ final class TestCoordinatorVoidSetup: Coordinator {
     }
 }
 
-final class TestCoordinatorStringSetup: Coordinator {
-    typealias SetupModel = (firstVC: UIViewController, string: String)
-    
-    var navigator: Navigator!
-    var currentViewController: UIViewController?
-    
-    var firstViewController: UIViewController?
-    var setupString: String!
-    var navContext: Navigator.NavigationContext!
-    var createCallCount: Int = 0
-    var presentFirstVCCallCount: Int = 0
-    var onDismissalCallCount: Int = 0
-    
-    static func create(with model: SetupModel, navigator: Navigator) -> TestCoordinatorStringSetup {
-        let coordinator = TestCoordinatorStringSetup()
-        coordinator.navigator = navigator
-        coordinator.firstViewController = model.firstVC
-        coordinator.createCallCount += 1
-        coordinator.setupString = model.string
-        return coordinator
-    }
-    
-    func presentFirstViewController(context: Navigator.NavigationContext) {
-        if let vc = self.firstViewController {
-            UIViewController.present(vc, context: context)
-        }
-        self.currentViewController = firstViewController
-        self.presentFirstVCCallCount += 1
-        self.navContext = context
-    }
-    
-    func onDismissal() {
-        self.onDismissalCallCount += 1
-    }
-}
-
 final class TestPassingPreconditionRequiringCoordinator: Coordinator, NavigationPreconditionRequiring {
+    final class TestViewController: UIViewController, CoordinatorManageable {
+        var coordinator: TestPassingPreconditionRequiringCoordinator?
+    }
+    
     var navigator: Navigator!
     var currentViewController: UIViewController?
     

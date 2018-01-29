@@ -1,8 +1,19 @@
 
 import UIKit
 
-public class CoordinatedNavigationController: UINavigationController {
-    public var navigator: Navigator!
+public class CoordinatedNavigationController: UINavigationController, CoordinatedViewController {
+    public var baseCoordinator: BaseCoordinator? {
+        if let topVC = self.topViewController {
+            guard topVC is CoordinatedViewController else {
+                fatalError("\(String(describing: type(of: topVC))) does not conform to one of either CoordinatorManageable or SelfCoordinating.")
+            }
+            let vc = topVC as! CoordinatedViewController
+            return vc.baseCoordinator
+        }
+        return nil
+    }
+    
+    public var navigator: Navigator?
     
     public convenience init(rootViewController: UIViewController, navigator: Navigator) {
         self.init(rootViewController: rootViewController)
@@ -13,9 +24,10 @@ public class CoordinatedNavigationController: UINavigationController {
         self.init(navigationBarClass: navigationBarClass, toolbarClass: toolbarClass)
         self.navigator = navigator
     }
-
+    
     @discardableResult
     public override func popViewController(animated: Bool) -> UIViewController? {
+        precondition(self.navigator != nil, "CoordinatedNavigationController's navigator property was not set.")
         guard let poppedViewController = super.popViewController(animated: animated) else { return nil }
         self.informNavigatorAboutPoppedViewControllers([poppedViewController])
         
@@ -24,6 +36,7 @@ public class CoordinatedNavigationController: UINavigationController {
     
     @discardableResult
     public override func popToViewController(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
+        precondition(self.navigator != nil, "CoordinatedNavigationController's navigator property was not set.")
         guard let poppedViewControllers = super.popToViewController(viewController, animated: animated) else { return nil }
         self.informNavigatorAboutPoppedViewControllers(poppedViewControllers)
         
@@ -32,6 +45,7 @@ public class CoordinatedNavigationController: UINavigationController {
     
     @discardableResult
     public override func popToRootViewController(animated: Bool) -> [UIViewController]? {
+        precondition(self.navigator != nil, "CoordinatedNavigationController's navigator property was not set.")
         guard let poppedViewControllers = super.popToRootViewController(animated: animated) else { return nil }
         self.informNavigatorAboutPoppedViewControllers(poppedViewControllers)
         
@@ -61,9 +75,20 @@ public class CoordinatedNavigationController: UINavigationController {
                 poppedCoordinatorsSet.append(coordinator)
             }
         }
+        poppedCoordinatorsSet.reverse() //reverse to match the coordinator navigation history on Navigator
+        
+        // Make sure we don't remove the botom-most coordinator of the popped coordinators if it's the coordinator for
+        // the new top-most view controller
+        if let topVCAfterPop = self.topViewController {
+            guard topVCAfterPop is CoordinatedViewController else {
+                fatalError("\(String(describing: type(of: topVCAfterPop))) does not conform to one of either CoordinatorManageable or SelfCoordinating.")
+            }
+            let topVC = topVCAfterPop as! CoordinatedViewController
+            if let lastCoordinatorToPop = poppedCoordinatorsSet.first, lastCoordinatorToPop === topVC.baseCoordinator {
+                poppedCoordinatorsSet.removeFirst()
+            }
+        } //self.viewControllers.count-1-poppedViewControllers.count
 
-        // TODO: check if the previous view controller is still managed by the same coordinator, cause we don't want to
-        // pop it if it's the same one.
-        self.navigator.coordinatedNavControllerDidPopCoordinators(poppedCoordinatorsSet)
+        self.navigator?.coordinatedNavControllerDidPopCoordinators(poppedCoordinatorsSet)
     }
 }

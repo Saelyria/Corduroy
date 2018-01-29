@@ -12,8 +12,9 @@
 		934847F1201D34F50032332E /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 934847EF201D34F50032332E /* LaunchScreen.storyboard */; };
 		9349369D201D6552005106FE /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 935395A1201D60FB005F584E /* Nimble.framework */; };
 		934936A0201E52B2005106FE /* TestViewControllers.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9349369F201E52B2005106FE /* TestViewControllers.swift */; };
+		934936A2201E9F8C005106FE /* NavigatorGoTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 934936A1201E9F8C005106FE /* NavigatorGoTests.swift */; };
 		93539565201D5020005F584E /* NavigationContextTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539563201D5020005F584E /* NavigationContextTests.swift */; };
-		93539566201D5020005F584E /* NavigatorTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539564201D5020005F584E /* NavigatorTests.swift */; };
+		93539566201D5020005F584E /* NavigatorGoBackTests.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539564201D5020005F584E /* NavigatorGoBackTests.swift */; };
 		9353956C201D5027005F584E /* TestPreconditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539569201D5026005F584E /* TestPreconditions.swift */; };
 		9353956D201D5027005F584E /* TestCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353956A201D5026005F584E /* TestCoordinators.swift */; };
 		9353956E201D502B005F584E /* TestFlowCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539568201D5026005F584E /* TestFlowCoordinators.swift */; };
@@ -99,10 +100,11 @@
 		934847F0201D34F50032332E /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		934847F2201D34F50032332E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		9349369F201E52B2005106FE /* TestViewControllers.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestViewControllers.swift; sourceTree = "<group>"; };
+		934936A1201E9F8C005106FE /* NavigatorGoTests.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigatorGoTests.swift; sourceTree = "<group>"; };
 		93539559201D4FF6005F584E /* Tests.xctest */ = {isa = PBXFileReference; explicitFileType = wrapper.cfbundle; includeInIndex = 0; path = Tests.xctest; sourceTree = BUILT_PRODUCTS_DIR; };
 		9353955D201D4FF6005F584E /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		93539563201D5020005F584E /* NavigationContextTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigationContextTests.swift; sourceTree = "<group>"; };
-		93539564201D5020005F584E /* NavigatorTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorTests.swift; sourceTree = "<group>"; };
+		93539564201D5020005F584E /* NavigatorGoBackTests.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = NavigatorGoBackTests.swift; sourceTree = "<group>"; };
 		93539568201D5026005F584E /* TestFlowCoordinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFlowCoordinators.swift; sourceTree = "<group>"; };
 		93539569201D5026005F584E /* TestPreconditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPreconditions.swift; sourceTree = "<group>"; };
 		9353956A201D5026005F584E /* TestCoordinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCoordinators.swift; sourceTree = "<group>"; };
@@ -167,7 +169,8 @@
 			children = (
 				93539567201D5026005F584E /* Test Objects */,
 				93539563201D5020005F584E /* NavigationContextTests.swift */,
-				93539564201D5020005F584E /* NavigatorTests.swift */,
+				934936A1201E9F8C005106FE /* NavigatorGoTests.swift */,
+				93539564201D5020005F584E /* NavigatorGoBackTests.swift */,
 				9353955D201D4FF6005F584E /* Info.plist */,
 			);
 			path = Tests;
@@ -387,10 +390,11 @@
 			files = (
 				9353956C201D5027005F584E /* TestPreconditions.swift in Sources */,
 				9353956E201D502B005F584E /* TestFlowCoordinators.swift in Sources */,
-				93539566201D5020005F584E /* NavigatorTests.swift in Sources */,
+				93539566201D5020005F584E /* NavigatorGoBackTests.swift in Sources */,
 				9353956D201D5027005F584E /* TestCoordinators.swift in Sources */,
 				934936A0201E52B2005106FE /* TestViewControllers.swift in Sources */,
 				93539565201D5020005F584E /* NavigationContextTests.swift in Sources */,
+				934936A2201E9F8C005106FE /* NavigatorGoTests.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

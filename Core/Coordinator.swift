@@ -69,7 +69,7 @@ public extension Coordinator where Self.SetupModel == Void {
  
  Flow coordinators are started by other coordinators and are expected to, once completed, call the completion closure
  passed into their `start(context:completion:)` method where they will pass in either an error if their flow 'failed' or
- a completion context of their `FlowCompletionContext` type. This context type could be, as in the example of
+ a completion context of their `FlowCompletionModel` type. This context type could be, as in the example of
  authentication, a type that contains information about whether the authentication was successful and, if so, the
  credentials for the authentication.
  */
@@ -80,7 +80,7 @@ public protocol FlowCoordinator: BaseCoordinator {
     
     /// The type of the model object that this flow coordinator will return in its completion containing data about or
     /// as a result of its flow. Defaults to 'EmptyContext' if no explicit type is set.
-    associatedtype FlowCompletionContext = Void
+    associatedtype FlowCompletionModel = Void
     
     /// The navigator managing navigation to this coordinator and that it should use to perform navigation to other
     /// coordinators.
@@ -105,7 +105,7 @@ public protocol FlowCoordinator: BaseCoordinator {
      - parameter context: A context object containing the involved coordinators and the view controller to start from.
      - parameter flowCompletion: A closure to call after the flow has completed.
      */
-    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionContext?) -> Void)
+    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionModel?) -> Void)
 }
 
 public extension FlowCoordinator where Self.SetupModel == Void {

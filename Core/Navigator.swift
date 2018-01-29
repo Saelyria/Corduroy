@@ -205,9 +205,10 @@ public class Navigator {
      - parameter parameters: Additional navigation parameters. Optional.
      - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
      */
+    @discardableResult
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod,
-    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
-        self.go(to: flowCoordinator, by: navMethod, with: (), flowCompletion: flowCompletion)
+    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> T where T.SetupModel == Void {
+        return self.go(to: flowCoordinator, by: navMethod, with: (), flowCompletion: flowCompletion)
     }
     
     /**
@@ -218,8 +219,9 @@ public class Navigator {
      - parameter parameters: Additional navigation parameters. Optional.
      - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
      */
+    @discardableResult
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
-    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
+    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> T {
         precondition(self.hasStarted, "The navigator hasn't been started - call `start(onWindow:firstCoordinator:with:)` first.")
         precondition(!(flowCoordinator is NavigationPreconditionRequiring.Type), "The specified coordinator has preconditions for navigation that must be checked - use `evaluatePreconditionsAndGo(to:by:evaluationCompletion:)` instead.")
         guard let viewController = self.currentCoordinator.currentViewController else {
@@ -232,6 +234,8 @@ public class Navigator {
         let stackItem = NavStackItem(coordinator: flowCoordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
         self.navigationStack.append(stackItem)
         flowCoordinator.presentFirstViewController(context: context, flowCompletion: flowCompletion)
+        
+        return flowCoordinator
     }
     
     /**
@@ -246,7 +250,7 @@ public class Navigator {
      */
     public func evaluatePreconditionsAndGo<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
     parameters: NavigationParameters = NavigationParameters(), evaluationCompletion: @escaping (Error?, T?) -> Void,
-    flowCompletion: @escaping (Error?, T.FlowCompletionContext?) -> Void) where T.SetupModel == Void {
+    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) where T.SetupModel == Void {
         self.evaluatePreconditionsAndGo(to: flowCoordinatorType, by: navMethod, with: (), evaluationCompletion: evaluationCompletion, flowCompletion: flowCompletion)
     }
 	
@@ -263,7 +267,7 @@ public class Navigator {
      */
 	public func evaluatePreconditionsAndGo<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
     with model: T.SetupModel, parameters: NavigationParameters = NavigationParameters(), evaluationCompletion: @escaping (Error?, T?) -> Void,
-    flowCompletion: @escaping (Error?, T.FlowCompletionContext?) -> Void) {
+    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) {
         precondition(self.hasStarted, "The navigator hasn't been started - call `start(onWindow:firstCoordinator:with:)` first.")
         guard let viewController = self.currentCoordinator.currentViewController else {
             fatalError("No view controller set as 'currentViewController' on the presenting Coordinator.")

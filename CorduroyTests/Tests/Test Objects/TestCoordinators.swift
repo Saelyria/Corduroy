@@ -3,7 +3,7 @@ import XCTest
 import Nimble
 import Corduroy
 
-// basic test coordinator. Takes the view controller it should use as its first view controller via its SetupModel.
+// A basic test coordinator. Takes the view controller it should use as its first view controller via its SetupModel.
 final class TestCoordinator: Coordinator {
     final class TestViewController: UIViewController, CoordinatorManageable {
         var coordinator: TestCoordinator?
@@ -44,7 +44,7 @@ final class TestCoordinator: Coordinator {
     }
 }
 
-// a test coordinator that takes its first view controller and a string as its setup model
+// A test coordinator that takes its first view controller and a string as its setup model
 final class TestCoordinatorStringSetup: Coordinator {
     final class TestViewController: UIViewController, CoordinatorManageable {
         var coordinator: TestCoordinatorStringSetup?
@@ -79,38 +79,6 @@ final class TestCoordinatorStringSetup: Coordinator {
             UIViewController.present(vc, context: context)
         }
         self.currentViewController = firstViewController
-        self.presentFirstVCCallCount += 1
-        self.navContext = context
-    }
-    
-    func onDismissal() {
-        self.onDismissalCallCount += 1
-    }
-}
-
-
-// test coordinator whose SetupModel is left as Void.
-final class TestCoordinatorVoidSetup: Coordinator {
-    final class TestViewController: UIViewController, CoordinatorManageable {
-        var coordinator: TestCoordinatorVoidSetup?
-    }
-    
-    var navigator: Navigator!
-    var currentViewController: UIViewController?
-    
-    var testFirstViewController: UIViewController?
-    var navContext: Navigator.NavigationContext!
-    var createCallCount: Int = 0
-    var presentFirstVCCallCount: Int = 0
-    var onDismissalCallCount: Int = 0
-    
-    static func create(with: (), navigator: Navigator) -> TestCoordinatorVoidSetup {
-        let coordinator = TestCoordinatorVoidSetup()
-        coordinator.createCallCount += 1
-        return coordinator
-    }
-    
-    func presentFirstViewController(context: Navigator.NavigationContext) {
         self.presentFirstVCCallCount += 1
         self.navContext = context
     }

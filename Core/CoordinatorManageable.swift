@@ -54,7 +54,7 @@ public protocol SelfCoordinating: Coordinator, CoordinatedViewController { }
 
 public extension SelfCoordinating where Self: UIViewController {
     func presentFirstViewController(context: Navigator.NavigationContext) {
-        UIViewController.present(self, context: context)
+        UIViewController.present(self, asDescribedBy: context)
     }
     
     var baseCoordinator: BaseCoordinator? {

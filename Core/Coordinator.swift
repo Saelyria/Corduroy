@@ -166,7 +166,7 @@ public extension BaseCoordinator {
     }
     
     func dismissViewControllers(context: Navigator.NavigationContext) {
-        UIViewController.dismiss(context: context)
+        UIViewController.dismissCurrentViewController(in: context)
     }
 }
 

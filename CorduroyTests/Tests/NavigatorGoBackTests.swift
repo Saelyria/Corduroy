@@ -4,7 +4,7 @@ import Nimble
 import Corduroy
 @testable import CorduroyTests
 
-// Tests for the `Navigator`'s various `goBack()` methods.
+// Tests for the Navigator's various `goBack()` methods.
 class NavigatorGoBackTests: XCTestCase {
     var navigator: Navigator!
     var window: UIWindow!

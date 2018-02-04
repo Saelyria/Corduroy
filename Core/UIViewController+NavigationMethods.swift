@@ -2,7 +2,14 @@
 import UIKit
 
 public extension UIViewController {
-    static func present(_ toVC: UIViewController, context: Navigator.NavigationContext) {
+    /**
+     Present the given view controller using the present method, current view controller, and parameters described in
+     the given context.
+     - parameter toVC: The view controller to present.
+     - parameter context: The context that describes the expected navigation, such as the method and the view controller
+        to present from.
+     */
+    static func present(_ toVC: UIViewController, asDescribedBy context: Navigator.NavigationContext) {
         guard let presentMethod = context.requestedPresentMethod else { return }
         let parameters = context.parameters
         
@@ -30,7 +37,12 @@ public extension UIViewController {
         }
     }
 
-    static func dismiss(context: Navigator.NavigationContext) {
+    /**
+     Dismiss the current view controller in the given context as described by the method and parameters in the context.
+     - parameter context: The context that describes the expected navigation, such as the method and the view controller
+     to dismiss.
+     */
+    static func dismissCurrentViewController(in context: Navigator.NavigationContext) {
         guard let dismissMethod = context.requestedDismissMethod else { return }
         let parameters = context.parameters
         

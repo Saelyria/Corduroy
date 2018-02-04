@@ -2,6 +2,7 @@
 import UIKit
 
 public class CoordinatedNavigationController: UINavigationController, CoordinatedViewController {
+    /// The coordinator of the navigation controller's top view controller.
     public var baseCoordinator: BaseCoordinator? {
         if let topVC = self.topViewController {
             guard topVC is CoordinatedViewController else {
@@ -13,13 +14,14 @@ public class CoordinatedNavigationController: UINavigationController, Coordinate
         return nil
     }
     
+    /// The navigator the navigation controller reports pop navigations to.
     public var navigator: Navigator?
     
     public convenience init(rootViewController: UIViewController, navigator: Navigator) {
         self.init(rootViewController: rootViewController)
         self.navigator = navigator
     }
-    
+
     public convenience init(navigationBarClass: AnyClass?, toolbarClass: AnyClass?, navigator: Navigator) {
         self.init(navigationBarClass: navigationBarClass, toolbarClass: toolbarClass)
         self.navigator = navigator
@@ -53,6 +55,7 @@ public class CoordinatedNavigationController: UINavigationController, Coordinate
     }
     
     private func informNavigatorAboutPoppedViewControllers(_ poppedViewControllers: [UIViewController]) {
+        precondition(self.navigator != nil, "CoordinatedNavigationController's navigator property was not set.")
         let coordinatedViewControllers: [CoordinatedViewController] = poppedViewControllers.filter({ (vc) -> Bool in
             if vc is CoordinatedViewController {
                 return true

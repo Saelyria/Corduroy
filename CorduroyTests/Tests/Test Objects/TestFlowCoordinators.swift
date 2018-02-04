@@ -34,7 +34,7 @@ final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
             vc.coordinator = self
         }
         if let vc = self.firstViewController {
-            UIViewController.present(vc, context: context)
+            UIViewController.present(vc, asDescribedBy: context)
         }
         self.flowCompletion = flowCompletion
         self.currentViewController = firstViewController
@@ -78,7 +78,7 @@ final class TestFlowCoordinatorStringCompletionModel: FlowCoordinator {
             vc.coordinator = self
         }
         if let vc = self.firstViewController {
-            UIViewController.present(vc, context: context)
+            UIViewController.present(vc, asDescribedBy: context)
         }
         self.flowCompletion = flowCompletion
         self.currentViewController = firstViewController

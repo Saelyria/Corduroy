@@ -18,7 +18,7 @@ Pod::Spec.new do |s|
   s.default_subspec = "Core"
 
   s.subspec "Core" do |ss|
-    ss.source_files  = 'Source/Core/'
+    ss.source_files  = 'Core/'
     ss.ios.framework  = "UIKit"
   end
 

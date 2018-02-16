@@ -85,8 +85,8 @@ class NavigatorGoTests: XCTestCase {
         let noAnimationParams = NavigationParameters(animateTransition: false)
         let firstVC = TestCoordinator.TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
-        let secondVC = TestFlowCoordinatorVoidCompletionModel.TestViewController()
-        let secondCoordinator = navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .modallyPresenting, with: secondVC,
+        let secondVC = TestFlowCoordinatorNothingCompletionModel.TestViewController()
+        let secondCoordinator = navigator.go(to: TestFlowCoordinatorNothingCompletionModel.self, by: .modallyPresenting, with: secondVC,
             parameters: noAnimationParams, flowCompletion: { _, _ in })
         let thirdVC = TestCoordinatorStringSetup.TestViewController()
         let thirdCoordinator = navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""), parameters: noAnimationParams)
@@ -117,11 +117,11 @@ class NavigatorGoTests: XCTestCase {
         let noAnimationParams = NavigationParameters(animateTransition: false)
         let firstVC = TestCoordinator.TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
-        let secondVC = TestFlowCoordinatorVoidCompletionModel.TestViewController()
+        let secondVC = TestFlowCoordinatorNothingCompletionModel.TestViewController()
         let flowNavController = CoordinatedNavigationController(rootViewController: secondVC, navigator: navigator)
-        let secondCoordinator = navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .modallyPresenting, with: flowNavController,
+        let secondCoordinator = navigator.go(to: TestFlowCoordinatorNothingCompletionModel.self, by: .modallyPresenting, with: flowNavController,
             parameters: noAnimationParams, flowCompletion: { _, _ in })
-        let thirdVC = TestFlowCoordinatorVoidCompletionModel.TestViewController()
+        let thirdVC = TestFlowCoordinatorNothingCompletionModel.TestViewController()
         flowNavController.pushViewController(thirdVC, animated: false)
         let fourthVC = TestCoordinatorStringSetup.TestViewController()
         let thirdCoordinator = navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (fourthVC, ""), parameters: noAnimationParams)
@@ -156,10 +156,10 @@ class NavigatorGoTests: XCTestCase {
         let firstVC = TestCoordinator.TestViewController()
         let navController = CoordinatedNavigationController(rootViewController: firstVC, navigator: navigator)
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: navController)
-        let secondVC = TestFlowCoordinatorVoidCompletionModel.TestViewController()
-        let secondCoordinator = navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .pushing, with: secondVC,
+        let secondVC = TestFlowCoordinatorNothingCompletionModel.TestViewController()
+        let secondCoordinator = navigator.go(to: TestFlowCoordinatorNothingCompletionModel.self, by: .pushing, with: secondVC,
             parameters: noAnimationParams, flowCompletion: { _, _ in })
-        let thirdVC = TestFlowCoordinatorVoidCompletionModel.TestViewController()
+        let thirdVC = TestFlowCoordinatorNothingCompletionModel.TestViewController()
         navController.pushViewController(thirdVC, animated: false)
         let fourthVC = TestCoordinatorStringSetup.TestViewController()
         let thirdCoordinator = navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (fourthVC, ""), parameters: noAnimationParams)

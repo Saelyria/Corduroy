@@ -17,14 +17,14 @@ import UIKit
  Dependencies for a coordinator can be defined via its `SetupModel` associated type. An object of this type is passed
  in to the `create(with:navigator:)` factory method of the coordinator. Beyond this setup model, there should be little
  to no more communication between coordinators - the idea is that a coordinator's setup model includes everything it
- needs from the outer application to do its job. This `SetupModel` associated type defaults to `Void` if no explicit
+ needs from the outer application to do its job. This `SetupModel` associated type defaults to `Nothing` if no explicit
  type is set. Note that coordinators are instantiated with their class's `create(with:navigator:)` methods, so `init`
  methods shouldn't be implemented.
  */
 public protocol Coordinator: BaseCoordinator {
     /// The type of the model object that contains all dependencies the coordinator needs to be properly initialized.
-    /// Defaults to 'Void' if no explicit type is set.
-    associatedtype SetupModel = Void
+    /// Defaults to 'Nothing' if no explicit type is set.
+    associatedtype SetupModel = Nothing
     
     /// The navigator managing navigation to this coordinator and that it should use to perform navigation to other
     /// coordinators.
@@ -33,7 +33,7 @@ public protocol Coordinator: BaseCoordinator {
     /**
      Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
      configured with the given `model` object, which is an instance of its aliased `SetupModel` type. A basic
-     implementation of this method is provided if the `SetupModel` type is `Void`.
+     implementation of this method is provided if the `SetupModel` type is `Nothing`.
      - parameter model: The context object containing all dependencies the view controller needs.
      - parameter navigator: The navigator the coordinator should use to navigate from.
      */
@@ -49,7 +49,7 @@ public protocol Coordinator: BaseCoordinator {
     func presentFirstViewController(context: Navigator.NavigationContext)
 }
 
-public extension Coordinator where Self.SetupModel == Void {
+public extension Coordinator where Self.SetupModel == Nothing {
     static func create(with model: SetupModel, navigator: Navigator) -> Self {
         let coordinator = Self()
         coordinator.navigator = navigator
@@ -75,12 +75,12 @@ public extension Coordinator where Self.SetupModel == Void {
  */
 public protocol FlowCoordinator: BaseCoordinator {
     /// The type of the model object that contains all dependencies the coordinator needs to be properly initialized.
-    /// Defaults to 'Void' if no explicit type is set.
-    associatedtype SetupModel = Void
+    /// Defaults to 'Nothing' if no explicit type is set.
+    associatedtype SetupModel = Nothing
     
     /// The type of the model object that this flow coordinator will return in its completion containing data about or
-    /// as a result of its flow. Defaults to 'EmptyContext' if no explicit type is set.
-    associatedtype FlowCompletionModel = Void
+    /// as a result of its flow. Defaults to 'Nothing' if no explicit type is set.
+    associatedtype FlowCompletionModel = Nothing
     
     /// The navigator managing navigation to this coordinator and that it should use to perform navigation to other
     /// coordinators.
@@ -89,7 +89,7 @@ public protocol FlowCoordinator: BaseCoordinator {
     /**
      Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
      configured with the given `model` object, which is an instance of its aliased `SetupModel` type. A basic
-     implementation of this method is provided if the `SetupModel` type is `Void`.
+     implementation of this method is provided if the `SetupModel` type is `Nothing`.
      - parameter model: The context object containing all dependencies the view controller needs.
      - parameter navigator: The navigator the coordinator should use to navigate from.
      */
@@ -108,7 +108,7 @@ public protocol FlowCoordinator: BaseCoordinator {
     func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionModel?) -> Void)
 }
 
-public extension FlowCoordinator where Self.SetupModel == Void {
+public extension FlowCoordinator where Self.SetupModel == Nothing {
     static func create(with model: SetupModel, navigator: Navigator) -> Self {
         let coordinator = Self()
         coordinator.navigator = navigator
@@ -169,4 +169,13 @@ public extension BaseCoordinator {
         UIViewController.dismissCurrentViewController(in: context)
     }
 }
+
+/**
+ An empty struct that is used as the default value of `SetupModel` or `FlowCompletionModel` associated types.
+ Coordinators whose setup models are this type are taken to mean that they have no dependencies.
+ */
+public struct Nothing: ExpressibleByNilLiteral {
+    public init(nilLiteral: ()) {  }
+}
+
 

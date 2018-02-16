@@ -77,8 +77,8 @@ public class Navigator {
      - parameter firstCoordinator: The type of coordinator to start the app from.
      */
     @discardableResult
-    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) -> T where T.SetupModel == Void {
-        return self.start(onWindow: window, firstCoordinator: firstCoordinator, with: ())
+    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) -> T where T.SetupModel == Nothing {
+        return self.start(onWindow: window, firstCoordinator: firstCoordinator, with: nil)
     }
     
     /**
@@ -113,8 +113,8 @@ public class Navigator {
      */
     @discardableResult
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod,
-    parameters: NavigationParameters = NavigationParameters()) -> T where T.SetupModel == Void {
-        return self.go(to: coordinator, by: navMethod, with: (), parameters: parameters)
+    parameters: NavigationParameters = NavigationParameters()) -> T where T.SetupModel == Nothing {
+        return self.go(to: coordinator, by: navMethod, with: nil, parameters: parameters)
     }
     
     /**
@@ -153,8 +153,8 @@ public class Navigator {
         passing in either an error or the created coordinator.
      */
     public func evaluatePreconditionsAndGo<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navMethod: PresentMethod,
-    parameters: NavigationParameters = NavigationParameters(), evaluationCompletion: @escaping (Error?, T?) -> Void) where T.SetupModel == Void {
-        self.evaluatePreconditionsAndGo(to: coordinator, by: navMethod, with: (), evaluationCompletion: evaluationCompletion)
+    parameters: NavigationParameters = NavigationParameters(), evaluationCompletion: @escaping (Error?, T?) -> Void) where T.SetupModel == Nothing {
+        self.evaluatePreconditionsAndGo(to: coordinator, by: navMethod, with: nil, evaluationCompletion: evaluationCompletion)
     }
     
     /**
@@ -207,8 +207,8 @@ public class Navigator {
      */
     @discardableResult
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod,
-    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> T where T.SetupModel == Void {
-        return self.go(to: flowCoordinator, by: navMethod, with: (), flowCompletion: flowCompletion)
+    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> T where T.SetupModel == Nothing {
+        return self.go(to: flowCoordinator, by: navMethod, with: nil, flowCompletion: flowCompletion)
     }
     
     /**
@@ -250,8 +250,8 @@ public class Navigator {
      */
     public func evaluatePreconditionsAndGo<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
     parameters: NavigationParameters = NavigationParameters(), evaluationCompletion: @escaping (Error?, T?) -> Void,
-    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) where T.SetupModel == Void {
-        self.evaluatePreconditionsAndGo(to: flowCoordinatorType, by: navMethod, with: (), evaluationCompletion: evaluationCompletion, flowCompletion: flowCompletion)
+    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) where T.SetupModel == Nothing {
+        self.evaluatePreconditionsAndGo(to: flowCoordinatorType, by: navMethod, with: nil, evaluationCompletion: evaluationCompletion, flowCompletion: flowCompletion)
     }
 	
     /**

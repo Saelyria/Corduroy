@@ -66,7 +66,7 @@ public extension SelfCoordinating where Self: UIViewController {
     }
 }
 
-public extension SelfCoordinating where Self: UIViewController, Self.SetupModel == Void {
+public extension SelfCoordinating where Self: UIViewController, Self.SetupModel == Nothing {
     // NOTE: This default behaviour should be overriden for view controllers that must be initiated from storyboards.
     static func create(with model: SetupModel, navigator: Navigator) -> Self {
         let selfCoordinatingVC = Self()

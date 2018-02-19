@@ -21,40 +21,13 @@ import UIKit
  type is set. Note that coordinators are instantiated with their class's `create(with:navigator:)` methods, so `init`
  methods shouldn't be implemented.
  */
-public protocol Coordinator: BaseCoordinator {
-    /// The type of the model object that contains all dependencies the coordinator needs to be properly initialized.
-    /// Defaults to 'Nothing' if no explicit type is set.
-    associatedtype SetupModel = Nothing
-    
-    /// The navigator managing navigation to this coordinator and that it should use to perform navigation to other
-    /// coordinators.
-    var navigator: Navigator! { get set }
-    
-    /**
-     Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
-     configured with the given `model` object, which is an instance of its aliased `SetupModel` type. A basic
-     implementation of this method is provided if the `SetupModel` type is `Nothing`.
-     - parameter model: The context object containing all dependencies the view controller needs.
-     - parameter navigator: The navigator the coordinator should use to navigate from.
-     */
-    static func create(with model: SetupModel, navigator: Navigator) -> Self
-    
-    init()
-    
+public protocol Coordinator: BaseCoordinator, SetupModelRequiring {
     /**
      Called when the coordinator is navigated to. In this method, the coordinator should instantiate its first view
      controller and push/present it from the context's `currentViewController`.
      - parameter context: A context object containing the involved coordinators and the view controller to start from.
      */
     func presentFirstViewController(context: Navigator.NavigationContext)
-}
-
-public extension Coordinator where Self.SetupModel == Nothing {
-    static func create(with model: SetupModel, navigator: Navigator) -> Self {
-        let coordinator = Self()
-        coordinator.navigator = navigator
-        return coordinator
-    }
 }
 
 
@@ -73,29 +46,10 @@ public extension Coordinator where Self.SetupModel == Nothing {
  authentication, a type that contains information about whether the authentication was successful and, if so, the
  credentials for the authentication.
  */
-public protocol FlowCoordinator: BaseCoordinator {
-    /// The type of the model object that contains all dependencies the coordinator needs to be properly initialized.
-    /// Defaults to 'Nothing' if no explicit type is set.
-    associatedtype SetupModel = Nothing
-    
+public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
     /// The type of the model object that this flow coordinator will return in its completion containing data about or
     /// as a result of its flow. Defaults to 'Nothing' if no explicit type is set.
     associatedtype FlowCompletionModel = Nothing
-    
-    /// The navigator managing navigation to this coordinator and that it should use to perform navigation to other
-    /// coordinators.
-    var navigator: Navigator! { get set }
-    
-    /**
-     Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
-     configured with the given `model` object, which is an instance of its aliased `SetupModel` type. A basic
-     implementation of this method is provided if the `SetupModel` type is `Nothing`.
-     - parameter model: The context object containing all dependencies the view controller needs.
-     - parameter navigator: The navigator the coordinator should use to navigate from.
-     */
-    static func create(with model: SetupModel, navigator: Navigator) -> Self
-    
-    init()
     
     /**
      Starts the coordinator with the given setup model, navigation context, and flow completion handler. Called when the
@@ -108,14 +62,6 @@ public protocol FlowCoordinator: BaseCoordinator {
     func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionModel?) -> Void)
 }
 
-public extension FlowCoordinator where Self.SetupModel == Nothing {
-    static func create(with model: SetupModel, navigator: Navigator) -> Self {
-        let coordinator = Self()
-        coordinator.navigator = navigator
-        return coordinator
-    }
-}
-
 
 
 /**
@@ -123,6 +69,10 @@ public extension FlowCoordinator where Self.SetupModel == Nothing {
  its own - instead, implement one of either `Coordinator`, `FlowCoordinator`, or `SelfCoordinating`.
  */
 public protocol BaseCoordinator: AnyObject {
+    /// The navigator managing navigation to this coordinator and that it should use to perform navigation to other
+    /// coordinators.
+    var navigator: Navigator! { get set }
+    
     /// The view controller the coordinator is currently presenting and managing. This must be set by the coordinator
     /// whenever it changes the currently presented view controller.
     var currentViewController: UIViewController? { get }
@@ -167,6 +117,35 @@ public extension BaseCoordinator {
     
     func dismissViewControllers(context: Navigator.NavigationContext) {
         UIViewController.dismissCurrentViewController(in: context)
+    }
+}
+
+/**
+ A basic protocol that all coordinator types implement. This is mostly used internally and should not be implemented on
+ its own - instead, implement one of either `Coordinator`, `FlowCoordinator`, or `SelfCoordinating`.
+ */
+public protocol SetupModelRequiring {
+    /// The type of the model object that contains all dependencies the coordinator needs to be properly initialized.
+    /// Defaults to 'Nothing' if no explicit type is set.
+    associatedtype SetupModel = Nothing
+    
+    /**
+     Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
+     configured with the given `model` object, which is an instance of its aliased `SetupModel` type. A basic
+     implementation of this method is provided if the `SetupModel` type is `Nothing`.
+     - parameter model: The context object containing all dependencies the view controller needs.
+     - parameter navigator: The navigator the coordinator should use to navigate from.
+     */
+    static func create(with model: SetupModel, navigator: Navigator) -> Self
+    
+    init()
+}
+
+public extension SetupModelRequiring where Self.SetupModel == Nothing, Self: BaseCoordinator {
+    static func create(with model: SetupModel, navigator: Navigator) -> Self {
+        let coordinator = Self()
+        coordinator.navigator = navigator
+        return coordinator
     }
 }
 

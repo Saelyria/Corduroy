@@ -1,6 +1,12 @@
 
 import Foundation
 
+public enum RoutingError: Error {
+    case failedToCreateSetupModel
+    case unrecognizedPathComponent(String)
+    case unableToPresentCoordinator
+}
+
 /**
  An object that handles navigation between coordinators.
  
@@ -15,12 +21,8 @@ import Foundation
  automatically added to the navigator's `currentRoute`.
  */
 public class RoutingNavigator {
-    public enum RoutingError: Error {
-        case failedToCreateSetupModel
-        case unrecognizedPathComponent(String)
-    }
-    
-    typealias NavigationHandler = (_ routeParameterValue: String, PresentMethod, NavigationParameters) -> Void
+    typealias NavigationHandler = (_ routeParameterValue: String, PresentMethod, NavigationParameters) throws -> Void
+    typealias FlowNavigationHandler = (_ routeParameterValue: String, PresentMethod, NavigationParameters) throws -> Void
     
     var currentRoute: URL? {
         return nil
@@ -54,9 +56,30 @@ public class RoutingNavigator {
         let handler: NavigationHandler = { [weak self] (routeParameterValue: String, presentMethod: PresentMethod, parameters: NavigationParameters) in
             if let model = T.SetupModel(routeParameterValue: routeParameterValue) {
                 self?.go(to: coordinatorType, by: presentMethod, with: model, parameters: parameters)
+            } else {
+                throw RoutingError.failedToCreateSetupModel
             }
         }
         self.navHandlersForPathComponents[coordinatorType.pathComponent] = handler
+    }
+    
+    /**
+     Register the given routable coordinator to allow it to be routed via URLs.
+     
+     In order for a coordinator to be navigable via URLs, its path component must be registered with the routing
+     navigator. This method should be called just after the navigator is created, and should be called once for each
+     coordinator in the application.
+     - parameter coordinatorTypes: The routable coordinator to register.
+     */
+    func register<T: RoutableFlowCoordinator>(_ flowCoordinatorType: T.Type) {
+        let handler: NavigationHandler = { [weak self] (routeParameterValue: String, presentMethod: PresentMethod, parameters: NavigationParameters) in
+            if let model = T.SetupModel(routeParameterValue: routeParameterValue) {
+                self?.go(to: flowCoordinatorType, by: presentMethod, with: model, parameters: parameters, flowCompletion: nil)
+            } else {
+                throw RoutingError.failedToCreateSetupModel
+            }
+        }
+        self.navHandlersForPathComponents[flowCoordinatorType.pathComponent] = handler
     }
     
     /*

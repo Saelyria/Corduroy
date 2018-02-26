@@ -52,10 +52,8 @@ public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
     associatedtype FlowCompletionModel = Nothing
     
     /**
-     Starts the coordinator with the given setup model, navigation context, and flow completion handler. Called when the
-     coordinator is being navigated to. In this method, the coordinator should instantiate its first view controller and
-     push/present it from the context's `currentViewController`.
-     - parameter model: The model object containing all dependencies the coordinator needs.
+     Called when the flow coordinator is navigated to. In this method, the coordinator should instantiate its first view
+     controller and push/present it from the context's `currentViewController`.
      - parameter context: A context object containing the involved coordinators and the view controller to start from.
      - parameter flowCompletion: A closure to call after the flow has completed.
      */

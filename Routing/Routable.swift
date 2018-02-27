@@ -3,6 +3,7 @@ import Foundation
 
 public typealias RoutableCoordinator = Coordinator & Routable
 public typealias RoutableFlowCoordinator = FlowCoordinator & Routable
+public typealias RoutableSelfCoordinating = SelfCoordinating & Routable
 
 /**
  A protocol describing a coordinator or flow coordinator that can be routed to via URLs.

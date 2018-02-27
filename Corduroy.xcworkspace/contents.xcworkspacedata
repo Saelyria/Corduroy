@@ -5,10 +5,10 @@
       location = "group:Corduroy.podspec">
    </FileRef>
    <FileRef
-      location = "group:LICENSE">
+      location = "group:README.md">
    </FileRef>
    <FileRef
-      location = "group:README.md">
+      location = "group:LICENSE">
    </FileRef>
    <FileRef
       location = "group:Corduroy.xcodeproj">
@@ -18,5 +18,8 @@
    </FileRef>
    <FileRef
       location = "group:CorduroyExample/CorduroyExample.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:CorduroyRoutingExample/CorduroyRoutingExample/CorduroyRoutingExample.xcodeproj">
    </FileRef>
 </Workspace>

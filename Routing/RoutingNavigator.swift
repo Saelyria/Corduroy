@@ -50,18 +50,18 @@ public class RoutingNavigator: Navigator {
      coordinator in the application.
      - parameter coordinatorType: The routable coordinator to register.
      */
-    func register<T: RoutableCoordinator>(_ coordinatorType: T.Type) {
-        let handler: NavigationHandler = { [weak self] (previousCoordinator, queryItems, routeInfoProvider) in
-            do {
-                let (model, presentMethod, parameters)
-                    = try routeInfoProvider.routingInfo(for: coordinatorType, presentedFrom: previousCoordinator, queryItems: queryItems)
-                self?.go(to: coordinatorType, by: presentMethod, with: model, parameters: parameters)
-            } catch {
-                throw error
-            }
-        }
-        self.navHandlersForPathComponents[coordinatorType.pathSegment] = handler
-    }
+//    func register<T: RoutableCoordinator>(_ coordinatorType: T.Type) {
+//        let handler: NavigationHandler = { [weak self] (previousCoordinator, queryItems, routeInfoProvider) in
+//            do {
+//                let (model, presentMethod, parameters)
+//                    = try routeInfoProvider.routingInfo(for: coordinatorType, presentedFrom: previousCoordinator, queryItems: queryItems)
+//                self?.go(to: coordinatorType, by: presentMethod, with: model, parameters: parameters)
+//            } catch {
+//                throw error
+//            }
+//        }
+//        self.navHandlersForPathComponents[coordinatorType.pathSegment] = handler
+//    }
     
     /**
      Register the given routable coordinator to allow it to be routed via URLs.
@@ -71,18 +71,18 @@ public class RoutingNavigator: Navigator {
      coordinator in the application.
      - parameter flowCoordinatorType: The routable flow coordinator to register.
      */
-    func register<T: RoutableFlowCoordinator>(_ flowCoordinatorType: T.Type) {
-        let handler: NavigationHandler = { [weak self] (previousCoordinator, queryItems, routeInfoProvider) in
-            do {
-                let (model, presentMethod, parameters, completion)
-                    = try routeInfoProvider.routingInfo(for: flowCoordinatorType, presentedFrom: previousCoordinator, queryItems: queryItems)
-                self?.go(to: flowCoordinatorType, by: presentMethod, with: model, parameters: parameters, flowCompletion: completion)
-            } catch {
-                throw error
-            }
-        }
-        self.navHandlersForPathComponents[flowCoordinatorType.pathSegment] = handler
-    }
+//    func register<T: RoutableFlowCoordinator>(_ flowCoordinatorType: T.Type) {
+//        let handler: NavigationHandler = { [weak self] (previousCoordinator, queryItems, routeInfoProvider) in
+//            do {
+//                let (model, presentMethod, parameters, completion)
+//                    = try routeInfoProvider.routingInfo(for: flowCoordinatorType, presentedFrom: previousCoordinator, queryItems: queryItems)
+//                self?.go(to: flowCoordinatorType, by: presentMethod, with: model, parameters: parameters, flowCompletion: completion)
+//            } catch {
+//                throw error
+//            }
+//        }
+//        self.navHandlersForPathComponents[flowCoordinatorType.pathSegment] = handler
+//    }
     
     /*
      TODO:

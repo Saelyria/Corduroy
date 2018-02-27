@@ -40,6 +40,8 @@ protocol RoutingURLParser {
 
 
 class DefaultRoutingURLParser: RoutingURLParser {
+    let parseableUrls: [URL] = []
+    
     func pathSegments(from url: URL) -> [RoutingURLParser.PathSegment] {
         let segments = url.pathComponents.filter({ $0 != "/" })
         let urlComponents = URLComponents(string: url.absoluteString)!

@@ -7,6 +7,9 @@ public typealias RoutableSelfCoordinating = SelfCoordinating & Routable
 
 /**
  A protocol describing a coordinator or flow coordinator that can be routed to via URLs.
+ 
+ In a URL-routed application, coordinators correspond to the path segments in a URL's path (i.e. "home" and "profiles"
+ in "/home/profiles" each correspond to a different coordinator in the navigation stack).
  */
 public protocol Routable: BaseCoordinator {
     static var pathSegment: String { get }
@@ -19,12 +22,12 @@ public protocol RouteParameterInitable {
 }
 
 
-public struct Route {
-    static let any: Route = Route(from: nil, to: nil)
-    
-    let from: Routable.Type?
-    let to: Routable.Type?
-}
+//public struct Route {
+//    static let any: Route = Route(from: nil, to: nil)
+//
+//    let from: Routable.Type?
+//    let to: Routable.Type?
+//}
 
 
 /**
@@ -60,12 +63,12 @@ public protocol Routing: AnyObject {
     var routableCoordinators: [Routable.Type] { get }
     
     /**
-     Asks the coordinator to route to the coordinator with the given path segment.
+     Asks the routing object to route to the coordinator with the given path segment.
      
      A routing navigator will call this method on a routable coordinator
      - parameter pathSegment: The path segment
      - parameter parameters: The key-value parameters that were included with the path segment for the
      presented coordinator in the URL being handled by the routing navigator.
      */
-    func route(to pathSegment: String, navigator: RoutingNavigator, parameters: [String: String]?)
+    func route(toCoordinatorFor pathSegment: String, navigator: RoutingNavigator, parameters: [String: String]?)
 }

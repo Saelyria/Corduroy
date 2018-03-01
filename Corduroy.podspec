@@ -3,10 +3,9 @@ Pod::Spec.new do |s|
   s.version          = '0.1.0'
   s.summary          = 'Advanced navigation framework for iOS.'
   s.description      = <<-DESC
-  Corduroy is a series of protocols and clases that, when implemented, encapsulate
-  all navigation logic in 'coordinator' objects that keep view controllers smaller, more
-  reusable, and more uniform in terms of dependency declaration and navigation. It also
-  adds advanced navigation features like preconditions and type-safe dependency injection.
+  Corduroy is an advanced navigation framework that makes your navigation logic more type-safe, more
+  self-documenting, and simply more powerful, adding features like URL-based routing, navigation
+  preconditions, and more.
   DESC
 
   s.homepage         = 'https://github.com/Saelyria/Corduroy'
@@ -18,13 +17,12 @@ Pod::Spec.new do |s|
   s.default_subspec = "Core"
 
   s.subspec "Core" do |ss|
-    ss.source_files  = 'Core/'
-    ss.ios.framework  = "UIKit"
+    ss.source_files = 'Core/'
+    ss.ios.framework = "UIKit"
   end
 
-  s.subspec "RxSwift" do |ss|
-    ss.source_files = "Source/RxCorduroy/"
-    ss.dependency "Corduroy/Core"
-    ss.dependency "RxSwift", "~> 4.0"
+  s.subspec "Routing" do |ss|
+    ss.source_files = 'Routing/'
+    ss.ios.framework = "UIKit"
   end
 end

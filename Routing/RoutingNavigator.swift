@@ -101,7 +101,7 @@ public class RoutingNavigator: Navigator {
         for (pathSegment, parameters) in pathSegments {
             if let prevCoordinator = self.currentCoordinator as? Routing,
             prevCoordinator.routableCoordinators.contains(where: { $0.pathSegment == pathSegment }) {
-                prevCoordinator.route(to: pathSegment, navigator: self, parameters: parameters)
+                prevCoordinator.route(toCoordinatorFor: pathSegment, navigator: self, parameters: parameters)
             }
         }
         
@@ -143,9 +143,9 @@ public class RoutingNavigator: Navigator {
      - parameter evaluationCompletion: The block called when the navigator has completed evaluation of preconditions,
      passing in either an error or the created coordinator.
      */
-    public override func evaluatePreconditionsAndGo<T: RoutableCoordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navMethod: PresentMethod,
-    with model: T.SetupModel, parameters: NavigationParameters = NavigationParameters(), evaluationCompletion: @escaping (Error?, T?) -> Void) {
-        super.evaluatePreconditionsAndGo(to: coordinator, by: navMethod, with: model, parameters: parameters, evaluationCompletion: evaluationCompletion)
+    public override func checkThenGo<T: RoutableCoordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navMethod: PresentMethod,
+    with model: T.SetupModel, parameters: NavigationParameters = NavigationParameters(), preconditionCompletion: ((Error?, T?) -> Void)?) {
+        super.checkThenGo(to: coordinator, by: navMethod, with: model, parameters: parameters, preconditionCompletion: preconditionCompletion)
     }
     
     // MARK: FlowCoordinator navigation methods
@@ -175,10 +175,10 @@ public class RoutingNavigator: Navigator {
      passing in either an error or the created coordinator.
      - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
      */
-    public override func evaluatePreconditionsAndGo<T: RoutableFlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
-    with model: T.SetupModel, parameters: NavigationParameters = NavigationParameters(), evaluationCompletion: @escaping (Error?, T?) -> Void,
+    public override func checkThenGo<T: RoutableFlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
+    with model: T.SetupModel, parameters: NavigationParameters = NavigationParameters(), preconditionCompletion: ((Error?, T?) -> Void)?,
     flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) {
-        super.evaluatePreconditionsAndGo(to: flowCoordinatorType, by: navMethod, with: model, evaluationCompletion: evaluationCompletion, flowCompletion: flowCompletion)
+        super.checkThenGo(to: flowCoordinatorType, by: navMethod, with: model, preconditionCompletion: preconditionCompletion, flowCompletion: flowCompletion)
     }
     
     // MARK: Backwards navigation methods

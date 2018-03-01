@@ -17,6 +17,7 @@
 		930C0899200C132400B0B934 /* CoordinatedNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */; };
 		9341551220276F5B00860CE2 /* Routable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9341551120276F5B00860CE2 /* Routable.swift */; };
 		9341551420276F9800860CE2 /* RoutingNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9341551320276F9800860CE2 /* RoutingNavigator.swift */; };
+		9351B4812047A8C100457AA5 /* CoordinatedViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9351B4802047A8C100457AA5 /* CoordinatedViewController.swift */; };
 		939826D0203B3A0F00B205C0 /* RoutingURLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939826CF203B3A0F00B205C0 /* RoutingURLParser.swift */; };
 /* End PBXBuildFile section */
 
@@ -33,6 +34,7 @@
 		930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatedNavigationController.swift; sourceTree = "<group>"; };
 		9341551120276F5B00860CE2 /* Routable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routable.swift; sourceTree = "<group>"; };
 		9341551320276F9800860CE2 /* RoutingNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingNavigator.swift; sourceTree = "<group>"; };
+		9351B4802047A8C100457AA5 /* CoordinatedViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatedViewController.swift; sourceTree = "<group>"; };
 		939826CF203B3A0F00B205C0 /* RoutingURLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingURLParser.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -73,6 +75,7 @@
 				93069169200BEEBD00B1C9B9 /* NavigationParameters.swift */,
 				93069167200BEEBD00B1C9B9 /* NavigationPrecondition.swift */,
 				930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */,
+				9351B4802047A8C100457AA5 /* CoordinatedViewController.swift */,
 				9306916A200BEEBD00B1C9B9 /* UIViewController+NavigationMethods.swift */,
 				930C0864200BF21000B0B934 /* Info.plist */,
 				930C0888200BF95A00B0B934 /* Corduroy.h */,
@@ -175,6 +178,7 @@
 				939826D0203B3A0F00B205C0 /* RoutingURLParser.swift in Sources */,
 				930C0889200BFA1200B0B934 /* CoordinatorManageable.swift in Sources */,
 				9341551420276F9800860CE2 /* RoutingNavigator.swift in Sources */,
+				9351B4812047A8C100457AA5 /* CoordinatedViewController.swift in Sources */,
 				930C088A200BFA1400B0B934 /* Coordinator.swift in Sources */,
 				930C088B200BFA1600B0B934 /* Navigator.swift in Sources */,
 				930C088C200BFA1800B0B934 /* NavigationParameters.swift in Sources */,

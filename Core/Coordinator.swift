@@ -27,7 +27,7 @@ public protocol Coordinator: BaseCoordinator, SetupModelRequiring {
      controller and push/present it from the context's `currentViewController`.
      - parameter context: A context object containing the involved coordinators and the view controller to start from.
      */
-    func presentFirstViewController(context: Navigator.NavigationContext)
+    func presentFirstViewController(context: NavigationContext)
 }
 
 
@@ -57,7 +57,7 @@ public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
      - parameter context: A context object containing the involved coordinators and the view controller to start from.
      - parameter flowCompletion: A closure to call after the flow has completed.
      */
-    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionModel?) -> Void)
+    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionModel?) -> Void)
 }
 
 
@@ -89,7 +89,7 @@ public protocol BaseCoordinator: AnyObject {
      view controller is handled by the navigation controller.
      - parameter context: A context object containing details about the navigation, such as the involved coordinators.
      */
-    func dismissViewControllers(context: Navigator.NavigationContext)
+    func dismissViewControllers(context: NavigationContext)
     
     /**
      Optional event method called when the navigator has been dismissed by the navigator or by a navigation controller.
@@ -101,19 +101,19 @@ public protocol BaseCoordinator: AnyObject {
      started by this coordinator. This method can be used to start tasks indicating to the user that an asynchronous
      task has started, such as starting a loading indicator.
      */
-    func onRecoveringPreconditionEvaluationDidStart()
+    func onPreconditionRecoveryStarted()
 }
 
 public extension BaseCoordinator {
     func onDismissal() { }
     
-    func onRecoveringPreconditionEvaluationDidStart() { }
+    func onPreconditionRecoveryStarted() { }
     
     var canBeNavigatedBackTo: Bool {
         return true
     }
     
-    func dismissViewControllers(context: Navigator.NavigationContext) {
+    func dismissViewControllers(context: NavigationContext) {
         UIViewController.dismissCurrentViewController(in: context)
     }
 }

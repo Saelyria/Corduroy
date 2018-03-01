@@ -8,7 +8,7 @@ public protocol NavigationPreconditionRequiring: BaseCoordinator {
     /// Whether the navigator should sort the preconditions array when evaluating them. If `true`, the navigator will
     /// evaluate non-asynchronous preconditions (i.e. non-`RecoveringNavigationPrecondition`s) before asynchronous ones
     /// in order to fail faster in case of a failure, otherwise it will evaluate preconditions in the array's order.
-    /// Defaults to `true`.
+    /// Defaults to `false`.
     var shouldSortPreconditions: Bool { get }
     
     /// The array of preconditions that must pass in order to navigate to this coordinator.
@@ -17,7 +17,7 @@ public protocol NavigationPreconditionRequiring: BaseCoordinator {
 
 public extension NavigationPreconditionRequiring {
     var shouldSortPreconditions: Bool {
-        return true
+        return false
     }
 }
 
@@ -28,13 +28,8 @@ public extension NavigationPreconditionRequiring {
  
  A `NavigationPrecondition` object is used by the `Navigator` to determine if navigation is allowed to a given
  coordinator. The navigator will determine this by calling the precondition's `evaluate(context:)` method and,
- based on whether or not an error is returned in the completion closure, will continue with navigation or not to the
- coordinator being navigated to. Precondition objects are created by the navigator shortly before the time of their
- evaluation.
- 
- Note that a precondition can instantly call their `completion` (as the case would be if the precondition was based on
- readily- or globally-available variables), but this can be called asynchronously (such as if a network request must be
- completed as a part of the precondition).
+ based on whether or not an error is thrown, will continue with navigation or not to the coordinator being navigated to.
+ Precondition objects are created by the navigator shortly before the time of their evaluation.
  */
 public protocol NavigationPrecondition {
     init()
@@ -44,22 +39,28 @@ public protocol NavigationPrecondition {
      - parameter context: A context object containing details about the navigation.
      - throws: An error about why the precondition did not pass.
      */
-    func evaluate(context: Navigator.NavigationContext) throws
+    func evaluate(context: NavigationContext) throws
 }
 
 
 
 /**
  Describes a navigation precondition that, when a precondition is not met, can attempt to recover asynchronously.
+ 
+ If the precondition initially throws an error in its `evaluate(context:)` method, the navigator will call its
+ `attemptRecovery(context:completion:)` method, where the precondition object can perform any kind of asynchronous work
+ to attempt to address the failed precondition. If it successfully addresses the precondition, the precondition must
+ call the passed in `completion` block, passing in nil. If the recovery attempt was unsuccessful, it should pass in an
+ error describing the problem.
  */
 public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
     /**
      Evaluates whether the precondition passes. This is called when a navigation takes place with this precondition.
      - parameter context: A context object containing details about the navigation.
      - parameter completion: A closure the precondition should call when it has decided that it passes (indicated by
-     passing `nil` or fails (by passing an `Error` object).
+     passing `nil`) or fails (indicated by passing an `Error` object).
      */
-    func attemptRecovery(context: Navigator.NavigationContext, completion: @escaping (Error?) -> Void)
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Error?) -> Void)
 }
 
 
@@ -76,8 +77,7 @@ public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
  */
 public protocol FlowRecoveringNavigationPrecondition: RecoveringNavigationPrecondition {
     /// The type of flow coordinator that will be used for recovery if the precondition is not already met when its
-    /// `evaluateIfRecoveryNeeded(context:)` method is called. This flow coordinator must have a `SetupModel` type of
-    /// `Nothing`.
+    /// `evaluate(context:)` method is called. This flow coordinator must have a `SetupModel` type of `Nothing`.
     associatedtype RecoveringFlowCoordinator: FlowCoordinator where RecoveringFlowCoordinator.SetupModel == Nothing
     
     /// The present method that should be used for the precondition's recovery flow coordinator.
@@ -85,7 +85,7 @@ public protocol FlowRecoveringNavigationPrecondition: RecoveringNavigationPrecon
 }
 
 public extension FlowRecoveringNavigationPrecondition {
-    func attemptRecovery(context: Navigator.NavigationContext, completion: @escaping (Error?) -> Void) {
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Error?) -> Void) {
         context.navigator.navigateForFlowRecoveringPrecondition(self, completion: completion)
     }
 }

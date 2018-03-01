@@ -2,6 +2,41 @@
 import UIKit
 
 /**
+ An object containing information about a navigation operation, most notably the involved coordinators and the
+ current view controller that the 'to' coordinator should start from.
+ */
+public struct NavigationContext {
+    /// The current view controller managed by the from coordinator that the to coordinator should navigate from.
+    /// Will be `nil` if this is the first coordinator navigation.
+    public let currentViewController: UIViewController?
+    /// The coordinator being navigated away from. Will be `nil` if this is the first coordinator navigation.
+    public let fromCoordinator: BaseCoordinator?
+    /// The coordinator being navigated to.
+    public let toCoordinator: BaseCoordinator
+    /// The presentation method requested to be used to present the to coordinator's first view controller. Will be
+    /// `nil` if the navigation is a dismissal.
+    public let requestedPresentMethod: PresentMethod?
+    /// The dissmissal method requested to be used to dismiss the coordinator's top view controller Will be `nil` if
+    /// the navigation is a presentation.
+    public let requestedDismissMethod: DismissMethod?
+    /// Other parameters for the navigation, such as the requested modal presentation style.
+    public let parameters: NavigationParameters
+    /// The navigator handling the navigation.
+    public let navigator: Navigator
+    
+    internal init(navigator: Navigator, viewController: UIViewController?, from: BaseCoordinator?,
+                  to: BaseCoordinator, present: PresentMethod?, dismiss: DismissMethod?, params: NavigationParameters) {
+        self.navigator = navigator
+        self.currentViewController = viewController
+        self.fromCoordinator = from
+        self.toCoordinator = to
+        self.requestedPresentMethod = present
+        self.requestedDismissMethod = dismiss
+        self.parameters = params
+    }
+}
+
+/**
  An enum describing a type of presentation between view controllers, such as a navigation controller push or modal
  present.
  */

@@ -26,9 +26,9 @@ public protocol Coordinator: BaseCoordinator, SetupModelRequiring {
     /**
      Called when the coordinator is navigated to. In this method, the coordinator should instantiate its first view
      controller and push/present it from the context's `currentViewController`.
-     - parameter context: A context object containing the involved coordinators and the view controller to start from.
+     - parameter context: A context object containing the involved coordinators and other navigation details.
      */
-    func presentFirstViewController(context: NavigationContext)
+    func presentViewController(context: NavigationContext)
 }
 
 
@@ -55,7 +55,7 @@ public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
     /**
      Called when the flow coordinator is navigated to. In this method, the coordinator should instantiate its first view
      controller and push/present it from the context's `currentViewController`.
-     - parameter context: A context object containing the involved coordinators and the view controller to start from.
+     - parameter context: A context object containing the involved coordinators and other navigation details.
      - parameter flowCompletion: A closure to call after the flow has completed.
      */
     func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionModel?) -> Void)
@@ -78,7 +78,8 @@ public protocol BaseCoordinator: AnyObject {
     var canBeNavigatedBackTo: Bool { get }
     
     /// Optional event method called when the navigator has been dismissed by the navigator.
-    func onDismissal()
+    /// - parameter context: A context object containing the involved coordinators and other navigation details.
+    func onDismissal(context: NavigationContext)
     
     /**
      Optional event method called when the navigator has started evaluating an asynchronous precondition on a navigation
@@ -90,7 +91,7 @@ public protocol BaseCoordinator: AnyObject {
 }
 
 public extension BaseCoordinator {
-    func onDismissal() { }
+    func onDismissal(context: NavigationContext) { }
     
     func onPreconditionRecoveryStarted() { }
     

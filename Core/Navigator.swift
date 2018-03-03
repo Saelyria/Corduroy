@@ -45,7 +45,7 @@ public class Navigator {
      */
     @discardableResult
     public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) -> T where T.SetupModel == Void {
-        return self.start(onWindow: window, firstCoordinator: firstCoordinator, with: nil)
+        return self.start(onWindow: window, firstCoordinator: firstCoordinator, with: ())
     }
     
     /**
@@ -65,7 +65,7 @@ public class Navigator {
         self.navigationStack.append(stackItem)
         let context = NavigationContext(navigator: self, from: nil, to: firstCoordinator,
                                         present: .addingAsRoot(window: window), dismiss: nil, params: NavigationParameters())
-        firstCoordinator.presentFirstViewController(context: context)
+        firstCoordinator.presentViewController(context: context)
         
         return firstCoordinator
     }
@@ -81,7 +81,7 @@ public class Navigator {
     @discardableResult
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod,
     parameters: NavigationParameters = NavigationParameters()) -> T where T.SetupModel == Void {
-        return self.go(to: coordinator, by: navMethod, with: nil, parameters: parameters)
+        return self.go(to: coordinator, by: navMethod, with: (), parameters: parameters)
     }
     
     /**
@@ -102,7 +102,7 @@ public class Navigator {
                                         present: navMethod, dismiss: nil, params: parameters)
         let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
         self.navigationStack.append(stackItem)
-        coordinator.presentFirstViewController(context: context)
+        coordinator.presentViewController(context: context)
         
         return coordinator
     }
@@ -118,7 +118,7 @@ public class Navigator {
      */
     public func checkThenGo<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navMethod: PresentMethod,
     parameters: NavigationParameters = NavigationParameters(), preconditionCompletion: ((Error?, T?) -> Void)?) where T.SetupModel == Void {
-        self.checkThenGo(to: coordinator, by: navMethod, with: nil, preconditionCompletion: preconditionCompletion)
+        self.checkThenGo(to: coordinator, by: navMethod, with: (), preconditionCompletion: preconditionCompletion)
     }
     
     /**
@@ -147,7 +147,7 @@ public class Navigator {
                     self.navigationStack.append(stackItem)
                     
                     preconditionCompletion?(nil, coordinator)
-                    coordinator.presentFirstViewController(context: context)
+                    coordinator.presentViewController(context: context)
                 }
             }
         })
@@ -169,7 +169,7 @@ public class Navigator {
     @discardableResult
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod,
     parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> T where T.SetupModel == Void {
-        return self.go(to: flowCoordinator, by: navMethod, with: nil, flowCompletion: flowCompletion)
+        return self.go(to: flowCoordinator, by: navMethod, with: (), flowCompletion: flowCompletion)
     }
     
     /**
@@ -209,7 +209,7 @@ public class Navigator {
     public func checkThenGo<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
     parameters: NavigationParameters = NavigationParameters(), preconditionCompletion: ((Error?, T?) -> Void)?,
     flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) where T.SetupModel == Void {
-        self.checkThenGo(to: flowCoordinatorType, by: navMethod, with: nil, preconditionCompletion: preconditionCompletion!, flowCompletion: flowCompletion)
+        self.checkThenGo(to: flowCoordinatorType, by: navMethod, with: (), preconditionCompletion: preconditionCompletion!, flowCompletion: flowCompletion)
     }
 	
     /**
@@ -303,30 +303,19 @@ public class Navigator {
             for viewController in navStackItem.viewControllers {
                 navStackItem.coordinator.dismiss(viewController, parameters: params)
             }
-
+            
+            let context = NavigationContext(navigator: self, from: coordinatorToRemove, to: coordinatorBeforeRemovedCoordinator,
+                                            present: nil, dismiss: dismissMethod, params: parameters)
+            coordinatorToRemove.onDismissal(context: context)
             self.navigationStack.remove(at: index)
-            coordinatorToRemove.onDismissal()
         }
         
         self.shouldIgnoreNavControllerPopRequests = false
     }
     
-    // MARK: UINavigationController methods
+    // MARK: CoordinatedViewController methods
     
-    internal func coordinatedNavControllerDidPopCoordinators(_ coordinators: [BaseCoordinator]) {
-        guard self.shouldIgnoreNavControllerPopRequests == false else { return }
-        
-        for coordinator in coordinators {
-            guard let lastCoordinator = self.navigationStack.last?.coordinator, lastCoordinator === coordinator else {
-                fatalError("Misalignment of popped coordinators and the navigator's nav stack.")
-            }
-            
-            self.navigationStack.removeLast()
-            coordinator.onDismissal()
-        }
-    }
-    
-    internal func coordinatedViewControllerDidAppear(_ viewController: CoordinatedViewController) {
+    internal func coordinatedViewControllerDidAppear(_ viewController: UIViewController & CoordinatedViewControllerProtocol) {
         guard self.navigationStack.last!.coordinator === viewController.baseCoordinator else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
@@ -334,8 +323,8 @@ public class Navigator {
         self.navigationStack.last!.viewControllers.append(viewController)
     }
     
-    internal func coordinatedViewControllerDidDisappear(_ viewController: CoordinatedViewController) {
-        guard self.navigationStack.last?.viewControllers.last === viewController else {
+    internal func coordinatedViewControllerDidDisappear(_ viewController: UIViewController & CoordinatedViewControllerProtocol) {
+        guard let lastVC = self.navigationStack.last?.viewControllers.last, lastVC === viewController else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
         self.navigationStack.last!.viewControllers.removeLast()
@@ -418,7 +407,7 @@ fileprivate class NavStackItem {
     let coordinator: BaseCoordinator
     let presentMethod: PresentMethod
     let canBeNavigatedBackTo: Bool
-    var viewControllers: [CoordinatedViewController] = []
+    var viewControllers: [UIViewController & CoordinatedViewControllerProtocol] = []
     
     init(coordinator: BaseCoordinator, presentMethod: PresentMethod, canBeNavigatedBackTo: Bool) {
         self.coordinator = coordinator

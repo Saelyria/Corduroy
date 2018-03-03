@@ -53,7 +53,7 @@ public extension CoordinatorManageable where Self: CoordinatedViewController {
 public protocol SelfCoordinating: Coordinator, CoordinatedViewControllerProtocol { }
 
 public extension SelfCoordinating where Self: CoordinatedViewController {
-    func presentFirstViewController(context: NavigationContext) {
+    func presentViewController(context: NavigationContext) {
         self.present(self, asDescribedBy: context)
     }
     
@@ -73,14 +73,4 @@ public extension SelfCoordinating where Self: UIViewController, Self.SetupModel 
         selfCoordinatingVC.navigator = navigator
         return selfCoordinatingVC
     }
-}
-
-
-/**
- A basic protocol that all coordinated view controller types implement. This is mostly used internally and should not be
- implemented on its own nor should a different value for `baseCoordinator` be provided other than the default - instead,
- implement one of either `CoordinatorManageable` or `SelfCoordinating` for your view controllers.
- */
-public protocol CoordinatedViewControllerProtocol {
-    var baseCoordinator: BaseCoordinator? { get }
 }

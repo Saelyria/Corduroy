@@ -8,7 +8,7 @@ public extension BaseCoordinator {
      - parameter presentMethod: The presentation method to use (e.g. push or modal present).
      - parameter parameters: Additional navigation parameters. Optional.
      */
-    func present(_ toVC: CoordinatedViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
+    func present(_ toVC: UIViewController & CoordinatedViewControllerProtocol, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
         guard toVC.baseCoordinator === self else {
             fatalError("A coordinator should only present view controllers it is managing.")
         }
@@ -30,6 +30,8 @@ public extension BaseCoordinator {
         case .addingAsRoot(let window):
             window.rootViewController = toVC
         }
+        
+        self.navigator.coordinatedViewControllerDidAppear(toVC)
     }
     
     /**
@@ -64,5 +66,7 @@ public extension BaseCoordinator {
         case .popping:
             vc.navigationController?.popViewController(animated: parameters.animateTransition)
         }
+        
+        self.navigator.coordinatedViewControllerDidDisappear(vc)
     }
 }

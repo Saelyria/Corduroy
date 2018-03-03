@@ -77,8 +77,8 @@ public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
  */
 public protocol FlowRecoveringNavigationPrecondition: RecoveringNavigationPrecondition {
     /// The type of flow coordinator that will be used for recovery if the precondition is not already met when its
-    /// `evaluate(context:)` method is called. This flow coordinator must have a `SetupModel` type of `Nothing`.
-    associatedtype RecoveringFlowCoordinator: FlowCoordinator where RecoveringFlowCoordinator.SetupModel == Nothing
+    /// `evaluate(context:)` method is called. This flow coordinator must have a `SetupModel` type of `Void`.
+    associatedtype RecoveringFlowCoordinator: FlowCoordinator where RecoveringFlowCoordinator.SetupModel == Void
     
     /// The present method that should be used for the precondition's recovery flow coordinator.
     var recoveryCoordinatorPresentMethod: PresentMethod { get }

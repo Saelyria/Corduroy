@@ -4,10 +4,10 @@ import Nimble
 import Corduroy
 
 // A basic test flow coordinator. Takes the view controller it should use as its first view controller via its SetupModel.
-// Has a Nothing FlowCompletionModel.
-final class TestFlowCoordinatorNothingCompletionModel: FlowCoordinator {
+// Has a Void FlowCompletionModel.
+final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
     final class TestViewController: UIViewController, CoordinatorManageable {
-        var coordinator: TestFlowCoordinatorNothingCompletionModel?
+        var coordinator: TestFlowCoordinatorVoidCompletionModel?
     }
     
     typealias SetupModel = UIViewController? //the VC to use as the first VC
@@ -17,19 +17,19 @@ final class TestFlowCoordinatorNothingCompletionModel: FlowCoordinator {
     
     var firstViewController: UIViewController?
     var navContext: Navigator.NavigationContext!
-    var flowCompletion: ((Error?, Nothing?) -> Void)!
+    var flowCompletion: ((Error?, Void?) -> Void)!
     var createCallCount: Int = 0
     var presentFirstVCCallCount: Int = 0
     var onDismissalCallCount: Int = 0
     
-    static func create(with firstViewController: UIViewController?, navigator: Navigator) -> TestFlowCoordinatorNothingCompletionModel {
-        let coordinator = TestFlowCoordinatorNothingCompletionModel()
+    static func create(with firstViewController: UIViewController?, navigator: Navigator) -> TestFlowCoordinatorVoidCompletionModel {
+        let coordinator = TestFlowCoordinatorVoidCompletionModel()
         coordinator.firstViewController = firstViewController
         coordinator.createCallCount += 1
         return coordinator
     }
     
-    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, Nothing?) -> Void) {
+    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, Void?) -> Void) {
         if let vc = self.firstViewController as? TestViewController {
             vc.coordinator = self
         }

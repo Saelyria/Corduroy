@@ -2,7 +2,8 @@
 import UIKit
 
 /**
- A protocol describing an object that manages navigation logic.
+ A protocol describing an object that manages navigation logic that replaces view controllers as the primary 'navigation
+ item'.
  
  A coordinator object is responsible for managing the navigation between view controllers, containing all navigation
  logic within itself. Coordinators should act as delegates for actions in view controllers (such as a button press or
@@ -15,9 +16,9 @@ import UIKit
  generally represent a unique location in your app.
  
  Dependencies for a coordinator can be defined via its `SetupModel` associated type. An object of this type is passed
- in to the `create(with:navigator:)` factory method of the coordinator. Beyond this setup model, there should be little
+ in to the `create(with:navigator:)` static method of the coordinator. Beyond this setup model, there should be little
  to no more communication between coordinators - the idea is that a coordinator's setup model includes everything it
- needs from the outer application to do its job. This `SetupModel` associated type defaults to `Nothing` if no explicit
+ needs from the outer application to do its job. This `SetupModel` associated type defaults to `Void` if no explicit
  type is set. Note that coordinators are instantiated with their class's `create(with:navigator:)` methods, so `init`
  methods shouldn't be implemented.
  */
@@ -48,8 +49,8 @@ public protocol Coordinator: BaseCoordinator, SetupModelRequiring {
  */
 public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
     /// The type of the model object that this flow coordinator will return in its completion containing data about or
-    /// as a result of its flow. Defaults to 'Nothing' if no explicit type is set.
-    associatedtype FlowCompletionModel = Nothing
+    /// as a result of its flow. Defaults to 'Void' if no explicit type is set.
+    associatedtype FlowCompletionModel = Void
     
     /**
      Called when the flow coordinator is navigated to. In this method, the coordinator should instantiate its first view
@@ -71,35 +72,19 @@ public protocol BaseCoordinator: AnyObject {
     /// coordinators.
     var navigator: Navigator! { get set }
     
-    /// The view controller the coordinator is currently presenting and managing. This must be set by the coordinator
-    /// whenever it changes the currently presented view controller.
-//    var currentViewController: UIViewController? { get }
-    
     /// Whether this coordinator can be navigated back to (i.e. if it should be skipped over when its navigator's
     /// `goBack(to:)` method is called). This can be useful, for example, for precondition recovering flow coordinators
     /// or login view controllers after a user has logged in. Defaults to `true`.
     var canBeNavigatedBackTo: Bool { get }
     
-    /**
-     Called when the navigator wants to dismiss the view controller(s) managed by this coordinator. In this method, the
-     coordinator should dismiss any view controllers it is managing. A default implementation is provided.
-     
-     Note that this method may not always be called on the coordinator on its dismissal; the main case for when this
-     method is not called is when navigation back is done by a `UINavigationController`, in which case dismissal of the
-     view controller is handled by the navigation controller.
-     - parameter context: A context object containing details about the navigation, such as the involved coordinators.
-     */
-//    func dismissViewControllers(context: NavigationContext)
-    
-    /**
-     Optional event method called when the navigator has been dismissed by the navigator or by a navigation controller.
-     */
+    /// Optional event method called when the navigator has been dismissed by the navigator.
     func onDismissal()
     
     /**
      Optional event method called when the navigator has started evaluating an asynchronous precondition on a navigation
-     started by this coordinator. This method can be used to start tasks indicating to the user that an asynchronous
-     task has started, such as starting a loading indicator.
+     started by this coordinator. This method should be used to start tasks indicating to the user that an asynchronous
+     task has started, such as starting a loading indicator. A default implementation for all coordinators in your app
+     can be easily achieved with an extension to `BaseCoordinator`.
      */
     func onPreconditionRecoveryStarted()
 }
@@ -112,10 +97,6 @@ public extension BaseCoordinator {
     var canBeNavigatedBackTo: Bool {
         return true
     }
-    
-//    func dismissViewControllers(context: NavigationContext) {
-//        UIViewController.dismissCurrentViewController(in: context)
-//    }
 }
 
 /**
@@ -124,13 +105,13 @@ public extension BaseCoordinator {
  */
 public protocol SetupModelRequiring {
     /// The type of the model object that contains all dependencies the coordinator needs to be properly initialized.
-    /// Defaults to 'Nothing' if no explicit type is set.
-    associatedtype SetupModel = Nothing
+    /// Defaults to 'Void' if no explicit type is set.
+    associatedtype SetupModel = Void
     
     /**
      Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
      configured with the given `model` object, which is an instance of its aliased `SetupModel` type. A basic
-     implementation of this method is provided if the `SetupModel` type is `Nothing`.
+     implementation of this method is provided if the `SetupModel` type is `Void`.
      - parameter model: The context object containing all dependencies the view controller needs.
      - parameter navigator: The navigator the coordinator should use to navigate from.
      */
@@ -139,20 +120,10 @@ public protocol SetupModelRequiring {
     init()
 }
 
-public extension SetupModelRequiring where Self.SetupModel == Nothing, Self: BaseCoordinator {
+public extension SetupModelRequiring where Self.SetupModel == Void, Self: BaseCoordinator {
     static func create(with model: SetupModel, navigator: Navigator) -> Self {
         let coordinator = Self()
         coordinator.navigator = navigator
         return coordinator
     }
 }
-
-/**
- An empty struct that is used as the default value of `SetupModel` or `FlowCompletionModel` associated types.
- Coordinators whose setup models are this type are taken to mean that they have no dependencies.
- */
-public struct Nothing: ExpressibleByNilLiteral {
-    public init(nilLiteral: ()) {  }
-}
-
-

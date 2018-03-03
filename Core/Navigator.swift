@@ -44,7 +44,7 @@ public class Navigator {
      - parameter firstCoordinator: The type of coordinator to start the app from.
      */
     @discardableResult
-    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) -> T where T.SetupModel == Nothing {
+    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) -> T where T.SetupModel == Void {
         return self.start(onWindow: window, firstCoordinator: firstCoordinator, with: nil)
     }
     
@@ -80,7 +80,7 @@ public class Navigator {
      */
     @discardableResult
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod,
-    parameters: NavigationParameters = NavigationParameters()) -> T where T.SetupModel == Nothing {
+    parameters: NavigationParameters = NavigationParameters()) -> T where T.SetupModel == Void {
         return self.go(to: coordinator, by: navMethod, with: nil, parameters: parameters)
     }
     
@@ -117,7 +117,7 @@ public class Navigator {
         passing in either an error or the created coordinator. Optional.
      */
     public func checkThenGo<T: Coordinator & NavigationPreconditionRequiring>(to coordinator: T.Type, by navMethod: PresentMethod,
-    parameters: NavigationParameters = NavigationParameters(), preconditionCompletion: ((Error?, T?) -> Void)?) where T.SetupModel == Nothing {
+    parameters: NavigationParameters = NavigationParameters(), preconditionCompletion: ((Error?, T?) -> Void)?) where T.SetupModel == Void {
         self.checkThenGo(to: coordinator, by: navMethod, with: nil, preconditionCompletion: preconditionCompletion)
     }
     
@@ -168,7 +168,7 @@ public class Navigator {
      */
     @discardableResult
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod,
-    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> T where T.SetupModel == Nothing {
+    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> T where T.SetupModel == Void {
         return self.go(to: flowCoordinator, by: navMethod, with: nil, flowCompletion: flowCompletion)
     }
     
@@ -208,7 +208,7 @@ public class Navigator {
      */
     public func checkThenGo<T: FlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
     parameters: NavigationParameters = NavigationParameters(), preconditionCompletion: ((Error?, T?) -> Void)?,
-    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) where T.SetupModel == Nothing {
+    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) where T.SetupModel == Void {
         self.checkThenGo(to: flowCoordinatorType, by: navMethod, with: nil, preconditionCompletion: preconditionCompletion!, flowCompletion: flowCompletion)
     }
 	
@@ -299,8 +299,11 @@ public class Navigator {
             } else {
                 params = NavigationParameters(animateTransition: false)
             }
-            let context = NavigationContext(navigator: self, from: coordinatorToRemove,
-                    to: coordinatorBeforeRemovedCoordinator, present: nil, dismiss: dismissMethod, params: params)
+            
+            for viewController in navStackItem.viewControllers {
+                navStackItem.coordinator.dismiss(viewController, parameters: params)
+            }
+
             self.navigationStack.remove(at: index)
             coordinatorToRemove.onDismissal()
         }

@@ -17,7 +17,7 @@ final class LandingViewController: UIViewController, SelfCoordinating {
     private let label = UILabel()
     private let signupButton = UIButton(type: .system)
     
-    // Because we haven't defined a `SetupModel` type (we left it as `Nothing`), a default implementation for
+    // Because we haven't defined a `SetupModel` type (we left it as `Void`), a default implementation for
     // `create(with:navigator)` is provided. We can implement it ourselves if we want to, though, like if we needed to
     // instantiate from a storyboard. The default implementation simply calls the view controller's `init()` method.
     //

@@ -4,6 +4,7 @@ import UIKit
 /**
  A `UINavigationController` subclass that should be used instead of `UINavigationController` when using Corduroy.
  */
+/*
 public class CoordinatedNavigationController: UINavigationController, CoordinatedViewControllerProtocol {
     /// The coordinator of the navigation controller's top view controller.
     public var baseCoordinator: BaseCoordinator? {
@@ -98,3 +99,4 @@ public class CoordinatedNavigationController: UINavigationController, Coordinate
         self.navigator?.coordinatedNavControllerDidPopCoordinators(poppedCoordinatorsSet)
     }
 }
+ */

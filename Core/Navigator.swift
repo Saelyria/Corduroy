@@ -24,9 +24,12 @@ public class Navigator {
         return self.coordinators[self.coordinators.count-2]
     }
     
-    internal var currentViewController: CoordinatedViewController!
+    /// The view controller currently being shown.
+    public var currentViewController: UIViewController {
+        return self.navigationStack.last!.viewControllersAndPresentMethods.last!.vc
+    }
     
-    private var navigationStack: [NavStackItem] = []
+    internal var navigationStack: [NavStackItem] = []
     private var hasStarted: Bool = false
     
     // There's no reliable way to determine whether a back navigation from a UINavigationController was started by it
@@ -95,7 +98,7 @@ public class Navigator {
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: NavigationParameters = NavigationParameters()) -> T {
         precondition(self.hasStarted, "The navigator hasn't been started - call `start(onWindow:firstCoordinator:with:)` first.")
-        precondition(!(coordinator is NavigationPreconditionRequiring.Type), "The specified coordinator has preconditions for navigation that must be checked - use `evaluatePreconditionsAndGo(to:by:preconditionCompletion:)` instead.")
+        precondition(!(coordinator is NavigationPreconditionRequiring.Type), "The specified coordinator has preconditions for navigation that must be checked - use `checkThenGo(to:by:preconditionCompletion:)` instead.")
         
         let coordinator = coordinator.create(with: model, navigator: self)
         let context = NavigationContext(navigator: self, from: self.currentCoordinator, to: coordinator,
@@ -184,7 +187,7 @@ public class Navigator {
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> T {
         precondition(self.hasStarted, "The navigator hasn't been started - call `start(onWindow:firstCoordinator:with:)` first.")
-        precondition(!(flowCoordinator is NavigationPreconditionRequiring.Type), "The specified coordinator has preconditions for navigation that must be checked - use `evaluatePreconditionsAndGo(to:by:preconditionCompletion:)` instead.")
+        precondition(!(flowCoordinator is NavigationPreconditionRequiring.Type), "The specified coordinator has preconditions for navigation that must be checked - use `checkThenGo(to:by:preconditionCompletion:flowCompletion:)` instead.")
         
         let flowCoordinator = flowCoordinator.create(with: model, navigator: self)
         let context = NavigationContext(navigator: self, from: self.currentCoordinator, to: flowCoordinator,
@@ -285,7 +288,7 @@ public class Navigator {
         // start ignoring calls to 'coordinatedNavControllerDidPopCoordinators'. See comment on `shouldIgnoreNavControllerPopRequests`'s declaration.
         self.shouldIgnoreNavControllerPopRequests = true
         
-        // get the coordinators to be removed in order from the end and call their `dismiss(context:)` methods
+        // get the coordinators to be removed in order from the end and call their `onDismissal(context:)` methods
         guard let coordinatorIndex = self.coordinators.index(where: { $0 === coordinator }) else { return }
         for index in stride(from: self.navigationStack.count-1, to: coordinatorIndex, by: -1) {
             let navStackItem = self.navigationStack[index]
@@ -300,7 +303,7 @@ public class Navigator {
                 params = NavigationParameters(animateTransition: false)
             }
             
-            for viewController in navStackItem.viewControllers {
+            for (viewController, _) in navStackItem.viewControllersAndPresentMethods {
                 navStackItem.coordinator.dismiss(viewController, parameters: params)
             }
             
@@ -315,20 +318,20 @@ public class Navigator {
     
     // MARK: CoordinatedViewController methods
     
-    internal func coordinatedViewControllerDidAppear(_ viewController: UIViewController & CoordinatedViewControllerProtocol) {
-        guard self.navigationStack.last!.coordinator === viewController.baseCoordinator else {
+    internal func viewControllerDidAppear(_ viewController: UIViewController, coordinator: BaseCoordinator, presentMethod: PresentMethod) {
+        guard coordinator === self.currentCoordinator else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
         
-        self.navigationStack.last!.viewControllers.append(viewController)
+        self.navigationStack.last!.viewControllersAndPresentMethods.append((viewController, presentMethod))
     }
     
-    internal func coordinatedViewControllerDidDisappear(_ viewController: UIViewController & CoordinatedViewControllerProtocol) {
-        guard let lastVC = self.navigationStack.last?.viewControllers.last, lastVC === viewController else {
+    internal func viewControllerDidDisappear(_ viewController: UIViewController, coordinator: BaseCoordinator) {
+        guard coordinator === self.currentCoordinator else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
-        self.navigationStack.last!.viewControllers.removeLast()
-        if self.navigationStack.last!.viewControllers.isEmpty {
+        self.navigationStack.last!.viewControllersAndPresentMethods.removeLast()
+        if self.navigationStack.last!.viewControllersAndPresentMethods.isEmpty {
             self.navigationStack.removeLast()
         }
     }
@@ -403,11 +406,11 @@ public class Navigator {
 /**
  An internal model type that holds the information of a navigation operation that is stored on a navigator's stack.
  */
-fileprivate class NavStackItem {
+internal class NavStackItem {
     let coordinator: BaseCoordinator
     let presentMethod: PresentMethod
     let canBeNavigatedBackTo: Bool
-    var viewControllers: [UIViewController & CoordinatedViewControllerProtocol] = []
+    var viewControllersAndPresentMethods: [(vc: UIViewController, presentMethod: PresentMethod)] = []
     
     init(coordinator: BaseCoordinator, presentMethod: PresentMethod, canBeNavigatedBackTo: Bool) {
         self.coordinator = coordinator

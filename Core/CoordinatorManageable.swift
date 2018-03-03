@@ -10,7 +10,7 @@ import UIKit
  example, from a 'Continue' or 'Open Settings' button) and decide to let its coordinator know, but the coordinator
  should ultimately decide whether to go through with that navigation and where to navigate to.
  */
-public protocol CoordinatorManageable: CoordinatedViewControllerProtocol {
+public protocol CoordinatorManageable {
     /**
      A type the `NavigationCoordinator` that manages this view controller should be or conform to in order to receive
      navigation events from this view controller. For better decoupling, best practice is for a view controller to have
@@ -30,12 +30,6 @@ public protocol CoordinatorManageable: CoordinatedViewControllerProtocol {
     var coordinator: ManagingCoordinator? { get set }
 }
 
-public extension CoordinatorManageable where Self: CoordinatedViewController {
-    var baseCoordinator: BaseCoordinator? {
-        return self.coordinator
-    }
-}
-
 
 
 /**
@@ -50,19 +44,11 @@ public extension CoordinatorManageable where Self: CoordinatedViewController {
  by default, these will both return `self`. It will still, however, have to implement the `create(with:)` and
  `start(context:)` methods found on `Coordinator`.
  */
-public protocol SelfCoordinating: Coordinator, CoordinatedViewControllerProtocol { }
+public protocol SelfCoordinating: Coordinator { }
 
-public extension SelfCoordinating where Self: CoordinatedViewController {
+public extension SelfCoordinating where Self: UIViewController {
     func presentViewController(context: NavigationContext) {
         self.present(self, asDescribedBy: context)
-    }
-    
-    var baseCoordinator: BaseCoordinator? {
-        return self
-    }
-    
-    var currentViewController: UIViewController? {
-        return self
     }
 }
 

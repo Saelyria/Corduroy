@@ -1,14 +1,17 @@
 
 import UIKit
 
-class CoordinatedViewController: UIViewController, CoordinatedViewControllerProtocol {
-    var baseCoordinator: BaseCoordinator?
+public class CoordinatedViewController: UIViewController, CoordinatedViewControllerProtocol {
+    public var baseCoordinator: BaseCoordinator?
+    public var presentMethod: PresentMethod!
     
-    override func viewDidAppear(_ animated: Bool) {
+    public override func viewDidAppear(_ animated: Bool) {
         super.viewDidAppear(animated)
+        self.baseCoordinator?.navigator.coordinatedViewControllerDidAppear(self)
     }
     
-    override func viewDidDisappear(_ animated: Bool) {
+    public override func viewDidDisappear(_ animated: Bool) {
         super.viewDidDisappear(animated)
+        self.baseCoordinator?.navigator.coordinatedViewControllerDidDisappear(self)
     }
 }

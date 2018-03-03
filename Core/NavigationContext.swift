@@ -6,9 +6,6 @@ import UIKit
  current view controller that the 'to' coordinator should start from.
  */
 public struct NavigationContext {
-    /// The current view controller managed by the from coordinator that the to coordinator should navigate from.
-    /// Will be `nil` if this is the first coordinator navigation.
-    public let currentViewController: UIViewController?
     /// The coordinator being navigated away from. Will be `nil` if this is the first coordinator navigation.
     public let fromCoordinator: BaseCoordinator?
     /// The coordinator being navigated to.
@@ -24,10 +21,9 @@ public struct NavigationContext {
     /// The navigator handling the navigation.
     public let navigator: Navigator
     
-    internal init(navigator: Navigator, viewController: UIViewController?, from: BaseCoordinator?,
-                  to: BaseCoordinator, present: PresentMethod?, dismiss: DismissMethod?, params: NavigationParameters) {
+    internal init(navigator: Navigator, from: BaseCoordinator?, to: BaseCoordinator, present: PresentMethod?,
+    dismiss: DismissMethod?, params: NavigationParameters) {
         self.navigator = navigator
-        self.currentViewController = viewController
         self.fromCoordinator = from
         self.toCoordinator = to
         self.requestedPresentMethod = present

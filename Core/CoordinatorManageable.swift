@@ -30,7 +30,7 @@ public protocol CoordinatorManageable: CoordinatedViewControllerProtocol {
     var coordinator: ManagingCoordinator? { get set }
 }
 
-public extension CoordinatorManageable where Self: UIViewController {
+public extension CoordinatorManageable where Self: CoordinatedViewController {
     var baseCoordinator: BaseCoordinator? {
         return self.coordinator
     }
@@ -52,9 +52,9 @@ public extension CoordinatorManageable where Self: UIViewController {
  */
 public protocol SelfCoordinating: Coordinator, CoordinatedViewControllerProtocol { }
 
-public extension SelfCoordinating where Self: UIViewController {
+public extension SelfCoordinating where Self: CoordinatedViewController {
     func presentFirstViewController(context: NavigationContext) {
-        UIViewController.present(self, asDescribedBy: context)
+        self.present(self, asDescribedBy: context)
     }
     
     var baseCoordinator: BaseCoordinator? {

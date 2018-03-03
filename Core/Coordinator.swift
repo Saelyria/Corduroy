@@ -73,7 +73,7 @@ public protocol BaseCoordinator: AnyObject {
     
     /// The view controller the coordinator is currently presenting and managing. This must be set by the coordinator
     /// whenever it changes the currently presented view controller.
-    var currentViewController: UIViewController? { get }
+//    var currentViewController: UIViewController? { get }
     
     /// Whether this coordinator can be navigated back to (i.e. if it should be skipped over when its navigator's
     /// `goBack(to:)` method is called). This can be useful, for example, for precondition recovering flow coordinators
@@ -89,7 +89,7 @@ public protocol BaseCoordinator: AnyObject {
      view controller is handled by the navigation controller.
      - parameter context: A context object containing details about the navigation, such as the involved coordinators.
      */
-    func dismissViewControllers(context: NavigationContext)
+//    func dismissViewControllers(context: NavigationContext)
     
     /**
      Optional event method called when the navigator has been dismissed by the navigator or by a navigation controller.
@@ -113,9 +113,9 @@ public extension BaseCoordinator {
         return true
     }
     
-    func dismissViewControllers(context: NavigationContext) {
-        UIViewController.dismissCurrentViewController(in: context)
-    }
+//    func dismissViewControllers(context: NavigationContext) {
+//        UIViewController.dismissCurrentViewController(in: context)
+//    }
 }
 
 /**

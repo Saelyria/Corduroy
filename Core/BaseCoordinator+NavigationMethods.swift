@@ -9,25 +9,33 @@ public extension BaseCoordinator {
      - parameter parameters: Additional navigation parameters. Optional.
      */
     func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
-        let currentVC: UIViewController = self.navigator.currentViewController
-        
         switch presentMethod {
         case .addingAsChild:
+            guard let currentVC = self.navigator.currentViewController else { return }
             currentVC.addChildViewController(toVC)
             currentVC.view.addSubview(toVC.view)
             toVC.view.frame = currentVC.view.frame
             toVC.didMove(toParentViewController: currentVC)
         case .modallyPresenting:
+            guard let currentVC = self.navigator.currentViewController else { return }
             toVC.modalPresentationStyle = parameters.modalPresentationStyle
             toVC.modalTransitionStyle = parameters.modalTransitionStyle
             currentVC.present(toVC, animated: parameters.animateTransition, completion: nil)
         case .pushing:
+            guard let currentVC = self.navigator.currentViewController else { return }
             currentVC.navigationController?.pushViewController(toVC, animated: parameters.animateTransition)
         case .addingAsRoot(let window):
             window.rootViewController = toVC
         }
         
-        self.navigator.viewControllerDidAppear(toVC, coordinator: self, presentMethod: presentMethod)
+        if let presentedNavVC = toVC as? UINavigationController {
+            if !(presentedNavVC is CoordinatedNavigationController) {
+                fatalError("Navigation controllers must subclass CoordinatedNavigationController to be presented by a coordinator.")
+            }
+            self.navigator.viewControllerDidAppear(presentedNavVC.topViewController!, coordinator: self, presentMethod: presentMethod)
+        } else {
+            self.navigator.viewControllerDidAppear(toVC, coordinator: self, presentMethod: presentMethod)
+        }
     }
     
     /**

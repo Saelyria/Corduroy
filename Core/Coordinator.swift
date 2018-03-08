@@ -78,8 +78,7 @@ public protocol BaseCoordinator: AnyObject {
     var canBeNavigatedBackTo: Bool { get }
     
     /// Optional event method called when the navigator has been dismissed by the navigator.
-    /// - parameter context: A context object containing the involved coordinators and other navigation details.
-    func onDismissal(context: NavigationContext)
+    func onDismissal()
     
     /**
      Optional event method called when the navigator has started evaluating an asynchronous precondition on a navigation
@@ -91,7 +90,7 @@ public protocol BaseCoordinator: AnyObject {
 }
 
 public extension BaseCoordinator {
-    func onDismissal(context: NavigationContext) { }
+    func onDismissal() { }
     
     func onPreconditionRecoveryStarted() { }
     

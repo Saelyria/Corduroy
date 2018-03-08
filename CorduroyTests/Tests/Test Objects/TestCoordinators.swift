@@ -15,24 +15,25 @@ final class TestCoordinator: Coordinator {
     var currentViewController: UIViewController?
     
     var firstViewController: UIViewController?
-    var navContext: Navigator.NavigationContext!
+    var navContext: NavigationContext!
     var createCallCount: Int = 0
     var presentFirstVCCallCount: Int = 0
     var onDismissalCallCount: Int = 0
     
     static func create(with firstViewController: UIViewController?, navigator: Navigator) -> TestCoordinator {
         let coordinator = TestCoordinator()
+        coordinator.navigator = navigator
         coordinator.firstViewController = firstViewController
         coordinator.createCallCount += 1
         return coordinator
     }
     
-    func presentFirstViewController(context: Navigator.NavigationContext) {
+    func presentViewController(context: NavigationContext) {
         if let vc = self.firstViewController as? TestViewController {
             vc.coordinator = self
         }
         if let vc = self.firstViewController {
-            UIViewController.present(vc, asDescribedBy: context)
+            self.present(vc, asDescribedBy: context)
         }
         self.currentViewController = firstViewController
         self.presentFirstVCCallCount += 1
@@ -57,7 +58,7 @@ final class TestCoordinatorStringSetup: Coordinator {
     
     var firstViewController: UIViewController?
     var setupString: String!
-    var navContext: Navigator.NavigationContext!
+    var navContext: NavigationContext!
     var createCallCount: Int = 0
     var presentFirstVCCallCount: Int = 0
     var onDismissalCallCount: Int = 0
@@ -71,12 +72,12 @@ final class TestCoordinatorStringSetup: Coordinator {
         return coordinator
     }
     
-    func presentFirstViewController(context: Navigator.NavigationContext) {
+    func presentViewController(context: NavigationContext) {
         if let vc = self.firstViewController as? TestViewController {
             vc.coordinator = self
         }
         if let vc = self.firstViewController {
-            UIViewController.present(vc, asDescribedBy: context)
+            self.present(vc, asDescribedBy: context)
         }
         self.currentViewController = firstViewController
         self.presentFirstVCCallCount += 1
@@ -103,7 +104,7 @@ final class TestPassingPreconditionRequiringCoordinator: Coordinator, Navigation
     var currentViewController: UIViewController?
     
     var firstViewController: UIViewController?
-    var navContext: Navigator.NavigationContext!
+    var navContext: NavigationContext!
     var createCallCount: Int = 0
     var presentFirstVCCallCount: Int = 0
     var onDismissalCallCount: Int = 0
@@ -116,12 +117,12 @@ final class TestPassingPreconditionRequiringCoordinator: Coordinator, Navigation
         return coordinator
     }
     
-    func presentFirstViewController(context: Navigator.NavigationContext) {
+    func presentViewController(context: NavigationContext) {
         if let vc = self.firstViewController as? TestViewController {
             vc.coordinator = self
         }
         if let vc = self.firstViewController {
-            UIViewController.present(vc, asDescribedBy: context)
+            self.present(vc, asDescribedBy: context)
         }
         self.currentViewController = firstViewController
         self.presentFirstVCCallCount += 1

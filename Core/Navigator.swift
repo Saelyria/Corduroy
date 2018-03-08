@@ -25,11 +25,9 @@ public class Navigator {
     }
     
     /// The view controller currently being shown.
-    public var currentViewController: UIViewController {
-        return self.navigationStack.last!.viewControllersAndPresentMethods.last!.vc
-    }
+    public private(set) var currentViewController: UIViewController?
     
-    internal var navigationStack: [NavStackItem] = []
+    public var navigationStack: [NavStackItem] = []
     private var hasStarted: Bool = false
     
     // There's no reliable way to determine whether a back navigation from a UINavigationController was started by it
@@ -289,16 +287,14 @@ public class Navigator {
         self.shouldIgnoreNavControllerPopRequests = true
         
         // get the coordinators to be removed in order from the end and call their `onDismissal(context:)` methods
-        guard let coordinatorIndex = self.coordinators.index(where: { $0 === coordinator }) else { return }
+        guard let coordinatorIndex = self.navigationStack.index(where: { $0.coordinator === coordinator }) else { return }
         for index in stride(from: self.navigationStack.count-1, to: coordinatorIndex, by: -1) {
             let navStackItem = self.navigationStack[index]
 
-            let dismissMethod = navStackItem.presentMethod.inverseDismissMethod
             let coordinatorToRemove: BaseCoordinator = navStackItem.coordinator
-            let coordinatorBeforeRemovedCoordinator: BaseCoordinator = self.coordinators[index-1]
             let params: NavigationParameters
             if index == coordinatorIndex+1 {
-                params = parameters
+                params =  parameters
             } else {
                 params = NavigationParameters(animateTransition: false)
             }
@@ -306,10 +302,8 @@ public class Navigator {
             for (viewController, _) in navStackItem.viewControllersAndPresentMethods {
                 navStackItem.coordinator.dismiss(viewController, parameters: params)
             }
-            
-            let context = NavigationContext(navigator: self, from: coordinatorToRemove, to: coordinatorBeforeRemovedCoordinator,
-                                            present: nil, dismiss: dismissMethod, params: parameters)
-            coordinatorToRemove.onDismissal(context: context)
+
+            coordinatorToRemove.onDismissal()
             self.navigationStack.remove(at: index)
         }
         
@@ -318,15 +312,41 @@ public class Navigator {
     
     // MARK: CoordinatedViewController methods
     
+    internal func navigationControllerDidPopViewControllers(_ viewControllers: [UIViewController]) {
+        if self.shouldIgnoreNavControllerPopRequests {
+            return
+        }
+        
+        for index in stride(from: viewControllers.count-1, through: 0, by: -1) {
+            let vc: UIViewController = viewControllers[index]
+            guard vc === self.navigationStack.last!.viewControllersAndPresentMethods.last!.vc else {
+                fatalError("Wrong")
+            }
+            self.navigationStack.last!.viewControllersAndPresentMethods.removeLast()
+            if self.navigationStack.last!.viewControllersAndPresentMethods.isEmpty {
+                let removedCoordinator: BaseCoordinator = self.navigationStack.last!.coordinator
+                self.navigationStack.removeLast()
+                removedCoordinator.onDismissal()
+            }
+        }
+        
+        self.currentViewController = self.navigationStack.last!.viewControllersAndPresentMethods.last!.vc
+    }
+    
     internal func viewControllerDidAppear(_ viewController: UIViewController, coordinator: BaseCoordinator, presentMethod: PresentMethod) {
         guard coordinator === self.currentCoordinator else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
         
         self.navigationStack.last!.viewControllersAndPresentMethods.append((viewController, presentMethod))
+        self.currentViewController = viewController
     }
     
     internal func viewControllerDidDisappear(_ viewController: UIViewController, coordinator: BaseCoordinator) {
+        if self.shouldIgnoreNavControllerPopRequests {
+            return
+        }
+        
         guard coordinator === self.currentCoordinator else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
@@ -334,6 +354,7 @@ public class Navigator {
         if self.navigationStack.last!.viewControllersAndPresentMethods.isEmpty {
             self.navigationStack.removeLast()
         }
+        self.currentViewController = self.navigationStack.last!.viewControllersAndPresentMethods.last!.vc
     }
     
     // MARK: Precondition evaluation
@@ -406,13 +427,13 @@ public class Navigator {
 /**
  An internal model type that holds the information of a navigation operation that is stored on a navigator's stack.
  */
-internal class NavStackItem {
-    let coordinator: BaseCoordinator
-    let presentMethod: PresentMethod
-    let canBeNavigatedBackTo: Bool
-    var viewControllersAndPresentMethods: [(vc: UIViewController, presentMethod: PresentMethod)] = []
+public class NavStackItem {
+    public let coordinator: BaseCoordinator
+    public let presentMethod: PresentMethod
+    public let canBeNavigatedBackTo: Bool
+    public var viewControllersAndPresentMethods: [(vc: UIViewController, presentMethod: PresentMethod)] = []
     
-    init(coordinator: BaseCoordinator, presentMethod: PresentMethod, canBeNavigatedBackTo: Bool) {
+    public init(coordinator: BaseCoordinator, presentMethod: PresentMethod, canBeNavigatedBackTo: Bool) {
         self.coordinator = coordinator
         self.presentMethod = presentMethod
         self.canBeNavigatedBackTo = canBeNavigatedBackTo

@@ -34,7 +34,6 @@ class NavigationContextTests: XCTestCase {
         let secondCoordinatorVC = UIViewController()
         let secondCoordinator = navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: secondCoordinatorVC)
         
-        expect(secondCoordinator.navContext.currentViewController).to(be(firstCoordinatorVC))
         expect(secondCoordinator.navContext.fromCoordinator).to(be(firstCoordinator))
         expect(secondCoordinator.navContext.toCoordinator).to(be(secondCoordinator))
         expect(secondCoordinator.navContext.requestedPresentMethod).to(equal(PresentMethod.modallyPresenting))

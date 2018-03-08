@@ -181,7 +181,7 @@ class NavigatorGoTests: XCTestCase {
         expect(navController.viewControllers[1]).to(be(secondVC))
         expect(navController.viewControllers[2]).to(be(thirdVC))
         expect(navController.viewControllers[3]).to(be(fourthVC))
-        expect(firstVC).to(be(self.window.rootViewController))
+        expect(navController).to(be(self.window.rootViewController))
     }
     
     func testEvaluateAndGoToPassingStack() {
@@ -192,8 +192,8 @@ class NavigatorGoTests: XCTestCase {
         var secondCoordinator: TestPassingPreconditionRequiringCoordinator?
         let thirdVC = TestCoordinatorStringSetup.TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup?
-        self.navigator.evaluatePreconditionsAndGo(to: TestPassingPreconditionRequiringCoordinator.self, by: .modallyPresenting,
-        with: secondVC, parameters: noAnimationParams, evaluationCompletion: { (error, coordinator) in
+        self.navigator.checkThenGo(to: TestPassingPreconditionRequiringCoordinator.self, by: .modallyPresenting,
+        with: secondVC, parameters: noAnimationParams, preconditionCompletion: { (error, coordinator) in
             expect(coordinator).toNot(beNil())
             expect(error).to(beNil())
             secondCoordinator = coordinator

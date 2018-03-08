@@ -16,7 +16,7 @@ final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
     var currentViewController: UIViewController?
     
     var firstViewController: UIViewController?
-    var navContext: Navigator.NavigationContext!
+    var navContext: NavigationContext!
     var flowCompletion: ((Error?, Void?) -> Void)!
     var createCallCount: Int = 0
     var presentFirstVCCallCount: Int = 0
@@ -24,17 +24,18 @@ final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
     
     static func create(with firstViewController: UIViewController?, navigator: Navigator) -> TestFlowCoordinatorVoidCompletionModel {
         let coordinator = TestFlowCoordinatorVoidCompletionModel()
+        coordinator.navigator = navigator
         coordinator.firstViewController = firstViewController
         coordinator.createCallCount += 1
         return coordinator
     }
     
-    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, Void?) -> Void) {
+    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, Void?) -> Void) {
         if let vc = self.firstViewController as? TestViewController {
             vc.coordinator = self
         }
         if let vc = self.firstViewController {
-            UIViewController.present(vc, asDescribedBy: context)
+            self.present(vc, asDescribedBy: context)
         }
         self.flowCompletion = flowCompletion
         self.currentViewController = firstViewController
@@ -60,7 +61,7 @@ final class TestFlowCoordinatorStringCompletionModel: FlowCoordinator {
     var currentViewController: UIViewController?
     
     var firstViewController: UIViewController?
-    var navContext: Navigator.NavigationContext!
+    var navContext: NavigationContext!
     var flowCompletion: ((Error?, String?) -> Void)!
     var createCallCount: Int = 0
     var presentFirstVCCallCount: Int = 0
@@ -68,17 +69,18 @@ final class TestFlowCoordinatorStringCompletionModel: FlowCoordinator {
     
     static func create(with firstViewController: UIViewController?, navigator: Navigator) -> TestFlowCoordinatorStringCompletionModel {
         let coordinator = TestFlowCoordinatorStringCompletionModel()
+        coordinator.navigator = navigator
         coordinator.firstViewController = firstViewController
         coordinator.createCallCount += 1
         return coordinator
     }
     
-    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, String?) -> Void) {
+    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, String?) -> Void) {
         if let vc = self.firstViewController as? TestViewController {
             vc.coordinator = self
         }
         if let vc = self.firstViewController {
-            UIViewController.present(vc, asDescribedBy: context)
+            self.present(vc, asDescribedBy: context)
         }
         self.flowCompletion = flowCompletion
         self.currentViewController = firstViewController

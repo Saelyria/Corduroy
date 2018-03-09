@@ -18,6 +18,7 @@
 		93069163200BED9F00B1C9B9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069161200BED9F00B1C9B9 /* HomeViewController.swift */; };
 		930C0891200BFC7100B0B934 /* Corduroy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930C0882200BF6AC00B0B934 /* Corduroy.framework */; };
 		930C0892200BFC7100B0B934 /* Corduroy.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 930C0882200BF6AC00B0B934 /* Corduroy.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
+		9316D09E20520CB700D1A5E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9316D09D20520CB700D1A5E8 /* Main.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -64,6 +65,7 @@
 		93069160200BED9F00B1C9B9 /* HomeCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
 		93069161200BED9F00B1C9B9 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Corduroy.xcodeproj; path = ../Corduroy.xcodeproj; sourceTree = "<group>"; };
+		9316D09D20520CB700D1A5E8 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -111,6 +113,7 @@
 			isa = PBXGroup;
 			children = (
 				9306914D200BEC1D00B1C9B9 /* Info.plist */,
+				9316D09D20520CB700D1A5E8 /* Main.storyboard */,
 				9306914A200BEC1D00B1C9B9 /* LaunchScreen.storyboard */,
 			);
 			path = "Supporting Files";
@@ -222,6 +225,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9306914C200BEC1D00B1C9B9 /* LaunchScreen.storyboard in Resources */,
+				9316D09E20520CB700D1A5E8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

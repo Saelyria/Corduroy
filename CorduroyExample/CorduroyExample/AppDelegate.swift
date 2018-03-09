@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // the landing view controller was pretty simple, so we made it self-coordinating - see the comments in
         // `LandingViewController` for more info on that.
         self.navigator = Navigator()
-        navigator.start(onWindow: self.window!, firstCoordinator: LandingViewController.self, with: ())
+        navigator.start(onWindow: self.window!, firstCoordinator: LandingCoordinator.self)
         
         return true
     }

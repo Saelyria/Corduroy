@@ -9,28 +9,45 @@ import Corduroy
  
  If this view controller were to become more complicated over the course of development, it wouldn't be hard to decide
  later to split it into a coordinator and view controller pair to avoid the 'Massive View Controller' problem.
-*/
  
+ Another little tidbit - while obviously not required, here I've added a typealias of LandingViewController to
+ LandingCoordinator. This hides implementation details for the 'landing' page (i.e. people that want to navigate to
+ landing still think to navigate to a coordinator; don't need to know that it's in fact a view controller that's self-
+ coordinating). You also wouldn't need to update any code outside of the landing VC / coordinator if you did decide to
+ split up LandingViewController.
+*/
+typealias LandingCoordinator = LandingViewController
+
 final class LandingViewController: UIViewController, SelfCoordinating {
     var navigator: Navigator!
     
     private let label = UILabel()
     private let signupButton = UIButton(type: .system)
     
-    // Because we haven't defined a `SetupModel` type (we left it as `Void`), a default implementation for
-    // `create(with:navigator)` is provided. We can implement it ourselves if we want to, though, like if we needed to
-    // instantiate from a storyboard. The default implementation simply calls the view controller's `init()` method.
-    //
-    // static func create(with model: SetupModel, navigator: Navigator) -> LandingViewController { }
+    // This 'create(with:navigator:)' method is a requirement of all 'Coordinators' and is how 'Navigator' objects
+    // create coordinators when they are navigated to. Since our view controller is self-coordinating, it needs to be
+    // implemented. However, a default implementation is provided by the `SelfCoordinating` protocol if the view
+    // controller doesn't declare a `SetupModel` associated type - by default, it will instantiate it with its
+    // `init(nibName:bundle:)` method and set its `navigator` property. However, because we want to instantiate our
+    // view controller from a storyboard, we need to implement it.
+    static func create(with model: Void, navigator: Navigator) -> LandingViewController {
+        let storyboard = UIStoryboard(name: "Main", bundle: nil)
+        let landingViewController = storyboard.instantiateViewController(withIdentifier: "LandingViewController") as! LandingViewController
+        landingViewController.navigator = navigator
+        
+        return landingViewController
+    }
     
-    // We also don't need to implement the `presentFirstViewController(context:)` on self-coordinating view controllers
+    // We also don't need to implement the `presentViewController(context:)` on self-coordinating view controllers
     // if we don't plan to do anything special - by default, it will perform an appropriate navigation (push, modal
     // present, etc.) based on the passed-in context. For more info, look at the `SelfCoordinating` extension under its
-    // declaration and the `UIViewController+Navigator.swift` file. Here, however, we want the view controller in a nav
-    // controller, so we create that and present it from the context's `currentViewController`.
-    func presentFirstViewController(context: Navigator.NavigationContext) {
+    // declaration and the `UIViewController+Navigator.swift` file.
+    //
+    // Here, however, we want the view controller in a nav controller, so we create that and present it from the
+    // context's `currentViewController`.
+    func presentViewController(context: NavigationContext) {
         let navController = CoordinatedNavigationController(rootViewController: self, navigator: self.navigator)
-        UIViewController.present(navController, context: context)
+        self.present(navController, asDescribedBy: context)
     }
 
     override func viewDidLoad() {

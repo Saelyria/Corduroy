@@ -15,7 +15,6 @@ struct SignupInfo {
 // app is concerned. In this case, we've split signup between three view controllers.
 final class SignupFlowCoordinator: FlowCoordinator {
     var navigator: Navigator!
-    var currentViewController: UIViewController?
     
     private var completion: ((Error?, SignupInfo?) -> Void)!
     
@@ -24,14 +23,13 @@ final class SignupFlowCoordinator: FlowCoordinator {
     private var tempSecurityQuestion: String?
     private var tempSecurityAnswer: String?
 
-    func presentFirstViewController(context: Navigator.NavigationContext, flowCompletion: @escaping (Error?, SignupInfo?) -> Void) {
+    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, SignupInfo?) -> Void) {
         self.completion = flowCompletion
         
         let signupVC = SignupFormViewController()
         signupVC.coordinator = self
         let navController = CoordinatedNavigationController(rootViewController: signupVC, navigator: self.navigator)
-        UIViewController.present(navController, context: context)
-        self.currentViewController = navController
+        self.present(navController, asDescribedBy: context)
     }
     
     // When the username/password creation view controller finishes, push the security question view controller.

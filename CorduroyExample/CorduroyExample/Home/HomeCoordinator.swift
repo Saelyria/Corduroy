@@ -6,13 +6,11 @@ import Corduroy
 // the actual `HomeViewController` can just be a controller of its view.
 final class HomeCoordinator: Coordinator {
     var navigator: Navigator!
-    var currentViewController: UIViewController?
     
-    func presentFirstViewController(context: Navigator.NavigationContext) {
+    func presentViewController(context: NavigationContext) {
         let homeViewController = HomeViewController()
         homeViewController.coordinator = self
-        self.currentViewController = homeViewController
-        UIViewController.present(homeViewController, context: context)
+        self.present(homeViewController, asDescribedBy: context)
     }
     
     func buttonPressed() {

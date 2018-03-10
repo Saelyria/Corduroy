@@ -2,8 +2,8 @@
 import UIKit
 
 /**
- An object containing information about a navigation operation, most notably the involved coordinators and the
- current view controller that the 'to' coordinator should start from.
+ An object containing information about a navigation operation, most notably the involved coordinators and the requested
+ presentation method.
  */
 public struct NavigationContext {
     /// The coordinator being navigated away from. Will be `nil` if this is the first coordinator navigation.
@@ -37,15 +37,16 @@ public struct NavigationContext {
  present.
  */
 public enum PresentMethod: Equatable {
+    /// The view controller should be pushed with a navigation controller.
     case pushing
+    /// The view controller should be modally presented.
     case modallyPresenting
-    case addingAsChild
+    /// The view controller should be set as the root view controller of the associated window. This should only be
+    /// used for the first view controller.
     case addingAsRoot(window: UIWindow)
     
-    public var inverseDismissMethod: DismissMethod {
+    internal var inverseDismissMethod: DismissMethod {
         switch self {
-        case .addingAsChild:
-            return .removingFromParent
         case .modallyPresenting:
             return .modallyDismissing
         case .pushing:
@@ -61,8 +62,6 @@ public enum PresentMethod: Equatable {
             return true
         case (.modallyPresenting, .modallyPresenting):
             return true
-        case (.addingAsChild, .addingAsChild):
-            return true
         case (.addingAsRoot, .addingAsRoot):
             return true
         default:
@@ -76,9 +75,10 @@ public enum PresentMethod: Equatable {
  dismiss.
  */
 public enum DismissMethod {
+    /// The view controller should be popped from its navigation controller.
     case popping
+    /// The view controller should be modally dismissed.
     case modallyDismissing
-    case removingFromParent
 }
 
 
@@ -90,9 +90,17 @@ public enum DismissMethod {
  initializer for values different from the default.
  */
 public struct NavigationParameters: Equatable {
+    /// The modal transition style for the navigation.
     let modalTransitionStyle: UIModalTransitionStyle
+    /// The modal presentation style for the navigation.
     let modalPresentationStyle: UIModalPresentationStyle
+    /// Whether the navigation should be animated.
     let animateTransition: Bool
+    
+    /// A convenience parameter set of all the UIKit default parameters.
+    static let `default`: NavigationParameters = NavigationParameters()
+    /// The default set of parameters with `animateTransition` set to `false`.
+    static let noAnimation: NavigationParameters = NavigationParameters(animateTransition: false)
     
     public init(modalTransitionStyle: UIModalTransitionStyle = .coverVertical,
          modalPresentationStyle: UIModalPresentationStyle = .overFullScreen,

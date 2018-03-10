@@ -28,8 +28,7 @@ final class SignupFlowCoordinator: FlowCoordinator {
         
         let signupVC = SignupFormViewController()
         signupVC.coordinator = self
-        let navController = CoordinatedNavigationController(rootViewController: signupVC, navigator: self.navigator)
-        self.present(navController, asDescribedBy: context)
+        self.present(signupVC, asDescribedBy: context)
     }
     
     // When the username/password creation view controller finishes, push the security question view controller.

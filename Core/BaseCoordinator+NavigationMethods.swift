@@ -10,12 +10,6 @@ public extension BaseCoordinator {
      */
     func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
         switch presentMethod {
-        case .addingAsChild:
-            guard let currentVC = self.navigator.currentViewController else { return }
-            currentVC.addChildViewController(toVC)
-            currentVC.view.addSubview(toVC.view)
-            toVC.view.frame = currentVC.view.frame
-            toVC.didMove(toParentViewController: currentVC)
         case .modallyPresenting:
             guard let currentVC = self.navigator.currentViewController else { return }
             toVC.modalPresentationStyle = parameters.modalPresentationStyle
@@ -60,7 +54,6 @@ public extension BaseCoordinator {
     func dismiss(_ vc: UIViewController, parameters: NavigationParameters = NavigationParameters()) {
         let dismissMethod = self.navigator.navigationStack.last!.viewControllersAndPresentMethods.last!.presentMethod.inverseDismissMethod
         switch dismissMethod {
-        case .removingFromParent: break
         case .modallyDismissing:
             vc.dismiss(animated: parameters.animateTransition, completion: nil)
         case .popping:

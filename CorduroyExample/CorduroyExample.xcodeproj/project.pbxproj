@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		93069142200BEC1D00B1C9B9 /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069141200BEC1D00B1C9B9 /* AppDelegate.swift */; };
 		9306914C200BEC1D00B1C9B9 /* LaunchScreen.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9306914A200BEC1D00B1C9B9 /* LaunchScreen.storyboard */; };
-		93069155200BED0000B1C9B9 /* LandingViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069154200BECFF00B1C9B9 /* LandingViewController.swift */; };
+		93069155200BED0000B1C9B9 /* WelcomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069154200BECFF00B1C9B9 /* WelcomeViewController.swift */; };
 		9306915C200BED6D00B1C9B9 /* SignupFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069158200BED6D00B1C9B9 /* SignupFormViewController.swift */; };
 		9306915D200BED6D00B1C9B9 /* SignupCompleteViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069159200BED6D00B1C9B9 /* SignupCompleteViewController.swift */; };
 		9306915E200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9306915A200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift */; };
@@ -19,6 +19,10 @@
 		930C0891200BFC7100B0B934 /* Corduroy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930C0882200BF6AC00B0B934 /* Corduroy.framework */; };
 		930C0892200BFC7100B0B934 /* Corduroy.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 930C0882200BF6AC00B0B934 /* Corduroy.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9316D09E20520CB700D1A5E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9316D09D20520CB700D1A5E8 /* Main.storyboard */; };
+		9316D0A420538F2000D1A5E8 /* LoginFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0A320538F2000D1A5E8 /* LoginFlowCoordinator.swift */; };
+		9316D0A720538FB000D1A5E8 /* LoggedInPrecondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0A620538FB000D1A5E8 /* LoggedInPrecondition.swift */; };
+		9316D0A92053901400D1A5E8 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0A82053901400D1A5E8 /* LoginViewController.swift */; };
+		9316D0AB2053903A00D1A5E8 /* SecurityQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0AA2053903A00D1A5E8 /* SecurityQuestionViewController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -57,7 +61,7 @@
 		93069141200BEC1D00B1C9B9 /* AppDelegate.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AppDelegate.swift; sourceTree = "<group>"; };
 		9306914B200BEC1D00B1C9B9 /* Base */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; name = Base; path = Base.lproj/LaunchScreen.storyboard; sourceTree = "<group>"; };
 		9306914D200BEC1D00B1C9B9 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
-		93069154200BECFF00B1C9B9 /* LandingViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LandingViewController.swift; sourceTree = "<group>"; };
+		93069154200BECFF00B1C9B9 /* WelcomeViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeViewController.swift; sourceTree = "<group>"; };
 		93069158200BED6D00B1C9B9 /* SignupFormViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupFormViewController.swift; sourceTree = "<group>"; };
 		93069159200BED6D00B1C9B9 /* SignupCompleteViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupCompleteViewController.swift; sourceTree = "<group>"; };
 		9306915A200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupSecurityQuestionViewController.swift; sourceTree = "<group>"; };
@@ -66,6 +70,10 @@
 		93069161200BED9F00B1C9B9 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
 		930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Corduroy.xcodeproj; path = ../Corduroy.xcodeproj; sourceTree = "<group>"; };
 		9316D09D20520CB700D1A5E8 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
+		9316D0A320538F2000D1A5E8 /* LoginFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowCoordinator.swift; sourceTree = "<group>"; };
+		9316D0A620538FB000D1A5E8 /* LoggedInPrecondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedInPrecondition.swift; sourceTree = "<group>"; };
+		9316D0A82053901400D1A5E8 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		9316D0AA2053903A00D1A5E8 /* SecurityQuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityQuestionViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -101,9 +109,11 @@
 			isa = PBXGroup;
 			children = (
 				93069141200BEC1D00B1C9B9 /* AppDelegate.swift */,
-				93069154200BECFF00B1C9B9 /* LandingViewController.swift */,
+				93069154200BECFF00B1C9B9 /* WelcomeViewController.swift */,
 				93069156200BED5000B1C9B9 /* Signup Flow */,
+				9316D0A220538F0A00D1A5E8 /* Login Flow */,
 				93069157200BED5900B1C9B9 /* Home */,
+				9316D0A520538F9800D1A5E8 /* Preconditions */,
 				93069153200BECD500B1C9B9 /* Supporting Files */,
 			);
 			path = CorduroyExample;
@@ -145,6 +155,24 @@
 				930C0882200BF6AC00B0B934 /* Corduroy.framework */,
 			);
 			name = Products;
+			sourceTree = "<group>";
+		};
+		9316D0A220538F0A00D1A5E8 /* Login Flow */ = {
+			isa = PBXGroup;
+			children = (
+				9316D0A320538F2000D1A5E8 /* LoginFlowCoordinator.swift */,
+				9316D0A82053901400D1A5E8 /* LoginViewController.swift */,
+				9316D0AA2053903A00D1A5E8 /* SecurityQuestionViewController.swift */,
+			);
+			path = "Login Flow";
+			sourceTree = "<group>";
+		};
+		9316D0A520538F9800D1A5E8 /* Preconditions */ = {
+			isa = PBXGroup;
+			children = (
+				9316D0A620538FB000D1A5E8 /* LoggedInPrecondition.swift */,
+			);
+			path = Preconditions;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -237,13 +265,17 @@
 			buildActionMask = 2147483647;
 			files = (
 				9306915C200BED6D00B1C9B9 /* SignupFormViewController.swift in Sources */,
-				93069155200BED0000B1C9B9 /* LandingViewController.swift in Sources */,
+				93069155200BED0000B1C9B9 /* WelcomeViewController.swift in Sources */,
 				9306915F200BED6D00B1C9B9 /* SignupFlowCoordinator.swift in Sources */,
 				93069163200BED9F00B1C9B9 /* HomeViewController.swift in Sources */,
 				93069142200BEC1D00B1C9B9 /* AppDelegate.swift in Sources */,
 				9306915E200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift in Sources */,
+				9316D0A720538FB000D1A5E8 /* LoggedInPrecondition.swift in Sources */,
+				9316D0A420538F2000D1A5E8 /* LoginFlowCoordinator.swift in Sources */,
 				93069162200BED9F00B1C9B9 /* HomeCoordinator.swift in Sources */,
 				9306915D200BED6D00B1C9B9 /* SignupCompleteViewController.swift in Sources */,
+				9316D0AB2053903A00D1A5E8 /* SecurityQuestionViewController.swift in Sources */,
+				9316D0A92053901400D1A5E8 /* LoginViewController.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

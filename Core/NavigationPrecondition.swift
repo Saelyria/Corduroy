@@ -88,7 +88,7 @@ public protocol FlowRecoveringNavigationPrecondition: RecoveringNavigationPrecon
 }
 
 public extension FlowRecoveringNavigationPrecondition {
-    func attemptRecovery(context: NavigationContext, completion: @escaping (Error?) -> Void) {
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void) {
         context.navigator.navigateForFlowRecoveringPrecondition(self, completion: completion)
     }
 }

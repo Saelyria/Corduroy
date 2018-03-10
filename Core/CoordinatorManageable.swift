@@ -24,7 +24,7 @@ public protocol CoordinatorManageable {
      coordinator, unless tighter coupling is desired to ensure the view controller can only be handled by a specific
      `Coordinator`.
      */
-    associatedtype ManagingCoordinator: BaseCoordinator
+    associatedtype ManagingCoordinator: AnyObject
     
     /// The coordinator managing the view controller.
     var coordinator: ManagingCoordinator? { get set }

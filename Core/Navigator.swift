@@ -27,7 +27,7 @@ public class Navigator {
     /// The view controller currently being shown.
     public private(set) var currentViewController: UIViewController?
     
-    public var navigationStack: [NavStackItem] = []
+    internal var navigationStack: [NavStackItem] = []
     private var hasStarted: Bool = false
     
     // There's no reliable way to determine whether a back navigation from a UINavigationController was started by it
@@ -360,13 +360,14 @@ public class Navigator {
     // MARK: Precondition evaluation
     
     internal func navigateForFlowRecoveringPrecondition<T: FlowRecoveringNavigationPrecondition>(_ precondition: T,
-    completion: @escaping (Error?) -> Void) {
+    completion: @escaping (Bool) -> Void) {
         guard !(T.RecoveringFlowCoordinator.self is NavigationPreconditionRequiring.Type) else {
             fatalError("The flow coordinator for a flow recovering precondition must not require preconditions of its own.")
         }
         
         self.go(to: T.RecoveringFlowCoordinator.self, by: precondition.recoveryCoordinatorPresentMethod, flowCompletion: { (error: Error?, _) in
-            completion(error)
+            let succeeded: Bool = error == nil
+            completion(succeeded)
         })
     }
     
@@ -393,9 +394,9 @@ public class Navigator {
                 if let recoveringPrecondition = precondition as? RecoveringNavigationPrecondition {
                     requiresRecovery = true
                     dispatchGroup.enter()
-                    recoveringPrecondition.attemptRecovery(context: context, completion: { (recoveryError: Error?) in
-                        if let recoveryError = recoveryError {
-                            preconditionErrors.append(contentsOf: [error, recoveryError])
+                    recoveringPrecondition.attemptRecovery(context: context, completion: { (recovered: Bool) in
+                        if !recovered {
+                            preconditionErrors.append(error)
                         }
                         dispatchGroup.leave()
                     })
@@ -427,7 +428,7 @@ public class Navigator {
 /**
  An internal model type that holds the information of a navigation operation that is stored on a navigator's stack.
  */
-public class NavStackItem {
+internal class NavStackItem {
     public let coordinator: BaseCoordinator
     public let presentMethod: PresentMethod
     public let canBeNavigatedBackTo: Bool

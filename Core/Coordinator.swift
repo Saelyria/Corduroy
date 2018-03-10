@@ -79,20 +79,10 @@ public protocol BaseCoordinator: AnyObject {
     
     /// Optional event method called when the navigator has been dismissed by the navigator.
     func onDismissal()
-    
-    /**
-     Optional event method called when the navigator has started evaluating an asynchronous precondition on a navigation
-     started by this coordinator. This method should be used to start tasks indicating to the user that an asynchronous
-     task has started, such as starting a loading indicator. A default implementation for all coordinators in your app
-     can be easily achieved with an extension to `BaseCoordinator`.
-     */
-    func onPreconditionRecoveryStarted()
 }
 
 public extension BaseCoordinator {
     func onDismissal() { }
-    
-    func onPreconditionRecoveryStarted() { }
     
     var canBeNavigatedBackTo: Bool {
         return true

@@ -30,8 +30,11 @@ public extension NavigationPreconditionRequiring {
  coordinator. The navigator will determine this by calling the precondition's `evaluate(context:)` method and,
  based on whether or not an error is thrown, will continue with navigation or not to the coordinator being navigated to.
  Precondition objects are created by the navigator shortly before the time of their evaluation.
+ 
+ For simplicity, `NavigationPrecondition` objects themselves conform to `Error` so, if there is not another specific
+ error that they wish to throw, they can throw themselves.
  */
-public protocol NavigationPrecondition {
+public protocol NavigationPrecondition: Error {
     init()
     
     /**
@@ -45,13 +48,14 @@ public protocol NavigationPrecondition {
 
 
 /**
- Describes a navigation precondition that, when a precondition is not met, can attempt to recover asynchronously.
+ Describes a navigation precondition that, when a precondition is not met, can attempt to recover.
  
  If the precondition initially throws an error in its `evaluate(context:)` method, the navigator will call its
  `attemptRecovery(context:completion:)` method, where the precondition object can perform any kind of asynchronous work
- to attempt to address the failed precondition. If it successfully addresses the precondition, the precondition must
- call the passed in `completion` block, passing in nil. If the recovery attempt was unsuccessful, it should pass in an
- error describing the problem.
+ or start any intermediary flow coordinators to attempt to address the failed precondition.
+ 
+ If it successfully addresses the precondition, the precondition must call the passed in `completion` block, passing in
+ 'true'. If the recovery attempt was unsuccessful, it should pass in 'false'.
  */
 public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
     /**
@@ -67,7 +71,6 @@ public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
 }
 
 
-
 /**
  Describes a navigation precondition that, when a precondition is not met, will attempt to recover with the result of a
  flow coordinator.
@@ -78,21 +81,25 @@ public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
  Note that the `attemptRecovery(context:completion:)` of the `RecoveringNavigationPrecondition` protocol is implemented
  via an extension and should not be implemented by a conforming type.
  */
-public protocol FlowRecoveringNavigationPrecondition: RecoveringNavigationPrecondition {
-    /// The type of flow coordinator that will be used for recovery if the precondition is not already met when its
-    /// `evaluate(context:)` method is called. This flow coordinator must have a `SetupModel` type of `Void`.
-    associatedtype RecoveringFlowCoordinator: FlowCoordinator where RecoveringFlowCoordinator.SetupModel == Void
-    
-    /// The present method that should be used for the precondition's recovery flow coordinator.
-    var recoveryCoordinatorPresentMethod: PresentMethod { get }
-}
-
-public extension FlowRecoveringNavigationPrecondition {
-    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void) {
-        context.navigator.navigateForFlowRecoveringPrecondition(self, completion: completion)
-    }
-}
-
+//public protocol FlowRecoveringNavigationPrecondition: RecoveringNavigationPrecondition {
+//    /// The type of flow coordinator that will be used for recovery if the precondition is not already met when its
+//    /// `evaluate(context:)` method is called. This flow coordinator must have a `SetupModel` type of `Void`.
+//    associatedtype RecoveringFlowCoordinator: FlowCoordinator where RecoveringFlowCoordinator.SetupModel == Void
+//
+//    /// The present method that should be used for the precondition's recovery flow coordinator.
+//    var recoveryCoordinatorPresentMethod: PresentMethod { get }
+//}
+//
+//public extension FlowRecoveringNavigationPrecondition {
+//    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void) {
+//        context.navigator.navigateForFlowRecoveringPrecondition(self, completion: completion)
+//    }
+//}
+//
+//
+//public protocol FlowPrecondition: NavigationPrecondition {
+//    func
+//}
 
 
 /// An error representing an aggregate of underlying errors.

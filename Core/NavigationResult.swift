@@ -1,0 +1,251 @@
+import UIKit
+
+/**
+ An object returned from navigator `go(to:)` methods that allows the object that started the navigation to subscribe to
+ various events related to the navigation.
+ */
+public class CoordinatorNavigationResult<C: Coordinator> {
+    private var onFail: ((Error) -> Void)?
+    private var onRecoveringPreconditionStarted: (() -> Void)?
+    private var onFlowRecoveryStarted: (() -> Void)?
+    private var onCoordinatorCreated: ((C) -> Void)?
+    
+    // Internal variables set by the navigator that indicate when a condition has passed that warrants one of the
+    // appropriate handlers be called.
+    internal var preconditonError: Error? {
+        didSet {
+            if let error = preconditonError, let onFail = self.onFail {
+                onFail(error)
+                self.onFail = nil
+            }
+        }
+    }
+    
+    internal var recoveringPreconditionsHaveStarted: Bool = false {
+        didSet {
+            if recoveringPreconditionsHaveStarted, let preconditionsStarted = self.onRecoveringPreconditionStarted {
+                preconditionsStarted()
+                self.onRecoveringPreconditionStarted = nil
+            }
+        }
+    }
+    
+    internal var flowRecoveryHasStarted: Bool = false {
+        didSet {
+            if flowRecoveryHasStarted, let flowStarted = self.onFlowRecoveryStarted {
+                flowStarted()
+                self.onFlowRecoveryStarted = nil
+            }
+        }
+    }
+    
+    internal var coordinator: C? {
+        didSet {
+            if let coordinator = coordinator, let onCoordinatorCreated = self.onCoordinatorCreated {
+                onCoordinatorCreated(coordinator)
+                self.onCoordinatorCreated = nil
+            }
+        }
+    }
+    
+    /**
+     Adds a handler to the navigation that is called when the coordinator being navigated to is created.
+     
+     In most cases this will be called immediately; however, in the case of a coordinator that has recovering
+     preconditions, the handler is called after all preconditions have passed or been recovered. The handler is not
+     called if any preconditions fail and were not recoverable. This handler is guaranteed to be called before the
+     created coordinator's `presentViewController` or `presentFirstViewController` methods, so additional configuration
+     of the coordinator can be done in this handler.
+     - parameter onCreated: The handler that will be called with the created coordinator.
+     */
+    @discardableResult
+    public func onCoordinatorCreated(_ onCreated: @escaping (C) -> Void) -> CoordinatorNavigationResult<C> {
+        if let coordinator = self.coordinator {
+            onCreated(coordinator)
+        } else {
+            self.onCoordinatorCreated = onCreated
+        }
+        return self
+    }
+    
+    /**
+     Adds a handler to the navigation that is called when a precondition fails and navigation cannot continue.
+     
+     The passed in handler is called when a precondition fails and was not recoverable. The error from the failed
+     precondition is passed into this handler.
+     - parameter onFail: The handler that will be called when a precondition fails.
+     */
+    @discardableResult
+    public func onPreconditionFailed(_ onFail: @escaping (Error) -> Void) -> CoordinatorNavigationResult<C> {
+        if let error = self.preconditonError {
+            onFail(error)
+        } else {
+            self.onFail = onFail
+        }
+        return self
+    }
+    
+    /**
+     Adds a handler to the navigation that is called when an asynchronous task has started to attempt recovery for a
+     failed precondition.
+     
+     This method is only called when an asynchronous recovery task is started, not for a flow recovering precondition
+     when it has started a flow. This handler can be used to indicate to the user that an asynchronous task has started,
+     such as displaying a loading indicator.
+     - parameter onStarted: The handler that will be called when precondition recovery starts.
+     */
+    @discardableResult
+    public func onPreconditionRecoveryStarted(_ onStarted: @escaping () -> Void) -> CoordinatorNavigationResult<C> {
+        if self.recoveringPreconditionsHaveStarted {
+            onStarted()
+        } else {
+            self.onRecoveringPreconditionStarted = onStarted
+        }
+        return self
+    }
+    
+    /**
+     Adds a handler to the navigation that is called when an an auxilliary flow coordinator was navigated to attempt
+     recovery for a failed precondition.
+     */
+    @discardableResult
+    public func onPreconditionFlowStarted(_ onStarted: @escaping () -> Void) -> CoordinatorNavigationResult<C> {
+        if self.flowRecoveryHasStarted {
+            onStarted()
+        } else {
+            self.onFlowRecoveryStarted = onStarted
+        }
+        return self
+    }
+}
+
+/**
+ An object returned from navigator `go(to:)` methods that allows the object that started the navigation to subscribe to
+ various events related to the navigation.
+ */
+public class FlowCoordinatorNavigationResult<C: FlowCoordinator> {
+    private var onFail: ((Error) -> Void)?
+    private var onRecoveringPreconditionStarted: (() -> Void)?
+    private var onFlowRecoveryStarted: (() -> Void)?
+    private var onCoordinatorCreated: ((C) -> Void)?
+    
+    // Internal variables set by the navigator that indicate when a condition has passed that warrants one of the
+    // appropriate handlers be called.
+    internal var preconditonError: Error? {
+        didSet {
+            if let error = preconditonError, let onFail = self.onFail {
+                onFail(error)
+                self.onFail = nil
+            }
+        }
+    }
+    
+    internal var recoveringPreconditionsHaveStarted: Bool = false {
+        didSet {
+            if recoveringPreconditionsHaveStarted, let preconditionsStarted = self.onRecoveringPreconditionStarted {
+                preconditionsStarted()
+                self.onRecoveringPreconditionStarted = nil
+            }
+        }
+    }
+    
+    internal var flowRecoveryHasStarted: Bool = false {
+        didSet {
+            if flowRecoveryHasStarted, let flowStarted = self.onFlowRecoveryStarted {
+                flowStarted()
+                self.onFlowRecoveryStarted = nil
+            }
+        }
+    }
+    
+    internal var coordinator: C? {
+        didSet {
+            if let coordinator = coordinator, let onCoordinatorCreated = self.onCoordinatorCreated {
+                onCoordinatorCreated(coordinator)
+                self.onCoordinatorCreated = nil
+            }
+        }
+    }
+    
+    /**
+     Adds a handler to the navigation that is called when the coordinator being navigated to is created.
+     
+     In most cases this will be called immediately; however, in the case of a coordinator that has recovering
+     preconditions, the handler is called after all preconditions have passed or been recovered. The handler is not
+     called if any preconditions fail and were not recoverable. This handler is guaranteed to be called before the
+     created coordinator's `presentViewController` or `presentFirstViewController` methods, so additional configuration
+     of the coordinator can be done in this handler.
+     - parameter onCreated: The handler that will be called with the created coordinator.
+     */
+    @discardableResult
+    public func onCoordinatorCreated(_ onCreated: @escaping (C) -> Void) -> FlowCoordinatorNavigationResult<C> {
+        if let coordinator = self.coordinator {
+            onCreated(coordinator)
+        } else {
+            self.onCoordinatorCreated = onCreated
+        }
+        return self
+    }
+    
+    /**
+     Adds a handler to the navigation that is called when a precondition fails and navigation cannot continue.
+     
+     The passed in handler is called when a precondition fails and was not recoverable. The error from the failed
+     precondition is passed into this handler.
+     - parameter onFail: The handler that will be called when a precondition fails.
+     */
+    @discardableResult
+    public func onPreconditionFailed(_ onFail: @escaping (Error) -> Void) -> FlowCoordinatorNavigationResult<C> {
+        if let error = self.preconditonError {
+            onFail(error)
+        } else {
+            self.onFail = onFail
+        }
+        return self
+    }
+    
+    /**
+     Adds a handler to the navigation that is called when an asynchronous task has started to attempt recovery for a
+     failed precondition.
+     
+     This method is only called when an asynchronous recovery task is started, not for a flow recovering precondition
+     when it has started a flow. This handler can be used to indicate to the user that an asynchronous task has started,
+     such as displaying a loading indicator.
+     - parameter onStarted: The handler that will be called when precondition recovery starts.
+     */
+    @discardableResult
+    public func onPreconditionRecoveryStarted(_ onStarted: @escaping () -> Void) -> FlowCoordinatorNavigationResult<C> {
+        if self.recoveringPreconditionsHaveStarted {
+            onStarted()
+        } else {
+            self.onRecoveringPreconditionStarted = onStarted
+        }
+        return self
+    }
+    
+    /**
+     Adds a handler to the navigation that is called when an an auxilliary flow coordinator was navigated to attempt
+     recovery for a failed precondition.
+     */
+    @discardableResult
+    public func onPreconditionFlowStarted(_ onStarted: @escaping () -> Void) -> FlowCoordinatorNavigationResult<C> {
+        if self.flowRecoveryHasStarted {
+            onStarted()
+        } else {
+            self.onFlowRecoveryStarted = onStarted
+        }
+        return self
+    }
+
+    @discardableResult
+    public func onFlowCompleted(_ onFlowCompleted: @escaping (Error?, C.FlowCompletionModel?) -> Void) -> FlowCoordinatorNavigationResult<C> {
+        self.onFlowCompleted = onFlowCompleted
+        
+        if self.flowRecoveryHasStarted {
+            onStarted()
+        } else {
+            self.onFlowRecoveryStarted = onStarted
+        }
+        return self
+    }
+}

@@ -55,12 +55,15 @@ public protocol NavigationPrecondition {
  */
 public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
     /**
-     Evaluates whether the precondition passes. This is called when a navigation takes place with this precondition.
+     Called when a precondition initally fails, allowing it to attempt to recover or resolve the precondition with the
+     result of an asynchronous task. When the task finishes (whether by successfully resolving the precondtion or
+     ultimately failing), the passed-in `completion` closure must be called, passing in 'true' if recovery was
+     successful or 'false' if recovery failed and the navigation should fail.
      - parameter context: A context object containing details about the navigation.
-     - parameter completion: A closure the precondition should call when it has decided that it passes (indicated by
-     passing `nil`) or fails (indicated by passing an `Error` object).
+     - parameter completion: A closure the precondition should call when it has decided that it passes or fails,
+        indicated by a boolean value it passes in (true for successful recovery, false for failure).
      */
-    func attemptRecovery(context: NavigationContext, completion: @escaping (Error?) -> Void)
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void)
 }
 
 

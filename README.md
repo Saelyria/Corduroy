@@ -135,7 +135,35 @@ navigator.go(to: MyFlowCoordinator.self, by: .modallyPresenting, flowCompletion:
 
 ## Preconditions
 
-Corduroy also has support for preconditions to navigation between coordinators. These can be simple checks (user is logged in, user has completed onboarding, etc) or can move up in complexity to preconditions that, if not initially met, can attempt to recover with an asynchronous task or with the result of a flow coordinator. This can be used to easily create more complex conditions like 'the user must be logged in to navigate to this coordinator. If they aren't, start the login flow and navigate if it succeeds'.
+Corduroy also has support for preconditions to navigation between coordinators. These can be simple checks (user is logged in, user has completed onboarding, etc) or can move up in complexity to preconditions that, if not initially met, can attempt to recover with an asynchronous task or with the result of a flow coordinator. This can be used to easily create more complex conditions like 'the user must be logged in to navigate to this coordinator. If they aren't, start the login flow and navigate if it succeeds'. Preconditions are represented by simple objects that conform to one of either `NavigationPrecondition`, `RecoveringNavigationPrecondition`, or `FlowRecoveringNavigationPrecondition`.
+
+A basic precondition conforming to `NavigationPrecondition` only needs to implement one method - `evaluate(context:)` - where it throws an error if it didn't pass. This error is ultimately propogated to the coordinator that started the navigation the precondition was a part of so it can handle it. Things get a little more interesting with recovering preconditions - if they throw in their `evaluate(context:)` method, then their `attemptRecovery(context:completion:)` method is called, where it can start an asynchronous task to attemp to recover so the navigation can continue. This could be something like making sure changes have been saved to a server before continuing, and could look something like this:
+
+```swift
+class DataSavedPrecondition: RecoveringNavigationPrecondition {
+    func evaluate(context: NavigationContext) throws {
+        if !dataAlreadySaved {
+            throw DataNotSavedError()
+        }
+    }
+    
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void) {
+        // start the network request to save the data, then:
+        completion(dataSavedSuccessfully)
+    }
+}
+```
+
+Coordinators that require preconditions for navigation should conform to the `NavigationPreconditionRequiring` protocol, where they are required to list their preconditions as an array of preconditions types, like this:
+
+```swift
+class MyCoordinator: Coordinator, NavigationPreconditionRequiring {
+    static let preconditions: [NavigationPrecondition.Type] = [
+        DataSavedPrecondition.self,
+        UserLoggedInPrecondition.self
+    ]
+}
+```
 
 
 The files of Corduroy are also well-documented and this repo includes an example application with step-by-step comments explaining what's going on.

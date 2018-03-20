@@ -48,16 +48,19 @@ public protocol NavigationPrecondition: Error {
 
 
 /**
- Describes a navigation precondition that, when a precondition is not met, can attempt to recover.
+ Describes a navigation precondition that, when a precondition is not met, can attempt to recover with the result of an
+ asynchronous task.
  
  If the precondition initially throws an error in its `evaluate(context:)` method, the navigator will call its
  `attemptRecovery(context:completion:)` method, where the precondition object can perform any kind of asynchronous work
- or start any intermediary flow coordinators to attempt to address the failed precondition.
+ to attempt to address the failed precondition. Navigation to other coordinators should not be done, as this will
+ result in undefined behaviour; if navigation to an intermediary flow is desired, please use a
+ `FlowRecoveringNavigationPrecondition`.
  
  If it successfully addresses the precondition, the precondition must call the passed in `completion` block, passing in
  'true'. If the recovery attempt was unsuccessful, it should pass in 'false'.
  */
-public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
+public protocol AsyncRecoveringNavigationPrecondition: NavigationPrecondition {
     /**
      Called when a precondition initally fails, allowing it to attempt to recover or resolve the precondition with the
      result of an asynchronous task. When the task finishes (whether by successfully resolving the precondtion or
@@ -73,33 +76,26 @@ public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
 
 /**
  Describes a navigation precondition that, when a precondition is not met, will attempt to recover with the result of a
- flow coordinator.
+ flow.
+ 
+ If the precondition initially throws an error in its `evaluate(context:)` method, the navigator will call its
+ `attemptRecovery(context:completion:)` method, where the precondition object should navigate to a flow coordinator to
+ resolve the issue.
  
  An ideal sample use case for this protocol would be a login precondition which will pass if the user is already logged
  in, but will instead start some kind of login flow coordinator if the user is not already logged in.
- 
- Note that the `attemptRecovery(context:completion:)` of the `RecoveringNavigationPrecondition` protocol is implemented
- via an extension and should not be implemented by a conforming type.
  */
-//public protocol FlowRecoveringNavigationPrecondition: RecoveringNavigationPrecondition {
-//    /// The type of flow coordinator that will be used for recovery if the precondition is not already met when its
-//    /// `evaluate(context:)` method is called. This flow coordinator must have a `SetupModel` type of `Void`.
-//    associatedtype RecoveringFlowCoordinator: FlowCoordinator where RecoveringFlowCoordinator.SetupModel == Void
-//
-//    /// The present method that should be used for the precondition's recovery flow coordinator.
-//    var recoveryCoordinatorPresentMethod: PresentMethod { get }
-//}
-//
-//public extension FlowRecoveringNavigationPrecondition {
-//    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void) {
-//        context.navigator.navigateForFlowRecoveringPrecondition(self, completion: completion)
-//    }
-//}
-//
-//
-//public protocol FlowPrecondition: NavigationPrecondition {
-//    func
-//}
+public protocol FlowRecoveringNavigationPrecondition: NavigationPrecondition {
+    /**
+     Called when a precondition initally fails, allowing it to attempt to recover or resolve the precondition with the
+     result of a flow coordinator. The passed-in completion block should be called in the flow coordinator's flow
+     completion block, indicating whether the flow completed successfully.
+     - parameter context: A context object containing details about the navigation.
+     - parameter completion: A closure the precondition should call when it has decided that it passes or fails,
+     indicated by a boolean value it passes in (true for successful recovery, false for failure).
+     */
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void)
+}
 
 
 /// An error representing an aggregate of underlying errors.

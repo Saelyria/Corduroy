@@ -58,7 +58,7 @@ public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
      - parameter context: A context object containing the involved coordinators and other navigation details.
      - parameter flowCompletion: A closure to call after the flow has completed.
      */
-    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionModel?) -> Void)
+    func presentFirstViewController(context: NavigationContext, flowCompletion: (Error?, FlowCompletionModel?) -> Void)
 }
 
 

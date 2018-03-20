@@ -3,12 +3,18 @@ import UIKit
 /**
  An object returned from navigator `go(to:)` methods that allows the object that started the navigation to subscribe to
  various events related to the navigation.
+ 
+ Note: do not hold reference to this object - simply call its various methods for adding callbacks.
  */
 public class CoordinatorNavigationResult<C: Coordinator> {
     private var onFail: ((Error) -> Void)?
     private var onRecoveringPreconditionStarted: (() -> Void)?
     private var onFlowRecoveryStarted: (() -> Void)?
     private var onCoordinatorCreated: ((C) -> Void)?
+    
+    // A closure that this result should call when it deinits (goes out of scope); used to indicate to the navigator
+    // that all callbacks are set that will be set.
+    private var completionHandler: () -> Void
     
     // Internal variables set by the navigator that indicate when a condition has passed that warrants one of the
     // appropriate handlers be called.
@@ -46,6 +52,18 @@ public class CoordinatorNavigationResult<C: Coordinator> {
                 self.onCoordinatorCreated = nil
             }
         }
+    }
+    
+    // Navigation results are created with a closure to call after they have been deallocated. The idea is to capture
+    // when they go out of scope to know when all event bindings have been set so the navigator can go through with the
+    // final 'present view controller' part of its navigation. This ensures that events (especially the 'on coordinator
+    // created' event) are guaranteed to be called before the final presentation of the view controller occurs.
+    internal init(completionHandler: @escaping () -> Void) {
+        self.completionHandler = completionHandler
+    }
+    
+    deinit {
+        self.completionHandler()
     }
     
     /**
@@ -128,6 +146,11 @@ public class FlowCoordinatorNavigationResult<C: FlowCoordinator> {
     private var onRecoveringPreconditionStarted: (() -> Void)?
     private var onFlowRecoveryStarted: (() -> Void)?
     private var onCoordinatorCreated: ((C) -> Void)?
+    private var onFlowCompleted: ((Error?, C.FlowCompletionModel?) -> Void)?
+    
+    // A closure that this result should call when it deinits (goes out of scope); used to indicate to the navigator
+    // that all callbacks are set that will be set.
+    private var completionHandler: () -> Void
     
     // Internal variables set by the navigator that indicate when a condition has passed that warrants one of the
     // appropriate handlers be called.
@@ -165,6 +188,27 @@ public class FlowCoordinatorNavigationResult<C: FlowCoordinator> {
                 self.onCoordinatorCreated = nil
             }
         }
+    }
+    
+    internal var flowCompleted: (Error?, C.FlowCompletionModel?)? {
+        didSet {
+            if let (error, model) = flowCompleted, let onFlowCompleted = self.onFlowCompleted {
+                onFlowCompleted(error, model)
+                self.onRecoveringPreconditionStarted = nil
+            }
+        }
+    }
+    
+    // Navigation results are created with a closure to call after they have been deallocated. The idea is to capture
+    // when they go out of scope to know when all event bindings have been set so the navigator can go through with the
+    // final 'present view controller' part of its navigation. This ensures that events (especially the 'on coordinator
+    // created' event) are guaranteed to be called before the final presentation of the view controller occurs.
+    internal init(completionHandler: @escaping () -> Void) {
+        self.completionHandler = completionHandler
+    }
+    
+    deinit {
+        self.completionHandler()
     }
     
     /**
@@ -239,12 +283,10 @@ public class FlowCoordinatorNavigationResult<C: FlowCoordinator> {
 
     @discardableResult
     public func onFlowCompleted(_ onFlowCompleted: @escaping (Error?, C.FlowCompletionModel?) -> Void) -> FlowCoordinatorNavigationResult<C> {
-        self.onFlowCompleted = onFlowCompleted
-        
-        if self.flowRecoveryHasStarted {
-            onStarted()
+        if let (error, model) = self.flowCompleted {
+            onFlowCompleted(error, model)
         } else {
-            self.onFlowRecoveryStarted = onStarted
+            self.onFlowCompleted = onFlowCompleted
         }
         return self
     }

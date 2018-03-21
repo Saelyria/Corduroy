@@ -1,4 +1,4 @@
-
+/*
 import Foundation
 
 public typealias RoutableCoordinator = Coordinator & Routable
@@ -72,3 +72,4 @@ public protocol Routing: AnyObject {
      */
     func route(toCoordinatorFor pathSegment: String, navigator: RoutingNavigator, parameters: [String: String]?)
 }
+*/

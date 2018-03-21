@@ -86,7 +86,7 @@ public class Navigator {
      */
     @discardableResult
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod,
-    parameters: NavigationParameters = NavigationParameters()) -> CoordinatorNavigationResult<T> where T.SetupModel == Void {
+    parameters: NavigationParameters = NavigationParameters()) -> NavigationResult<T> where T.SetupModel == Void {
         return self.go(to: coordinator, by: navMethod, with: (), parameters: parameters)
     }
     
@@ -101,19 +101,56 @@ public class Navigator {
         passing in either an error or the created coordinator. Optional.
      */
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
-    parameters: NavigationParameters = NavigationParameters()) -> CoordinatorNavigationResult<T> {
+    parameters: NavigationParameters = NavigationParameters()) -> NavigationResult<T> {
+        return self.go(to: coordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { coordinator, context in
+            coordinator.presentViewController(context: context)
+        })
+    }
+    
+    // MARK: FlowCoordinator navigation methods
+    
+    /**
+     Navigate to the specified flow coordinator.
+     - parameter coordinator: The type of coordinator to navigate to.
+     - parameter navMethod: The presentation method to use (e.g. push or modal present).
+     - parameter parameters: Additional navigation parameters. Optional.
+     - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
+     */
+    @discardableResult
+    public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters(),
+    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> NavigationResult<T> where T.SetupModel == Void {
+        return self.go(to: flowCoordinator, by: navMethod, with: (), flowCompletion: flowCompletion)
+    }
+    
+    /**
+     Navigate to the specified flow coordinator with the given setup model.
+     - parameter coordinator: The type of coordinator to navigate to.
+     - parameter navMethod: The presentation method to use (e.g. push or modal present).
+     - parameter model: A model of the given coordinator's setup model type.
+     - parameter parameters: Additional navigation parameters. Optional.
+     - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
+     */
+    @discardableResult
+    public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
+    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> NavigationResult<T> {
+        return self.go(to: flowCoordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { flowCoordinator, context in
+            flowCoordinator.presentFirstViewController(context: context, flowCompletion: flowCompletion)
+        })
+    }
+    
+    private func go<T: BaseCoordinator & SetupModelRequiring>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel, parameters: NavigationParameters, presentBlock: @escaping (T, NavigationContext) -> Void) -> NavigationResult<T> {
         precondition(self.hasStarted, "The navigator hasn't been started - call `start(onWindow:firstCoordinator:with:)` first.")
         
         // This navigation happened from a recovering navigation precondition; flag it
         if self.isEvaluatingPreconditions {
             self.preconditionRecoveryDidNavigate = true
         }
-
-        let coordinator = coordinator.create(with: model, navigator: self)
+        
+        let coordinator = T.create(with: model, navigator: self)
         let context = NavigationContext(navigator: self, from: self.currentCoordinator, to: coordinator,
                                         present: navMethod, dismiss: nil, params: parameters)
-        let navResult = CoordinatorNavigationResult<T>(completionHandler: {
-            coordinator.presentViewController(context: context)
+        let navResult = NavigationResult<T>(completionHandler: {
+            presentBlock(coordinator, context)
         })
         
         // if the coordinator has preconditions, start evaluating them
@@ -138,76 +175,6 @@ public class Navigator {
             }
         } else {
             let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
-            self.navigationStack.append(stackItem)
-            
-            navResult.coordinator = coordinator
-        }
-        
-        return navResult
-    }
-    
-    // MARK: FlowCoordinator navigation methods
-    
-    /**
-     Navigate to the specified flow coordinator.
-     - parameter coordinator: The type of coordinator to navigate to.
-     - parameter navMethod: The presentation method to use (e.g. push or modal present).
-     - parameter parameters: Additional navigation parameters. Optional.
-     - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
-     */
-    @discardableResult
-    public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters(),
-    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> FlowCoordinatorNavigationResult<T> where T.SetupModel == Void {
-        return self.go(to: flowCoordinator, by: navMethod, with: (), flowCompletion: flowCompletion)
-    }
-    
-    /**
-     Navigate to the specified flow coordinator with the given setup model.
-     - parameter coordinator: The type of coordinator to navigate to.
-     - parameter navMethod: The presentation method to use (e.g. push or modal present).
-     - parameter model: A model of the given coordinator's setup model type.
-     - parameter parameters: Additional navigation parameters. Optional.
-     - parameter flowCompletion: The completion block the flow coordinator will call when its flow has completed.
-     */
-    @discardableResult
-    public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
-    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> FlowCoordinatorNavigationResult<T> {
-        precondition(self.hasStarted, "The navigator hasn't been started - call `start(onWindow:firstCoordinator:with:)` first.")
-        
-        // This navigation happened from a recovering navigation precondition; flag it
-        if self.isEvaluatingPreconditions {
-            self.preconditionRecoveryDidNavigate = true
-        }
-        
-        let flowCoordinator = flowCoordinator.create(with: model, navigator: self)
-        let context = NavigationContext(navigator: self, from: self.currentCoordinator, to: flowCoordinator,
-                                        present: navMethod, dismiss: nil, params: parameters)
-        let navResult = FlowCoordinatorNavigationResult<T>(completionHandler: {
-            flowCoordinator.presentFirstViewController(context: context, flowCompletion: navResult.flow)
-        })
-        
-        // if the coordinator has preconditions, start evaluating them
-        if let preconCoordinator = flowCoordinator as? NavigationPreconditionRequiring {
-            let (startedAsyncRecovery, startedFlowRecovery) = self.evaluatePreconditions(on: preconCoordinator, context: context, completion: { [navResult] (error: Error?) in
-                DispatchQueue.main.async {
-                    if let error = error {
-                        navResult.preconditonError = error
-                    } else {
-                        let stackItem = NavStackItem(coordinator: flowCoordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
-                        self.navigationStack.append(stackItem)
-                        
-                        navResult.coordinator = flowCoordinator
-                    }
-                }
-            })
-            
-            if startedAsyncRecovery {
-                navResult.recoveringPreconditionsHaveStarted = true
-            } else if startedFlowRecovery {
-                navResult.flowRecoveryHasStarted = true
-            }
-        } else {
-            let stackItem = NavStackItem(coordinator: flowCoordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
             self.navigationStack.append(stackItem)
             
             navResult.coordinator = coordinator

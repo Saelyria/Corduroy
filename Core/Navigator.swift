@@ -36,11 +36,6 @@ public class Navigator {
     // don't end up with duplicate calls.
     private var shouldIgnoreNavControllerPopRequests: Bool = false
     
-    // A flag set during precondition evaluation to determine whether a navigation happened so we can call the right
-    // callback on the NavigationResult.
-    private var preconditionRecoveryDidNavigate: Bool = false
-    private var isEvaluatingPreconditions: Bool = false
-    
     /// Initialize a new Navigator object.
     public init() { }
     
@@ -124,7 +119,7 @@ public class Navigator {
     
     /**
      Navigate to the specified flow coordinator with the given setup model.
-     - parameter coordinator: The type of coordinator to navigate to.
+     - parameter flowCoordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
      - parameter parameters: Additional navigation parameters. Optional.
@@ -138,45 +133,51 @@ public class Navigator {
         })
     }
     
-    private func go<T: BaseCoordinator & SetupModelRequiring>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel, parameters: NavigationParameters, presentBlock: @escaping (T, NavigationContext) -> Void) -> NavigationResult<T> {
+    private func go<T: BaseCoordinator & SetupModelRequiring>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
+    parameters: NavigationParameters, presentBlock: @escaping (T, NavigationContext) -> Void) -> NavigationResult<T> {
         precondition(self.hasStarted, "The navigator hasn't been started - call `start(onWindow:firstCoordinator:with:)` first.")
         
-        // This navigation happened from a recovering navigation precondition; flag it
-        if self.isEvaluatingPreconditions {
-            self.preconditionRecoveryDidNavigate = true
-        }
-        
         let coordinator = T.create(with: model, navigator: self)
+        
+        // Create the coordinator, context, and nav result. When the nav result is dealloc'd (i.e. goes out of scope),
+        // it will call the passed-in 'present' block to tell the coordinator to finally present its view controller.
+        // If there were no preconditions / event bindings on it, it will dealloc at the end of this method. If there
+        // were bindings, it will dealloc at the end of the scope in which the 'go(to:)' method was called (as long as a
+        // reference to it was not held). If there were preconditions, it will go out of scope after the 'completion' on
+        // 'evaluatePreconditions(on:context:completion:)' finishes.
         let context = NavigationContext(navigator: self, from: self.currentCoordinator, to: coordinator,
                                         present: navMethod, dismiss: nil, params: parameters)
         let navResult = NavigationResult<T>(completionHandler: {
-            presentBlock(coordinator, context)
+            DispatchQueue.main.async {
+                presentBlock(coordinator, context)
+            }
         })
         
         // if the coordinator has preconditions, start evaluating them
         if let preconCoordinator = coordinator as? NavigationPreconditionRequiring {
-            let (startedAsyncRecovery, startedFlowRecovery) = self.evaluatePreconditions(on: preconCoordinator, context: context, completion: { [navResult] (error: Error?) in
+            let recoveryMethods = self.evaluatePreconditions(on: preconCoordinator, context: context, completion: { [navResult] (error: Error?) in
                 DispatchQueue.main.async {
                     if let error = error {
                         navResult.preconditonError = error
                     } else {
                         let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
                         self.navigationStack.append(stackItem)
-                        
                         navResult.coordinator = coordinator
                     }
                 }
             })
             
-            if startedAsyncRecovery {
-                navResult.recoveringPreconditionsHaveStarted = true
-            } else if startedFlowRecovery {
+            if recoveryMethods.contains(.flowCoordinator) {
                 navResult.flowRecoveryHasStarted = true
+            } else if recoveryMethods.contains(.asyncTask) {
+                navResult.recoveringPreconditionsHaveStarted = true
             }
-        } else {
+        }
+        
+        // otherwise, just add the coordinator to the stack and let the nav result object go out of scope to call present
+        else {
             let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
             self.navigationStack.append(stackItem)
-            
             navResult.coordinator = coordinator
         }
         
@@ -300,13 +301,11 @@ public class Navigator {
      - returns: A boolean indicating whether an asynchronous recovery for a precondition is required.
      */
     private func evaluatePreconditions(on coordinator: NavigationPreconditionRequiring, context: NavigationContext,
-    completion: @escaping (Error?) -> Void) -> (startedAsyncRecovery: Bool, startedFlowRecovery: Bool) {
-        self.isEvaluatingPreconditions = true
+    completion: @escaping (Error?) -> Void) -> [PreconditionRecoveryMethod] {
         
         let dispatchGroup = DispatchGroup()
         var preconditionErrors: [Error] = []
-        var startedAsyncRecovery: Bool = false
-        var startedFlowRecovery: Bool = false
+        var recoveryMethods: Set<PreconditionRecoveryMethod> = []
         
         // instantiate an instance of each precondition and evaluate them
         for preconditionType: NavigationPrecondition.Type in type(of: coordinator).preconditions {
@@ -316,37 +315,36 @@ public class Navigator {
             } catch {
                 // if it's a recovering precondition, set requiredRecovery so the caller knows then try to recover
                 if let recoveringPrecondition = precondition as? RecoveringNavigationPrecondition {
-                    requiresRecovery = true
                     dispatchGroup.enter()
-                    recoveringPrecondition.attemptRecovery(context: context, completion: { (recovered: Bool) in
+                    let recoveryMethod = recoveringPrecondition.attemptRecovery(context: context, completion: { (recovered: Bool) in
                         if !recovered {
                             preconditionErrors.append(error)
                         }
                         dispatchGroup.leave()
                     })
-                    // otherwise, add an error to the array of errors
-                } else {
+                    recoveryMethods.insert(recoveryMethod)
+                }
+                // otherwise, add the error to the array of errors
+                else {
                     preconditionErrors.append(error)
                 }
             }
         }
         
+        if (recoveryMethods.contains(.flowCoordinator) && recoveryMethods.contains(.asyncTask)) {
+            print("WARNING: Preconditions for a coordinator having both 'asynchronous task' and 'flow coordinator' recovery methods is not supported; unexpected results may occur.")
+        }
+        
         // call the completion block once all the async tasks are complete
         dispatchGroup.notify(queue: .main) {
-            self.isEvaluatingPreconditions = false
-            
-            if preconditionErrors.count > 1 {
+            if preconditionErrors.count >= 1 {
                 let aggregateError = AggregateError(underlyingErrors: preconditionErrors)
                 completion(aggregateError)
-            } else if preconditionErrors.count == 1 {
-                let error = preconditionErrors.first!
-                completion(error)
-            }
-            else {
+            } else {
                 completion(nil)
             }
         }
         
-        return requiresRecovery
+        return Array(recoveryMethods)
     }
 }

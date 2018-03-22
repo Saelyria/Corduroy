@@ -5,10 +5,12 @@ import UIKit
  Describes a coordinator that has preconditions that must be fulfilled before navigation to it is allowed.
  */
 public protocol NavigationPreconditionRequiring: BaseCoordinator {
-    /// Whether the navigator should sort the preconditions array when evaluating them. If `true`, the navigator will
-    /// evaluate non-asynchronous preconditions (i.e. non-`RecoveringNavigationPrecondition`s) before asynchronous ones
-    /// in order to fail faster in case of a failure, otherwise it will evaluate preconditions in the array's order.
-    /// Defaults to `false`.
+    /**
+     Whether the navigator should sort the preconditions array when evaluating them. If `true`, the navigator will
+     evaluate non-asynchronous preconditions (i.e. non-`RecoveringNavigationPrecondition`s) before asynchronous ones in
+     order to fail faster in case of a failure, otherwise it will evaluate preconditions in the array's order. Defaults
+     to `false`.
+     */
     var shouldSortPreconditions: Bool { get }
     
     /// The array of preconditions that must pass in order to navigate to this coordinator.
@@ -56,7 +58,6 @@ public protocol NavigationPrecondition: Error {
  to attempt to address the failed precondition - be that network calls or navigation to an intermediary flow
  coordinator. An ideal sample use case for this protocol would be a login precondition which will pass if the user is
  already logged in, but will instead start some kind of login flow coordinator if the user is not already logged in.
-
  
  If it successfully addresses the precondition, the precondition must call the passed in `completion` block, passing in
  'true'. If the recovery attempt was unsuccessful, it should pass in 'false'.
@@ -70,8 +71,17 @@ public protocol RecoveringNavigationPrecondition: NavigationPrecondition {
      - parameter context: A context object containing details about the navigation.
      - parameter completion: A closure the precondition should call when it has decided that it passes or fails,
         indicated by a boolean value it passes in (true for successful recovery, false for failure).
+     - returns: The recovery method used (either a flow coordinator was navigated to or a different kind of async task).
      */
-    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void)
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void) -> PreconditionRecoveryMethod
+}
+
+/// A kind of recovery method that a `RecoveringNavigationPrecondition` can use.
+public enum PreconditionRecoveryMethod {
+    /// The precondition started a flow coordinator to attempt to recover.
+    case flowCoordinator
+    /// The precondition started an asynchronous task (such as a network request) to attempt to recover.
+    case asyncTask
 }
 
 

@@ -67,7 +67,8 @@ public class NavigationResult<C: BaseCoordinator> {
     }
     
     /**
-     Adds a handler to the navigation that is called when the coordinator being navigated to is created.
+     Adds a handler to the navigation that is called when the coordinator being navigated to is created to perform any
+     additional configuration on it.
      
      In most cases this will be called immediately; however, in the case of a coordinator that has recovering
      preconditions, the handler is called after all preconditions have passed or been recovered. The handler is not
@@ -77,7 +78,7 @@ public class NavigationResult<C: BaseCoordinator> {
      - parameter onCreated: The handler that will be called with the created coordinator.
      */
     @discardableResult
-    public func onCoordinatorCreated(_ onCreated: @escaping (C) -> Void) -> NavigationResult<C> {
+    public func configureCoordinator(_ onCreated: @escaping (C) -> Void) -> NavigationResult<C> {
         if let coordinator = self.coordinator {
             onCreated(coordinator)
         } else {

@@ -1,16 +1,18 @@
 import UIKit
 import Corduroy
 
-struct NotLoggedInError: Error { }
-
-final class LoggedInPrecondition: FlowRecoveringNavigationPrecondition {
-    typealias RecoveringFlowCoordinator = LoginFlowCoordinator
-    
-    var recoveryCoordinatorPresentMethod: PresentMethod = .modallyPresenting
-    
+final class LoggedInPrecondition: RecoveringNavigationPrecondition {
     func evaluate(context: NavigationContext) throws {
         if !AppDelegate.isLoggedIn {
-            throw NotLoggedInError()
+            throw self
         }
+    }
+    
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void) -> PreconditionRecoveryMethod {
+        context.navigator.go(to: LoginFlowCoordinator.self, by: .modallyPresenting, flowCompletion: { error, _ in
+            let successfullyRecovered = (error == nil)
+            completion(successfullyRecovered)
+        })
+        return .flowCoordinator
     }
 }

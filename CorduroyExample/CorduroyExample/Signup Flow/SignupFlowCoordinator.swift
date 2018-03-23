@@ -22,11 +22,13 @@ final class SignupFlowCoordinator: FlowCoordinator {
     private var tempPassword: String?
     private var tempSecurityQuestion: String?
     private var tempSecurityAnswer: String?
+    
+    private let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
     func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, SignupInfo?) -> Void) {
         self.completion = flowCompletion
         
-        let signupVC = SignupFormViewController()
+        let signupVC = storyboard.instantiateViewController(withIdentifier: "SignupFormViewController") as! SignupFormViewController
         signupVC.coordinator = self
         self.present(signupVC, asDescribedBy: context)
     }
@@ -36,7 +38,7 @@ final class SignupFlowCoordinator: FlowCoordinator {
         self.tempUsername = username
         self.tempPassword = password
         
-        let securityQuesstionVC = SignupSecurityQuestionViewController()
+        let securityQuesstionVC = storyboard.instantiateViewController(withIdentifier: "SignupSecurityQuestionViewController") as! SignupSecurityQuestionViewController
         securityQuesstionVC.coordinator = self
         signupFormVC.navigationController?.pushViewController(securityQuesstionVC, animated: true)
     }
@@ -50,7 +52,7 @@ final class SignupFlowCoordinator: FlowCoordinator {
             return
         }
         let signupInfo = SignupInfo(username: username, password: password, securityQuestion: question, securityAnswer: answer)
-        let signupCompleteVC = SignupCompleteViewController()
+        let signupCompleteVC = storyboard.instantiateViewController(withIdentifier: "SignupCompleteViewController") as! SignupCompleteViewController
         signupCompleteVC.coordinator = self
         signupCompleteVC.signupInfo = signupInfo
         securityQuestionVC.navigationController?.pushViewController(signupCompleteVC, animated: true)
@@ -59,8 +61,11 @@ final class SignupFlowCoordinator: FlowCoordinator {
     // When the user presses 'Continue' on the completed view controller, call the flow coordinator's 'completion'
     // closure. This leaves it up to whoever started this flow to decide what to do with the information.
     func signupCompleteViewControllerDidPressContinue(_ signupCompleteVC: SignupCompleteViewController) {
-        guard let username = self.tempUsername, let password = self.tempPassword, let securityQuestion = self.tempSecurityQuestion, let securityAnswer = self.tempSecurityAnswer else {
-            return
+        guard let username = self.tempUsername,
+            let password = self.tempPassword,
+            let securityQuestion = self.tempSecurityQuestion,
+            let securityAnswer = self.tempSecurityAnswer else {
+                return
         }
 
         let signupInfo = SignupInfo(username: username, password: password, securityQuestion: securityQuestion, securityAnswer: securityAnswer)

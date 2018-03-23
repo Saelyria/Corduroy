@@ -13,7 +13,6 @@ Corduroy is a navigation framework for iOS with a rich feature set that makes na
 - Can be easily adapted to fit MVP or VIPER architectures
 - Simple navigation preconditions that can run asynchronous tasks or launch intermediary view controllers before continuing navigation
 - Navigation via URLs for better deep linking (under development!)
-- 'App state' objects passed in during navigation for more testable, functional-style state management (coming soon!)
 - RxSwift support (coming soon!)
 
 MVC is great, but it's too easy to let your view controllers become behaviour dumps that know too much about their place in your application. Corduroy helps you tame your view controllers by moving all of their navigation logic to *coordinators* - objects smarter than your view controllers that handle translating app state for them and that know what to show when. This keeps your view controllers just that - controllers that layout, animate, and bind data to your views, making them more resuable and more defined.
@@ -22,7 +21,7 @@ But don't take my word for it - check out [some of these great articles](https:/
 
 ## The basics: All right, coordinators look cool. But what does Corduroy do?
 
-The bread and butter of Corduroy are the `Navigator` (an object that handles navigation and precondition evaluation), the `Coordinator` (a navigation item that handles navigation logic for a view controller) and the `CoordinatorManageable` (your view controller). The biggest shift to starting with Corduroy is that the things you navigate to and from are not view controllers; instead, you navigate to and from *coordinators* - I explain the reasons for this in the 'advantages' section. Navigation is done with a simple call to a `Navigator`, passing in the type of the next coordinator you want to navigate to:
+The bread and butter of Corduroy are the `Navigator` (an object that handles navigation and precondition evaluation), the `Coordinator` (a navigation item that handles navigation logic for a view controller) and the `CoordinatorManageable` (your view controller). The biggest shift to starting with Corduroy is that the things you navigate to and from are not view controllers; instead, you navigate to and from *coordinators*. Navigation is done with a simple call to a `Navigator`, passing in the type of the next coordinator you want to navigate to and how you want to present it:
 
 ```swift
 navigator.go(to: MyCoordinator.self, by: .modallyPresenting)
@@ -35,7 +34,7 @@ class MyCoordinator: Coordinator {
     var navigator: Navigator!
     
     // coordinators are created with a factory 'create(with:navigator:)' method. A default implementation is
-    // provided that creates the coordinator and sets its 'navigator'.
+    // provided that creates the coordinator and sets its 'navigator', but can be implemented yourself.
 
     // The coordinator's 'presentViewController' method is called when it is navigated to. It is passed a
     // 'navigation context' object, which has properties like the previous coordinator and the presentation

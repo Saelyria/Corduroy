@@ -11,10 +11,10 @@ import Corduroy
  later to split it into a coordinator and view controller pair to avoid the 'Massive View Controller' problem.
  
  Another little tidbit - while obviously not required, here I've added a typealias of WelcomeViewController to
- WelcomeCoordinator. This hides implementation details for the 'landing' page (i.e. people that want to navigate to
- landing still think to navigate to a coordinator; don't need to know that it's in fact a view controller that's self-
+ WelcomeCoordinator. This hides implementation details for the 'welcome' page (i.e. people that want to navigate to
+ 'welcome' still think to navigate to a coordinator; don't need to know that it's in fact a view controller that's self-
  coordinating). You also wouldn't need to update any code outside of the landing VC / coordinator if you did decide to
- split up LandingViewController.
+ split up WelcomeViewController.
 */
 typealias WelcomeCoordinator = WelcomeViewController
 
@@ -30,7 +30,7 @@ final class WelcomeViewController: UIViewController, SelfCoordinating {
     // controller doesn't declare a `SetupModel` associated type - by default, it will instantiate it with its
     // `init(nibName:bundle:)` method and set its `navigator` property. However, because we want to instantiate our
     // view controller from a storyboard, we need to implement it.
-    static func create(with model: Void, navigator: Navigator) -> WelcomeViewController {
+    static func create(with: (), navigator: Navigator) -> WelcomeViewController {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let welcomeViewController = storyboard.instantiateViewController(withIdentifier: "WelcomeViewController") as! WelcomeViewController
         welcomeViewController.navigator = navigator

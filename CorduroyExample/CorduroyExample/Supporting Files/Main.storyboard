@@ -229,14 +229,49 @@
             </objects>
             <point key="canvasLocation" x="1220" y="134"/>
         </scene>
-        <!--Signup Complete View Controller-->
+        <!--Success-->
         <scene sceneID="C6F-OZ-mBy">
             <objects>
-                <viewController storyboardIdentifier="SignupCompleteViewController" id="XTn-Qf-Gbt" customClass="SignupCompleteViewController" customModule="CorduroyExample" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="SignupCompleteViewController" title="Success" id="XTn-Qf-Gbt" customClass="SignupCompleteViewController" customModule="CorduroyExample" customModuleProvider="target" sceneMemberID="viewController">
                     <view key="view" contentMode="scaleToFill" id="wyO-cm-SQZ">
                         <rect key="frame" x="0.0" y="0.0" width="375" height="667"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="CZP-T8-H1L">
+                                <rect key="frame" x="15" y="592" width="345" height="60"/>
+                                <color key="backgroundColor" red="0.4727036953" green="0.79153710600000005" blue="0.0" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="60" id="doO-Kb-o08"/>
+                                </constraints>
+                                <state key="normal" title="Continue">
+                                    <color key="titleColor" red="1" green="1" blue="1" alpha="1" colorSpace="custom" customColorSpace="sRGB"/>
+                                </state>
+                                <userDefinedRuntimeAttributes>
+                                    <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
+                                        <integer key="value" value="10"/>
+                                    </userDefinedRuntimeAttribute>
+                                </userDefinedRuntimeAttributes>
+                                <connections>
+                                    <action selector="continuePressed" destination="8W6-Oc-ONa" eventType="touchUpInside" id="81D-f3-ihB"/>
+                                    <action selector="continuePressed" destination="XTn-Qf-Gbt" eventType="touchUpInside" id="yGN-eA-C1e"/>
+                                    <action selector="signupPressedWithSender:" destination="DDT-tA-5wZ" eventType="touchUpInside" id="6cS-W7-ew0"/>
+                                </connections>
+                            </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="You're all set up!" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="pQ9-h7-YL5">
+                                <rect key="frame" x="124.5" y="189.5" width="126" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" white="0.33333333333333331" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="custom" customColorSpace="genericGamma22GrayColorSpace"/>
+                        <constraints>
+                            <constraint firstItem="pQ9-h7-YL5" firstAttribute="centerY" secondItem="wyO-cm-SQZ" secondAttribute="centerY" multiplier="0.6" id="A6i-uX-HgG"/>
+                            <constraint firstItem="zuD-xJ-00N" firstAttribute="bottom" secondItem="CZP-T8-H1L" secondAttribute="bottom" constant="15" id="Deh-m3-rIY"/>
+                            <constraint firstItem="zuD-xJ-00N" firstAttribute="trailing" secondItem="CZP-T8-H1L" secondAttribute="trailing" constant="15" id="WCR-ix-V7y"/>
+                            <constraint firstItem="pQ9-h7-YL5" firstAttribute="centerX" secondItem="wyO-cm-SQZ" secondAttribute="centerX" id="oSd-OM-XDK"/>
+                            <constraint firstItem="CZP-T8-H1L" firstAttribute="leading" secondItem="zuD-xJ-00N" secondAttribute="leading" constant="15" id="s84-Rd-lbY"/>
+                        </constraints>
                         <viewLayoutGuide key="safeArea" id="zuD-xJ-00N"/>
                     </view>
                 </viewController>

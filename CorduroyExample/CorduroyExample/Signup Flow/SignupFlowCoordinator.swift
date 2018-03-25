@@ -48,13 +48,8 @@ final class SignupFlowCoordinator: FlowCoordinator {
         self.tempSecurityAnswer = answer
         self.tempSecurityQuestion = question
         
-        guard let username = self.tempUsername, let password = self.tempPassword else {
-            return
-        }
-        let signupInfo = SignupInfo(username: username, password: password, securityQuestion: question, securityAnswer: answer)
         let signupCompleteVC = storyboard.instantiateViewController(withIdentifier: "SignupCompleteViewController") as! SignupCompleteViewController
         signupCompleteVC.coordinator = self
-        signupCompleteVC.signupInfo = signupInfo
         securityQuestionVC.navigationController?.pushViewController(signupCompleteVC, animated: true)
     }
     
@@ -67,8 +62,15 @@ final class SignupFlowCoordinator: FlowCoordinator {
             let securityAnswer = self.tempSecurityAnswer else {
                 return
         }
-
+        
         let signupInfo = SignupInfo(username: username, password: password, securityQuestion: securityQuestion, securityAnswer: securityAnswer)
+        
+        // save to user defaults for the sake of the demo
+        UserDefaults.standard.set(signupInfo.username, forKey: "username")
+        UserDefaults.standard.set(signupInfo.password, forKey: "password")
+        UserDefaults.standard.set(signupInfo.securityQuestion, forKey: "security-question")
+        UserDefaults.standard.set(signupInfo.securityAnswer, forKey: "security-answer")
+
         self.completion(nil, signupInfo)
     }
 }

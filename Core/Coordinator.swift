@@ -2,7 +2,7 @@
 import UIKit
 
 /**
- A protocol describing an object that manages navigation logic that replaces view controllers as the primary 'navigation
+ A protocol describing an object that manages navigation logic and replaces view controllers as the primary 'navigation
  item'.
  
  A coordinator object is responsible for managing the navigation between view controllers, containing all navigation

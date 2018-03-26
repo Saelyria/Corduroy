@@ -13,7 +13,6 @@ Corduroy is a navigation framework for iOS with a rich feature set that makes na
 - Can be easily adapted to fit MVP or VIPER architectures
 - Simple navigation preconditions that can run asynchronous tasks or launch intermediary view controllers before continuing navigation
 - Navigation via URLs for better deep linking (under development!)
-- RxSwift support (coming soon!)
 
 MVC is great, but it's too easy to let your view controllers become behaviour dumps that know too much about their place in your application. Corduroy helps you tame your view controllers by moving all of their navigation logic to *coordinators* - objects smarter than your view controllers that handle translating app state for them and that know what to show when. This keeps your view controllers just that - controllers that layout, animate, and bind data to your views, making them more resuable and more defined.
 

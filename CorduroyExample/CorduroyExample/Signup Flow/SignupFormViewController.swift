@@ -12,7 +12,7 @@ final class SignupFormViewController: UIViewController, CoordinatorManageable {
     // to create a delegate protocol and associate that as the `ManagingCoordinator` that any coordinator can implement
     // and be the coordinator for the view controller.
     var coordinator: SignupFlowCoordinator?
-    
+        
     @IBOutlet private var label: UILabel!
     @IBOutlet private var usernameTextField: UITextField!
     @IBOutlet private var passwordTextField: UITextField!

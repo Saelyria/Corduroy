@@ -42,7 +42,7 @@ public protocol CoordinatorManageable {
  
  A self-coordinating view controller does not need to implement its `currentViewController` or `coordinator` properties;
  by default, these will both return `self`. It will still, however, have to implement the `create(with:)` and
- `start(context:)` methods found on `Coordinator`.
+ `presentViewController(context:)` methods found on `Coordinator`.
  */
 public protocol SelfCoordinating: Coordinator { }
 

@@ -3,7 +3,7 @@ import UIKit
 /**
  An internal model type that holds the information of a navigation operation that is stored on a navigator's stack.
  */
-internal class NavStackItem {
+public class NavStackItem {
     public let coordinator: BaseCoordinator
     public let presentMethod: PresentMethod
     public let canBeNavigatedBackTo: Bool

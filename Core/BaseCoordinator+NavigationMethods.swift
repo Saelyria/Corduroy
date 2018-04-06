@@ -20,6 +20,8 @@ public extension BaseCoordinator {
             currentVC.navigationController?.pushViewController(toVC, animated: parameters.animateTransition)
         case .addingAsRoot(let window):
             window.rootViewController = toVC
+        case .switchingToTab:
+            break
         }
         
         if let presentedNavVC = toVC as? UINavigationController {
@@ -58,6 +60,8 @@ public extension BaseCoordinator {
             vc.dismiss(animated: parameters.animateTransition, completion: nil)
         case .popping:
             vc.navigationController?.popViewController(animated: parameters.animateTransition)
+        case .none:
+            break
         }
         
         self.navigator.viewControllerDidDisappear(vc, coordinator: self)

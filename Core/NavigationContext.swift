@@ -44,6 +44,9 @@ public enum PresentMethod: Equatable {
     /// The view controller should be set as the root view controller of the associated window. This should only be
     /// used for the first view controller.
     case addingAsRoot(window: UIWindow)
+    /// The view controller should be presented by switching to its tab on the tab bar controller. The view controller
+    /// must be one of the root view controllers of the navigator's assigned `UITabBarController` to use this method.
+    case switchingToTab
     
     internal var inverseDismissMethod: DismissMethod {
         switch self {
@@ -51,8 +54,8 @@ public enum PresentMethod: Equatable {
             return .modallyDismissing
         case .pushing:
             return .popping
-        case .addingAsRoot:
-            fatalError("No inverse dismiss method to adding as the root view controller of a window.")
+        case .addingAsRoot, .switchingToTab:
+            return .none
         }
     }
     
@@ -63,6 +66,8 @@ public enum PresentMethod: Equatable {
         case (.modallyPresenting, .modallyPresenting):
             return true
         case (.addingAsRoot, .addingAsRoot):
+            return true
+        case (.switchingToTab, .switchingToTab):
             return true
         default:
             return false
@@ -79,6 +84,9 @@ public enum DismissMethod {
     case popping
     /// The view controller should be modally dismissed.
     case modallyDismissing
+    /// No dismiss action can occur. This is the dismiss method given for the inverse of a present method with no clear
+    /// inverse dismiss method.
+    case none
 }
 
 

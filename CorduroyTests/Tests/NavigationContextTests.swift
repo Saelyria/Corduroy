@@ -32,14 +32,16 @@ class NavigationContextTests: XCTestCase {
         expect(firstCoordinator.navContext.navigator).to(be(self.navigator))
         
         let secondCoordinatorVC = UIViewController()
-        let secondCoordinator = navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: secondCoordinatorVC)
+        var secondCoordinator: TestCoordinator!
+        navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: secondCoordinatorVC)
+            .configureCoordinator { secondCoordinator = $0 }
         
-        expect(secondCoordinator.navContext.fromCoordinator).to(be(firstCoordinator))
-        expect(secondCoordinator.navContext.toCoordinator).to(be(secondCoordinator))
-        expect(secondCoordinator.navContext.requestedPresentMethod).to(equal(PresentMethod.modallyPresenting))
-        expect(secondCoordinator.navContext.requestedDismissMethod).to(beNil())
-        expect(secondCoordinator.navContext.parameters).to(equal(defaultParameters))
-        expect(secondCoordinator.navContext.navigator).to(be(self.navigator))
+        expect(secondCoordinator.navContext.fromCoordinator).toEventually(be(firstCoordinator))
+        expect(secondCoordinator.navContext.toCoordinator).toEventually(be(secondCoordinator))
+        expect(secondCoordinator.navContext.requestedPresentMethod).toEventually(equal(PresentMethod.modallyPresenting))
+        expect(secondCoordinator.navContext.requestedDismissMethod).toEventually(beNil())
+        expect(secondCoordinator.navContext.parameters).toEventually(equal(defaultParameters))
+        expect(secondCoordinator.navContext.navigator).toEventually(be(self.navigator))
     }
     
     func testGoBackContext() {

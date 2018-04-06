@@ -27,7 +27,10 @@ public class Navigator {
     /// The view controller currently being shown.
     public private(set) var currentViewController: UIViewController?
     
-    internal var navigationStack: [NavStackItem] = []
+    /// The application's tab bar controller, if the navigator was started with one.
+    public private(set) var tabBarController: UITabBarController?
+    
+    public private(set) var navigationStack: [NavStackItem] = []
     private var hasStarted: Bool = false
     
     // There's no reliable way to determine whether a back navigation from a UINavigationController was started by it
@@ -38,6 +41,18 @@ public class Navigator {
     
     /// Initialize a new Navigator object.
     public init() { }
+    
+    /**
+     Start the navigator with tab coordinators for the given tab bar controller.
+     - parameter window: The root window that view controllers should be presented on.
+     - parameter tabCoordinators: The coordinators for the root view controllers of each tab.
+     - parameter tabBarController: The app's tab bar controller.
+     */
+    public func start(onWindow window: UIWindow, tabCoordinators: [TabCoordinator.Type], tabBarController: UITabBarController) {
+        precondition(self.hasStarted == false, "One of the navigator's `start` methods was already called.")
+        self.tabBarController = tabBarController
+        self.hasStarted = true
+    }
     
     /**
      Start the navigator with the first coordinator.
@@ -58,7 +73,7 @@ public class Navigator {
     @discardableResult
     public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type, with model: T.SetupModel) -> T {
         precondition(!(firstCoordinator is NavigationPreconditionRequiring.Type), "The first coordinator of the app should not have navigation preconditions.")
-        precondition(self.hasStarted == false, "The navigator's `start(onWindow:firstCoordinator:with:)` method was already called.")
+        precondition(self.hasStarted == false, "One of the navigator's `start` methods was already called.")
         self.hasStarted = true
         
         let firstCoordinator = firstCoordinator.create(with: model, navigator: self)
@@ -148,21 +163,33 @@ public class Navigator {
         let context = NavigationContext(navigator: self, from: self.currentCoordinator, to: coordinator,
                                         present: navMethod, dismiss: nil, params: parameters)
         let navResult = NavigationResult<T>(completionHandler: {
-            DispatchQueue.main.async {
+            if Thread.isMainThread {
                 presentBlock(coordinator, context)
+            } else {
+                DispatchQueue.main.async {
+                    presentBlock(coordinator, context)
+                }
             }
         })
         
         // if the coordinator has preconditions, start evaluating them
         if let preconCoordinator = coordinator as? NavigationPreconditionRequiring {
             let recoveryMethods = self.evaluatePreconditions(on: preconCoordinator, context: context, completion: { [navResult] (error: Error?) in
-                DispatchQueue.main.async {
+                let handler = {
                     if let error = error {
                         navResult.preconditonError = error
                     } else {
                         let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
                         self.navigationStack.append(stackItem)
                         navResult.coordinator = coordinator
+                    }
+                }
+                
+                if Thread.isMainThread {
+                    handler()
+                } else {
+                    DispatchQueue.main.async {
+                        handler()
                     }
                 }
             })
@@ -271,16 +298,16 @@ public class Navigator {
         guard coordinator === self.currentCoordinator else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
-        
+
         self.navigationStack.last!.viewControllersAndPresentMethods.append((viewController, presentMethod))
         self.currentViewController = viewController
     }
-    
+
     internal func viewControllerDidDisappear(_ viewController: UIViewController, coordinator: BaseCoordinator) {
         if self.shouldIgnoreNavControllerPopRequests {
             return
         }
-        
+
         guard coordinator === self.currentCoordinator else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }

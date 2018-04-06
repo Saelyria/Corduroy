@@ -20,6 +20,7 @@
 		9341551420276F9800860CE2 /* RoutingNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9341551320276F9800860CE2 /* RoutingNavigator.swift */; };
 		93580F042053A245005D96D3 /* NavigationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93580F032053A245005D96D3 /* NavigationResult.swift */; };
 		939826D0203B3A0F00B205C0 /* RoutingURLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939826CF203B3A0F00B205C0 /* RoutingURLParser.swift */; };
+		93C5955B20688D21004EACA7 /* CoordinatedTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5955A20688D21004EACA7 /* CoordinatedTabBarController.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +39,7 @@
 		9341551320276F9800860CE2 /* RoutingNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingNavigator.swift; sourceTree = "<group>"; };
 		93580F032053A245005D96D3 /* NavigationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationResult.swift; sourceTree = "<group>"; };
 		939826CF203B3A0F00B205C0 /* RoutingURLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingURLParser.swift; sourceTree = "<group>"; };
+		93C5955A20688D21004EACA7 /* CoordinatedTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatedTabBarController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -77,6 +79,7 @@
 				93069169200BEEBD00B1C9B9 /* NavigationContext.swift */,
 				93069167200BEEBD00B1C9B9 /* NavigationPrecondition.swift */,
 				930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */,
+				93C5955A20688D21004EACA7 /* CoordinatedTabBarController.swift */,
 				9306916A200BEEBD00B1C9B9 /* BaseCoordinator+NavigationMethods.swift */,
 				93580F032053A245005D96D3 /* NavigationResult.swift */,
 				9316D09B204F371600D1A5E8 /* NavigationStackManager.swift */,
@@ -184,6 +187,7 @@
 				93580F042053A245005D96D3 /* NavigationResult.swift in Sources */,
 				930C088A200BFA1400B0B934 /* Coordinator.swift in Sources */,
 				930C088B200BFA1600B0B934 /* Navigator.swift in Sources */,
+				93C5955B20688D21004EACA7 /* CoordinatedTabBarController.swift in Sources */,
 				9316D09C204F371600D1A5E8 /* NavigationStackManager.swift in Sources */,
 				930C088C200BFA1800B0B934 /* NavigationContext.swift in Sources */,
 				930C088D200BFA1B00B0B934 /* NavigationPrecondition.swift in Sources */,

@@ -3,7 +3,6 @@ import XCTest
 import Nimble
 import Corduroy
 
-struct PreconditionFailedError: Error { }
 
 final class PassingPrecondition: NavigationPrecondition {
     func evaluate(context: NavigationContext) throws { }
@@ -11,22 +10,24 @@ final class PassingPrecondition: NavigationPrecondition {
 
 final class FailingPrecondition: NavigationPrecondition {
     func evaluate(context: NavigationContext) throws {
-        throw PreconditionFailedError()
+        throw self
     }
 }
 
 final class PassingRecoveringPrecondition: RecoveringNavigationPrecondition {
     func evaluate(context: NavigationContext) throws { }
     
-    func attemptRecovery(context: NavigationContext, completion: @escaping (Error?) -> Void) {
-        completion(nil)
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void) -> PreconditionRecoveryMethod {
+        completion(true)
+        return .asyncTask
     }
 }
 
 final class FailingRecoveringPrecondition: RecoveringNavigationPrecondition {
     func evaluate(context: NavigationContext) throws { }
     
-    func attemptRecovery(context: NavigationContext, completion: @escaping (Error?) -> Void) {
-        completion(PreconditionFailedError())
+    func attemptRecovery(context: NavigationContext, completion: @escaping (Bool) -> Void) -> PreconditionRecoveryMethod {
+        completion(false)
+        return .asyncTask
     }
 }

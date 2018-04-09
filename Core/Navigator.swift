@@ -25,12 +25,22 @@ public class Navigator {
     }
     
     /// The view controller currently being shown.
-    public private(set) var currentViewController: UIViewController?
+    public var currentViewController: UIViewController? {
+        return self.navigationStack.last?.viewControllersAndPresentMethods.last?.vc
+    }
     
     /// The application's tab bar controller, if the navigator was started with one.
     public private(set) var tabBarController: UITabBarController?
     
-    public private(set) var navigationStack: [NavStackItem] = []
+    public var navigationStack: [NavStackItem] {
+        let selectedTab = self.tabBarController?.selectedIndex ?? 0
+        return self.tabStack[selectedTab]
+    }
+    private var tabStack: [[NavStackItem]] = []
+    private var selectedTab: Int {
+        return self.tabBarController?.selectedIndex ?? 0
+    }
+    
     private var hasStarted: Bool = false
     
     // There's no reliable way to determine whether a back navigation from a UINavigationController was started by it
@@ -46,12 +56,29 @@ public class Navigator {
      Start the navigator with tab coordinators for the given tab bar controller.
      - parameter window: The root window that view controllers should be presented on.
      - parameter tabCoordinators: The coordinators for the root view controllers of each tab.
-     - parameter tabBarController: The app's tab bar controller.
+     - parameter tabBarController: The app's tab bar controller. If nil is passed in, the navigator will create a basic
+        tab bar controller.
      */
-    public func start(onWindow window: UIWindow, tabCoordinators: [TabCoordinator.Type], tabBarController: UITabBarController) {
+    public func start(onWindow window: UIWindow, tabCoordinators: [TabCoordinator.Type], tabBarController: UITabBarController? = nil) {
         precondition(self.hasStarted == false, "One of the navigator's `start` methods was already called.")
-        self.tabBarController = tabBarController
+        if let tabBarController = tabBarController {
+            self.tabBarController = tabBarController
+        } else {
+            self.tabBarController = UITabBarController()
+        }
         self.hasStarted = true
+        
+        var viewControllers: [UIViewController] = []
+        var tabIndex: Int = 0
+        for coordinator in tabCoordinators {
+            let coordinator = coordinator.create(navigator: self)
+            let vc = coordinator.createViewController()
+            viewControllers.append(vc)
+            let navStackItem = NavStackItem(coordinator: coordinator, presentMethod: .switchingToTab, canBeNavigatedBackTo: true)
+            self.tabStack[tabIndex] = [navStackItem]
+            tabIndex = tabIndex + 1
+        }
+        self.tabBarController?.viewControllers = viewControllers
     }
     
     /**
@@ -59,9 +86,8 @@ public class Navigator {
      - parameter window: The root window that view controllers should be presented on.
      - parameter firstCoordinator: The type of coordinator to start the app from.
      */
-    @discardableResult
-    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) -> T where T.SetupModel == Void {
-        return self.start(onWindow: window, firstCoordinator: firstCoordinator, with: ())
+    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) where T.SetupModel == Void {
+        self.start(onWindow: window, firstCoordinator: firstCoordinator, with: ())
     }
     
     /**
@@ -70,20 +96,17 @@ public class Navigator {
      - parameter firstCoordinator: The type of coordinator to start the app from.
      - parameter model: A model of the given coordinator's setup model type.
      */
-    @discardableResult
-    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type, with model: T.SetupModel) -> T {
+    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type, with model: T.SetupModel) {
         precondition(!(firstCoordinator is NavigationPreconditionRequiring.Type), "The first coordinator of the app should not have navigation preconditions.")
         precondition(self.hasStarted == false, "One of the navigator's `start` methods was already called.")
         self.hasStarted = true
         
         let firstCoordinator = firstCoordinator.create(with: model, navigator: self)
         let stackItem = NavStackItem(coordinator: firstCoordinator, presentMethod: .addingAsRoot(window: window), canBeNavigatedBackTo: true)
-        self.navigationStack.append(stackItem)
+        self.tabStack[self.selectedTab].append(stackItem)
         let context = NavigationContext(navigator: self, from: nil, to: firstCoordinator,
                                         present: .addingAsRoot(window: window), dismiss: nil, params: NavigationParameters())
         firstCoordinator.presentViewController(context: context)
-        
-        return firstCoordinator
     }
     
     // MARK: Coordinator navigation methods
@@ -174,13 +197,13 @@ public class Navigator {
         
         // if the coordinator has preconditions, start evaluating them
         if let preconCoordinator = coordinator as? NavigationPreconditionRequiring {
-            let recoveryMethods = self.evaluatePreconditions(on: preconCoordinator, context: context, completion: { [navResult] (error: Error?) in
+            let recoveryMethods = self.evaluatePreconditions(on: preconCoordinator, context: context, completion: { [navResult, unowned self] (error: Error?) in
                 let handler = {
                     if let error = error {
                         navResult.preconditonError = error
                     } else {
                         let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
-                        self.navigationStack.append(stackItem)
+                        self.tabStack[self.selectedTab].append(stackItem)
                         navResult.coordinator = coordinator
                     }
                 }
@@ -204,7 +227,7 @@ public class Navigator {
         // otherwise, just add the coordinator to the stack and let the nav result object go out of scope to call present
         else {
             let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
-            self.navigationStack.append(stackItem)
+            self.tabStack[self.selectedTab].append(stackItem)
             navResult.coordinator = coordinator
         }
         
@@ -265,7 +288,7 @@ public class Navigator {
             }
 
             coordinatorToRemove.onDismissal()
-            self.navigationStack.remove(at: index)
+            self.tabStack[self.selectedTab].remove(at: index)
         }
         
         self.shouldIgnoreNavControllerPopRequests = false
@@ -286,12 +309,10 @@ public class Navigator {
             self.navigationStack.last!.viewControllersAndPresentMethods.removeLast()
             if self.navigationStack.last!.viewControllersAndPresentMethods.isEmpty {
                 let removedCoordinator: BaseCoordinator = self.navigationStack.last!.coordinator
-                self.navigationStack.removeLast()
+                self.tabStack[self.selectedTab].removeLast()
                 removedCoordinator.onDismissal()
             }
         }
-        
-        self.currentViewController = self.navigationStack.last!.viewControllersAndPresentMethods.last!.vc
     }
     
     internal func viewControllerDidAppear(_ viewController: UIViewController, coordinator: BaseCoordinator, presentMethod: PresentMethod) {
@@ -300,7 +321,6 @@ public class Navigator {
         }
 
         self.navigationStack.last!.viewControllersAndPresentMethods.append((viewController, presentMethod))
-        self.currentViewController = viewController
     }
 
     internal func viewControllerDidDisappear(_ viewController: UIViewController, coordinator: BaseCoordinator) {
@@ -313,9 +333,8 @@ public class Navigator {
         }
         self.navigationStack.last!.viewControllersAndPresentMethods.removeLast()
         if self.navigationStack.last!.viewControllersAndPresentMethods.isEmpty {
-            self.navigationStack.removeLast()
+            self.tabStack[self.selectedTab].removeLast()
         }
-        self.currentViewController = self.navigationStack.last!.viewControllersAndPresentMethods.last!.vc
     }
     
     // MARK: Precondition evaluation

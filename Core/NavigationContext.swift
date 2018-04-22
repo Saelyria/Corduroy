@@ -106,9 +106,9 @@ public struct NavigationParameters: Equatable {
     let animateTransition: Bool
     
     /// A convenience parameter set of all the UIKit default parameters.
-    static let `default`: NavigationParameters = NavigationParameters()
+    public static let `default`: NavigationParameters = NavigationParameters()
     /// The default set of parameters with `animateTransition` set to `false`.
-    static let noAnimation: NavigationParameters = NavigationParameters(animateTransition: false)
+    public static let noAnimation: NavigationParameters = NavigationParameters(animateTransition: false)
     
     public init(modalTransitionStyle: UIModalTransitionStyle = .coverVertical,
          modalPresentationStyle: UIModalPresentationStyle = .overFullScreen,

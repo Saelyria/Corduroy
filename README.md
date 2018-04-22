@@ -98,15 +98,15 @@ The idea is that anything your coordinator and/or its managed view need as a dep
 
 Another tool that Corduroy offers is 'flow coordinators'. Often in apps there exist series of view controllers that are meant to work together in a 'flow' - think login flows that span 2 or 3 view controllers, or signup flows, or onboarding flows. View controllers in these flows often have to share resources and models and know a lot about each other, which can make adding to or updating the flow involve a lot of refactoring. Flow coordinators (objects conforming to `FlowCoordinator`) are special coordinators that are meant to effectively 'black box' the flow to other views, managing all involved view controllers and their shared state.
 
-Flows are often used to accomplish tasks or get a value from something. To facilitate this, `FlowCoordinator`s can be navigated to with 'flow completion' closures to report when the flow completes or is abandoned. This completion would likely be used to dismiss the flow coordinator or (like as would be expected in the case of a login flow) continue to a specific other coordinator. They can also declare a `FlowCompletionModel` associated type that is meant to be the flow's 'return' value (i.e. is passed into the flow completion closure). Here's what a flow coordinator could look like:
+Flows are often used to accomplish tasks or get a value from something. To facilitate this, `FlowCoordinator`s can be navigated to with 'flow completion' closures to report when the flow completes or is abandoned. This completion would likely be used to dismiss the flow coordinator or (like as would be expected in the case of a login flow) continue to a specific other coordinator. They can also declare a `FlowResult` associated type that is meant to be the flow's 'return' value (i.e. is passed into the flow completion closure). Here's what a flow coordinator could look like:
 
 ```swift
 class MyFlowCoordinator: FlowCoordinator {
-    typealias FlowCompletionModel = MyModel
+    typealias FlowResult = MyModel
 
     // instead of a 'presentViewController' method, flow coordinators have 'presentFirstViewController' where,
     // along with a context, they can also be passed a 'completion' closure they're expected to call.
-    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, FlowCompletionModel?) -> Void) {
+    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, FlowResult?) -> Void) {
         self.flowCompletion = flowCompletion //store the flow completion to call it later
         // present first view controller
     }

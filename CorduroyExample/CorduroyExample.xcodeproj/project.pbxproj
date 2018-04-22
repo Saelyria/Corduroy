@@ -23,7 +23,6 @@
 		9316D0A720538FB000D1A5E8 /* LoggedInPrecondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0A620538FB000D1A5E8 /* LoggedInPrecondition.swift */; };
 		9316D0A92053901400D1A5E8 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0A82053901400D1A5E8 /* LoginViewController.swift */; };
 		9316D0AB2053903A00D1A5E8 /* SecurityQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0AA2053903A00D1A5E8 /* SecurityQuestionViewController.swift */; };
-		936CC8C020673F5E0073076D /* WelcomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936CC8BF20673F5E0073076D /* WelcomeCoordinator.swift */; };
 		936CC8C320673FEB0073076D /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936CC8C220673FEB0073076D /* AccountViewController.swift */; };
 /* End PBXBuildFile section */
 
@@ -76,7 +75,6 @@
 		9316D0A620538FB000D1A5E8 /* LoggedInPrecondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedInPrecondition.swift; sourceTree = "<group>"; };
 		9316D0A82053901400D1A5E8 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		9316D0AA2053903A00D1A5E8 /* SecurityQuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityQuestionViewController.swift; sourceTree = "<group>"; };
-		936CC8BF20673F5E0073076D /* WelcomeCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = WelcomeCoordinator.swift; sourceTree = "<group>"; };
 		936CC8C220673FEB0073076D /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -183,7 +181,6 @@
 		936CC8BE20673F470073076D /* Welcome */ = {
 			isa = PBXGroup;
 			children = (
-				936CC8BF20673F5E0073076D /* WelcomeCoordinator.swift */,
 				93069154200BECFF00B1C9B9 /* WelcomeViewController.swift */,
 			);
 			path = Welcome;
@@ -290,7 +287,6 @@
 				93069155200BED0000B1C9B9 /* WelcomeViewController.swift in Sources */,
 				936CC8C320673FEB0073076D /* AccountViewController.swift in Sources */,
 				9306915F200BED6D00B1C9B9 /* SignupFlowCoordinator.swift in Sources */,
-				936CC8C020673F5E0073076D /* WelcomeCoordinator.swift in Sources */,
 				93069163200BED9F00B1C9B9 /* HomeViewController.swift in Sources */,
 				93069142200BEC1D00B1C9B9 /* AppDelegate.swift in Sources */,
 				9306915E200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift in Sources */,

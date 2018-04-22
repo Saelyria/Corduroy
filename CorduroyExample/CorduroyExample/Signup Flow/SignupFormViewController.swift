@@ -3,7 +3,7 @@ import UIKit
 import Corduroy
 
 // Any view controller that is managed by a coordinator (that is not coordinating itself by implementing
-// `SelfCoordinating`) must implement `CoordinatorManageable`. The only requirement for this protocol is a `coordinator`
+// `Coordinator`) must implement `CoordinatorManageable`. The only requirement for this protocol is a `coordinator`
 // property of a type the implementing class associates. This can be done by simply declaring the type on the
 // `coordinator` property - Swift will infer it from there.
 final class SignupFormViewController: UIViewController, CoordinatorManageable {

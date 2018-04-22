@@ -32,10 +32,12 @@ public class Navigator {
     /// The application's tab bar controller, if the navigator was started with one.
     public private(set) var tabBarController: UITabBarController?
     
+    /// The active navigation stack. If the app is using a tab bar controller, this will be the stack on the active
+    /// tab.
     public var navigationStack: [NavStackItem] {
-        let selectedTab = self.tabBarController?.selectedIndex ?? 0
-        return self.tabStack[selectedTab]
+        return self.tabStack[self.selectedTab]
     }
+    /// The stack of coordinators for each tab of the tab controller.
     private var tabStack: [[NavStackItem]] = []
     private var selectedTab: Int {
         return self.tabBarController?.selectedIndex ?? 0
@@ -59,7 +61,8 @@ public class Navigator {
      - parameter tabBarController: The app's tab bar controller. If nil is passed in, the navigator will create a basic
         tab bar controller.
      */
-    public func start(onWindow window: UIWindow, tabCoordinators: [TabCoordinator.Type], tabBarController: UITabBarController? = nil) {
+    @discardableResult
+    public func start(onWindow window: UIWindow, tabCoordinators: [TabCoordinator.Type], tabBarController: UITabBarController? = nil) -> TabCoordinator {
         precondition(self.hasStarted == false, "One of the navigator's `start` methods was already called.")
         if let tabBarController = tabBarController {
             self.tabBarController = tabBarController
@@ -79,6 +82,7 @@ public class Navigator {
             tabIndex = tabIndex + 1
         }
         self.tabBarController?.viewControllers = viewControllers
+        return self.tabStack[self.selectedTab][0].coordinator as! TabCoordinator
     }
     
     /**
@@ -86,8 +90,9 @@ public class Navigator {
      - parameter window: The root window that view controllers should be presented on.
      - parameter firstCoordinator: The type of coordinator to start the app from.
      */
-    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) where T.SetupModel == Void {
-        self.start(onWindow: window, firstCoordinator: firstCoordinator, with: ())
+    @discardableResult
+    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type) -> T where T.SetupModel == Void {
+        return self.start(onWindow: window, firstCoordinator: firstCoordinator, with: ())
     }
     
     /**
@@ -96,17 +101,20 @@ public class Navigator {
      - parameter firstCoordinator: The type of coordinator to start the app from.
      - parameter model: A model of the given coordinator's setup model type.
      */
-    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type, with model: T.SetupModel) {
+    @discardableResult
+    public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type, with model: T.SetupModel) -> T {
         precondition(!(firstCoordinator is NavigationPreconditionRequiring.Type), "The first coordinator of the app should not have navigation preconditions.")
         precondition(self.hasStarted == false, "One of the navigator's `start` methods was already called.")
         self.hasStarted = true
         
         let firstCoordinator = firstCoordinator.create(with: model, navigator: self)
         let stackItem = NavStackItem(coordinator: firstCoordinator, presentMethod: .addingAsRoot(window: window), canBeNavigatedBackTo: true)
-        self.tabStack[self.selectedTab].append(stackItem)
+        self.tabStack.append([stackItem])
         let context = NavigationContext(navigator: self, from: nil, to: firstCoordinator,
                                         present: .addingAsRoot(window: window), dismiss: nil, params: NavigationParameters())
         firstCoordinator.presentViewController(context: context)
+        
+        return firstCoordinator
     }
     
     // MARK: Coordinator navigation methods
@@ -151,7 +159,7 @@ public class Navigator {
      */
     @discardableResult
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters(),
-    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> NavigationResult<T> where T.SetupModel == Void {
+    flowCompletion: @escaping (Error?, T.FlowResult?) -> Void) -> NavigationResult<T> where T.SetupModel == Void {
         return self.go(to: flowCoordinator, by: navMethod, with: (), flowCompletion: flowCompletion)
     }
     
@@ -165,7 +173,7 @@ public class Navigator {
      */
     @discardableResult
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
-    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> NavigationResult<T> {
+    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowResult?) -> Void) -> NavigationResult<T> {
         return self.go(to: flowCoordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { flowCoordinator, context in
             flowCoordinator.presentFirstViewController(context: context, flowCompletion: flowCompletion)
         })
@@ -320,7 +328,11 @@ public class Navigator {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
 
-        self.navigationStack.last!.viewControllersAndPresentMethods.append((viewController, presentMethod))
+        if let navController = viewController as? UINavigationController, let topVC = navController.topViewController {
+            self.navigationStack.last!.viewControllersAndPresentMethods.append((topVC, presentMethod))
+        } else {
+            self.navigationStack.last!.viewControllersAndPresentMethods.append((viewController, presentMethod))
+        }
     }
 
     internal func viewControllerDidDisappear(_ viewController: UIViewController, coordinator: BaseCoordinator) {

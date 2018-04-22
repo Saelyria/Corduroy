@@ -17,7 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window = UIWindow(frame: UIScreen.main.bounds)
         window?.makeKeyAndVisible()
         
-        // the only things we really need to do to get started are create a navigator (an object that will do all
+        // The only things we really need to do to get started are create a navigator (an object that will do all
         /// navigation for the app) then tell the navigator to start with a given coordinator type.
         self.navigator = Navigator()
         if AppDelegate.hasSignedUp {

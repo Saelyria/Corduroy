@@ -160,7 +160,7 @@ public class RoutingNavigator: Navigator {
      */
     @discardableResult
     public override func go<T: RoutableFlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
-    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) -> T {
+    parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowResult?) -> Void) -> T {
         return super.go(to: flowCoordinator, by: navMethod, with: model, parameters: parameters, flowCompletion: flowCompletion)
     }
     
@@ -177,7 +177,7 @@ public class RoutingNavigator: Navigator {
      */
     public override func checkThenGo<T: RoutableFlowCoordinator & NavigationPreconditionRequiring>(to flowCoordinatorType: T.Type, by navMethod: PresentMethod,
     with model: T.SetupModel, parameters: NavigationParameters = NavigationParameters(), preconditionCompletion: ((Error?, T?) -> Void)?,
-    flowCompletion: @escaping (Error?, T.FlowCompletionModel?) -> Void) {
+    flowCompletion: @escaping (Error?, T.FlowResult?) -> Void) {
         super.checkThenGo(to: flowCoordinatorType, by: navMethod, with: model, preconditionCompletion: preconditionCompletion, flowCompletion: flowCompletion)
     }
     

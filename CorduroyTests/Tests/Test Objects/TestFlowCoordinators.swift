@@ -4,7 +4,7 @@ import Nimble
 import Corduroy
 
 // A basic test flow coordinator. Takes the view controller it should use as its first view controller via its SetupModel.
-// Has a Void FlowCompletionModel.
+// Has a Void FlowResult.
 final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
     final class TestViewController: UIViewController, CoordinatorManageable {
         var coordinator: TestFlowCoordinatorVoidCompletionModel?
@@ -48,14 +48,14 @@ final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
     }
 }
 
-// A test coordinator whose flow completion gives a string value as its FlowCompletionModel
+// A test coordinator whose flow completion gives a string value as its FlowResult
 final class TestFlowCoordinatorStringCompletionModel: FlowCoordinator {
     final class TestViewController: UIViewController, CoordinatorManageable {
         var coordinator: TestFlowCoordinatorStringCompletionModel?
     }
     
     typealias SetupModel = UIViewController? //the VC to use as the first VC
-    typealias FlowCompletionModel = String
+    typealias FlowResult = String
     
     var navigator: Navigator!
     var currentViewController: UIViewController?

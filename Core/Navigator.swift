@@ -43,6 +43,9 @@ public class Navigator {
         return self.tabBarController?.selectedIndex ?? 0
     }
     
+    // An object that is set as the delegate of all navigation controllers which informs the navigator of pops.
+    internal var navigationDelegate: _NavControllerDelegate!
+    
     private var hasStarted: Bool = false
     
     // There's no reliable way to determine whether a back navigation from a UINavigationController was started by it
@@ -51,8 +54,10 @@ public class Navigator {
     // don't end up with duplicate calls.
     private var shouldIgnoreNavControllerPopRequests: Bool = false
     
-    /// Initialize a new Navigator object.
-    public init() { }
+    /// Instantiate a new navigator.
+    public required init() {
+        self.navigationDelegate = _NavControllerDelegate(navigator: self)
+    }
     
     /**
      Start the navigator with tab coordinators for the given tab bar controller.
@@ -112,7 +117,7 @@ public class Navigator {
         self.tabStack.append([stackItem])
         let context = NavigationContext(navigator: self, from: nil, to: firstCoordinator,
                                         present: .addingAsRoot(window: window), dismiss: nil, params: NavigationParameters())
-        firstCoordinator.presentViewController(context: context)
+        firstCoordinator.presentViewController(presentMethod: .addingAsRoot(window: window), context: context)
         
         return firstCoordinator
     }
@@ -144,7 +149,7 @@ public class Navigator {
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: NavigationParameters = NavigationParameters()) -> NavigationResult<T> {
         return self.go(to: coordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { coordinator, context in
-            coordinator.presentViewController(context: context)
+            coordinator.presentViewController(presentMethod: navMethod, context: context)
         })
     }
     
@@ -175,7 +180,7 @@ public class Navigator {
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowResult?) -> Void) -> NavigationResult<T> {
         return self.go(to: flowCoordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { flowCoordinator, context in
-            flowCoordinator.presentFirstViewController(context: context, flowCompletion: flowCompletion)
+            flowCoordinator.presentFirstViewController(presentMethod: navMethod, context: context, flowCompletion: flowCompletion)
         })
     }
     
@@ -193,7 +198,7 @@ public class Navigator {
         // 'evaluatePreconditions(on:context:completion:)' finishes.
         let context = NavigationContext(navigator: self, from: self.currentCoordinator, to: coordinator,
                                         present: navMethod, dismiss: nil, params: parameters)
-        let navResult = NavigationResult<T>(completionHandler: {
+        let navResult = NavigationResult<T>(onDealloc: {
             if Thread.isMainThread {
                 presentBlock(coordinator, context)
             } else {
@@ -203,7 +208,8 @@ public class Navigator {
             }
         })
         
-        // if the coordinator has preconditions, start evaluating them
+        // if the coordinator has preconditions, start evaluating them. Make sure the 'evaluate preconditions' completion
+        // block captures the nav result object so it's not deallocated
         if let preconCoordinator = coordinator as? NavigationPreconditionRequiring {
             let recoveryMethods = self.evaluatePreconditions(on: preconCoordinator, context: context, completion: { [navResult, unowned self] (error: Error?) in
                 let handler = {
@@ -404,5 +410,25 @@ public class Navigator {
         }
         
         return Array(recoveryMethods)
+    }
+}
+
+class _NavControllerDelegate: NSObject, UINavigationControllerDelegate {
+    weak var navigator: Navigator!
+    
+    required init(navigator: Navigator) {
+        self.navigator = navigator
+    }
+    
+    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
+        if let indexOfTopVC = navigationController.viewControllers.index(of: viewController) {
+            
+//            for index in stride(from: navigationController.viewControllers.count-1, to: indexOfTopVC, by: -1) {
+//
+//            }
+
+            let poppedViewControllers = Array(navigationController.viewControllers.suffix(from: indexOfTopVC))
+            self.navigator.navigationControllerDidPopViewControllers(poppedViewControllers)
+        }
     }
 }

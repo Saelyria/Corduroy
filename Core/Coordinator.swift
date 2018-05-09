@@ -22,7 +22,7 @@ import UIKit
  
  Depending on the complexity of the view being created, you can decide to have a dedicated coordinator object that your
  view controller delegates to, or your view controller can implement `Coordinator` itself. View controllers conforming
- to `Coordinator` have a default implementation provided for `presentViewController(context:)` and
+ to `Coordinator` have a default implementation provided for `presentViewController(_:context:)` and
  `create(with:navigator:)`. View controllers that are created from a storyboard should always implement their static
  `create` method, as this default implementation simply creates them with their `init(nibName:bundle:)` initializer.
  */
@@ -32,12 +32,12 @@ public protocol Coordinator: BaseCoordinator, SetupModelRequiring {
      controller and push/present it from the context's `currentViewController`.
      - parameter context: A context object containing the involved coordinators and other navigation details.
      */
-    func presentViewController(context: NavigationContext)
+    func presentViewController(presentMethod: PresentMethod, context: NavigationContext)
 }
 
 public extension Coordinator where Self: UIViewController {
-    func presentViewController(context: NavigationContext) {
-        self.present(self, asDescribedBy: context)
+    func presentViewController(presentMethod: PresentMethod, context: NavigationContext) {
+        self.present(self, by: presentMethod)
     }
 }
 
@@ -74,7 +74,7 @@ public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
      - parameter context: A context object containing the involved coordinators and other navigation details.
      - parameter flowCompletion: A closure to call after the flow has completed.
      */
-    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, FlowResult?) -> Void)
+    func presentFirstViewController(presentMethod: PresentMethod, context: NavigationContext, flowCompletion: @escaping (Error?, FlowResult?) -> Void)
 }
 
 
@@ -93,6 +93,12 @@ public protocol TabCoordinator: BaseCoordinator {
     
     /// Create the view controller that will be used for a tab on the tab bar.
     func createViewController() -> UIViewController
+}
+
+extension TabCoordinator where Self: UIViewController {
+    func createViewController() -> UIViewController {
+        return self
+    }
 }
 
 
@@ -155,7 +161,7 @@ public extension SetupModelRequiring where Self.SetupModel == Void, Self: BaseCo
 }
 
 public extension SetupModelRequiring where Self: UIViewController, Self: BaseCoordinator, Self.SetupModel == Void {
-    // NOTE: This default behaviour should be overriden for view controllers that must be initiated from storyboards.
+    // NOTE: This default behaviour should be overriden for view controllers that must be initialized from storyboards.
     static func create(with model: SetupModel, navigator: Navigator) -> Self {
         let selfCoordinatingVC = Self(nibName: nil, bundle: nil)
         selfCoordinatingVC.navigator = navigator

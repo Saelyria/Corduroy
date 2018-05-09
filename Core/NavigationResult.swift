@@ -14,7 +14,7 @@ public class NavigationResult<C: BaseCoordinator> {
     
     // A closure that this result should call when it deinits (goes out of scope); used to indicate to the navigator
     // that all callbacks are set that will be set.
-    private var completionHandler: () -> Void
+    private var onDealloc: () -> Void
     
     // Internal variables set by the navigator that indicate when a condition has passed that warrants one of the
     // appropriate handlers be called.
@@ -58,12 +58,12 @@ public class NavigationResult<C: BaseCoordinator> {
     // when they go out of scope to know when all event bindings have been set so the navigator can go through with the
     // final 'present view controller' part of its navigation. This ensures that events (especially the 'on coordinator
     // created' event) are guaranteed to be called before the final presentation of the view controller occurs.
-    internal init(completionHandler: @escaping () -> Void) {
-        self.completionHandler = completionHandler
+    internal init(onDealloc: @escaping () -> Void) {
+        self.onDealloc = onDealloc
     }
     
     deinit {
-        self.completionHandler()
+        self.onDealloc()
     }
     
     /**

@@ -19,47 +19,38 @@ public extension BaseCoordinator {
      - parameter parameters: Additional navigation parameters. Optional.
      */
     func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
-        switch presentMethod {
-        case .modallyPresenting:
-            guard let currentVC = self.navigator.currentViewController else { return }
-            toVC.modalPresentationStyle = parameters.modalPresentationStyle
-            toVC.modalTransitionStyle = parameters.modalTransitionStyle
-            currentVC.present(toVC, animated: parameters.animateTransition, completion: nil)
-        case .pushing:
-            guard let currentVC = self.navigator.currentViewController else { return }
-            currentVC.navigationController?.pushViewController(toVC, animated: parameters.animateTransition)
-        case .addingAsRoot(let window):
-            window.rootViewController = toVC
-        case .switchingToTab:
-            break
-        }
-        
-        if let presentedNavVC = toVC as? UINavigationController {
-            presentedNavVC.delegate = self.navigator.navigationDelegate
-//            if !(presentedNavVC is CoordinatedNavigationController) {
-//                fatalError("Navigation controllers must subclass CoordinatedNavigationController to be presented by a coordinator.")
-//            }
-            self.navigator.viewControllerDidAppear(presentedNavVC.topViewController!, coordinator: self, presentMethod: presentMethod)
-        } else {
-            self.navigator.viewControllerDidAppear(toVC, coordinator: self, presentMethod: presentMethod)
-        }
-    }
-    
-    func present<T>(_ toVC: T, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters())
-    where T: NavigationControllerEmbedded {
         var vcToPresent: UIViewController = toVC
-        if presentMethod == .pushing {
-            guard self.navigator.currentViewController?.navigationController is T.NavigationControllerType else {
-                fatalError("Error: the view controller being pushed expects to be in a \(String(describing: T.NavigationControllerType.self)), but the previous view controller's navigation controller is not this type.")
-            }
-        } else {
+        if let toVC = toVC as? UIViewController & NavigationControllerEmbedded, presentMethod != .pushing {
             let navController = toVC.createNavigationController()
-            if navController.viewControllers.first != toVC {
+            if navController.viewControllers.first !== toVC {
                 navController.viewControllers = [toVC]
             }
             vcToPresent = navController
         }
-        self.present(vcToPresent, by: presentMethod, parameters: parameters)
+        
+        switch presentMethod {
+        case .modallyPresenting:
+            guard let currentVC = self.navigator.currentViewController else { return }
+            vcToPresent.modalPresentationStyle = parameters.modalPresentationStyle
+            vcToPresent.modalTransitionStyle = parameters.modalTransitionStyle
+            currentVC.present(vcToPresent, animated: parameters.animateTransition, completion: nil)
+        case .pushing:
+            guard let currentVC = self.navigator.currentViewController else { return }
+            currentVC.navigationController?.pushViewController(vcToPresent, animated: parameters.animateTransition)
+        case .addingAsRoot(let window):
+            window.rootViewController = vcToPresent
+        case .switchingToTab:
+            break //TODO: switch to the tab
+        }
+        
+        if let presentedNavVC = vcToPresent as? UINavigationController {
+            if presentedNavVC.delegate !== self.navigator {
+                presentedNavVC.delegate = self.navigator.navigationDelegate
+            }
+            self.navigator.viewControllerDidAppear(presentedNavVC.topViewController!, coordinator: self, presentMethod: presentMethod)
+        } else {
+            self.navigator.viewControllerDidAppear(vcToPresent, coordinator: self, presentMethod: presentMethod)
+        }
     }
     
     /**

@@ -20,25 +20,31 @@ class NavigatorGoTests: XCTestCase {
         self.navigator = nil
     }
     
-    // Test that the navigator's `go(to:)` method produces the expected stack when modally presenting
-    func testGoToCoordinatorStack() {
-        let noAnimationParams = NavigationParameters(animateTransition: false)
+    // Test that the navigator's `go(to:)` method produces the expected stack when they're all modally presented
+    func testModallyPresentedStack() {
+        // start with a view controller NOT in a nav controller
         let firstVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
-        let secondVC = TestViewController()
+        
+        // add a modally presented coordinator in a nav controller
+        let secondVC = TestEmbeddedViewController()
         var secondCoordinator: TestCoordinator!
-        navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: secondVC, parameters: noAnimationParams)
+        navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: secondVC, parameters: .noAnimation)
             .configureCoordinator { secondCoordinator = $0 }
+        
+        // add a modally presented coordinator NOT in a nav controller
         let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
-        navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""), parameters: noAnimationParams)
+        navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""), parameters: .noAnimation)
             .configureCoordinator { thirdCoordinator = $0 }
         
+        // expect the navigator to have three coordinators in the right order
         expect(self.navigator.coordinators).to(haveCount(3))
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
         expect(self.navigator.coordinators[1]).to(be(secondCoordinator))
         expect(self.navigator.coordinators[2]).to(be(thirdCoordinator))
         
+        // expect the coordinator's `create` and `present` methods to have been called only once
         expect(firstCoordinator.createCallCount).to(equal(1))
         expect(secondCoordinator.createCallCount).to(equal(1))
         expect(thirdCoordinator.createCallCount).to(equal(1))
@@ -46,30 +52,38 @@ class NavigatorGoTests: XCTestCase {
         expect(secondCoordinator.presentFirstVCCallCount).to(equal(1))
         expect(thirdCoordinator.presentFirstVCCallCount).to(equal(1))
         
+        // expect the view controllers to have the appropriate presentation relationships to each other
         expect(firstVC).to(be(self.window.rootViewController))
-        expect(firstVC.presentedViewController).toEventually(be(secondVC))
+        expect(firstVC.presentedViewController).toEventually(be(secondVC.navigationController))
         expect(secondVC.presentingViewController).toEventually(be(firstVC))
         expect(secondVC.presentedViewController).toEventually(be(thirdVC)) //eventually because view hierarchies need to settle
-        expect(thirdVC.presentingViewController).toEventually(be(secondVC))
+        expect(thirdVC.presentingViewController).toEventually(be(secondVC.navigationController))
     }
     
     // Test that the navigator's `go(to:)` method produces the expected stack when using a nav controller then modally presenting
-    func testGoToCoordinatorNavControllerStack() {
-        let noAnimationParams = NavigationParameters(animateTransition: false)
-        let firstVC = UIViewController()
-        let navController = CoordinatedNavigationController(rootViewController: firstVC, navigator: self.navigator)
-        let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: navController)
-        let secondVC = TestViewController()
+    func testNavPushThenModallyPresentedStack() {
+        // start with a view controller in a nav controller
+        let firstVC = TestEmbeddedViewController()
+        let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
+        let navController = firstVC.navigationController
+        expect(navController).toNot(beNil())
+        
+        // add a pushed coordinator that expects to be in a nav controller
+        let secondVC = TestEmbeddedViewController()
         var secondCoordinator: TestCoordinator!
-        navigator.go(to: TestCoordinator.self, by: .pushing, with: secondVC, parameters: noAnimationParams)
+        navigator.go(to: TestCoordinator.self, by: .pushing, with: secondVC, parameters: .noAnimation)
             .configureCoordinator { secondCoordinator = $0 }
+        
+        // add a pushed coordinator
         let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
-        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (thirdVC, ""), parameters: noAnimationParams)
+        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (thirdVC, ""), parameters: .noAnimation)
             .configureCoordinator { thirdCoordinator = $0 }
+        
+        // add a modally presented coordinator
         let fourthVC = TestViewController()
         var fourthCoordinator: TestCoordinator!
-        navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: fourthVC, parameters: noAnimationParams)
+        navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: fourthVC, parameters: .noAnimation)
             .configureCoordinator { fourthCoordinator = $0 }
 
         expect(self.navigator.coordinators).to(haveCount(4))
@@ -78,26 +92,32 @@ class NavigatorGoTests: XCTestCase {
         expect(self.navigator.coordinators[2]).to(be(thirdCoordinator))
         expect(self.navigator.coordinators[3]).to(be(fourthCoordinator))
 
-        expect(navController.viewControllers).to(haveCount(3))
+        expect(navController?.viewControllers).to(haveCount(3))
         expect(self.window.rootViewController).to(be(navController))
         expect(firstVC.navigationController).to(be(navController))
         expect(secondVC.navigationController).to(be(navController))
         expect(thirdVC.navigationController).to(be(navController))
         expect(fourthVC.presentingViewController).to(be(navController))
     }
+    
+    // MARK: Flow coordinator tests
 
     // Test that the navigator's `go(to:)` flow coordinator method produces the expected stack when presenting it modally
-    func testGoToFlowCoordinatorStack() {
-        let noAnimationParams = NavigationParameters(animateTransition: false)
+    func testFlowModallyPresentedStack() {
+        // start with a view controller NOT in a nav controller
         let firstVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
-        let secondVC = TestViewController()
+        
+        // add a modally presented flow coordinator whose view expects to be in a nav controller
+        let secondVC = TestEmbeddedViewController()
         var secondCoordinator: TestFlowCoordinatorVoidCompletionModel!
-        navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .modallyPresenting, with: secondVC, parameters: noAnimationParams, flowCompletion: { _, _ in })
+        navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .modallyPresenting, with: secondVC, parameters: .noAnimation, flowCompletion: { _, _ in })
             .configureCoordinator { secondCoordinator = $0 }
+        
+        // add a modally presented coordinator
         let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
-        navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""), parameters: noAnimationParams)
+        navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""), parameters: .noAnimation)
             .configureCoordinator { thirdCoordinator = $0 }
 
         expect(self.navigator.coordinators).to(haveCount(3))
@@ -113,30 +133,35 @@ class NavigatorGoTests: XCTestCase {
         expect(thirdCoordinator.presentFirstVCCallCount).to(equal(1))
 
         expect(firstVC).to(be(self.window.rootViewController))
-        expect(firstVC.presentedViewController).to(be(secondVC))
+        expect(firstVC.presentedViewController).to(be(secondVC.navigationController))
         expect(secondVC.presentingViewController).to(be(firstVC))
         expect(secondVC.presentedViewController).toEventually(be(thirdVC)) //eventually because view hierarchies need to settle
-        expect(thirdVC.presentingViewController).toEventually(be(secondVC))
+        expect(thirdVC.presentingViewController).toEventually(be(secondVC.navigationController))
     }
 
     // Test that the navigator's `go(to:)` flow coordinator method produces the expected navigator and navigation controller stacks
     // when the flow coordinator's navigation controller has multiple items in it
     func testGoToFlowCoordinatorNavControllerPushStack() {
-        // setup the stack, making the flow coordinator have a nav controller with two VCs in its stack
-        let noAnimationParams = NavigationParameters(animateTransition: false)
+        // start with a view controller NOT in a nav controller
         let firstVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
-        let secondVC = TestViewController()
-        let flowNavController = CoordinatedNavigationController(rootViewController: secondVC, navigator: navigator)
+        
+        // add a modally presented flow coordinator whose views are in a nav controller
+        let secondVC = TestEmbeddedViewController()
         var secondCoordinator: TestFlowCoordinatorVoidCompletionModel!
-        navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .modallyPresenting, with: flowNavController,
-            parameters: noAnimationParams, flowCompletion: { _, _ in })
+        navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .modallyPresenting, with: secondVC, parameters: .noAnimation, flowCompletion: { _, _ in })
             .configureCoordinator { secondCoordinator = $0 }
+        let flowNavController = secondVC.navigationController
+        expect(flowNavController).toNot(beNil())
+        
+        // have the flow coordinator push a new view controller
         let thirdVC = TestViewController()
-        flowNavController.pushViewController(thirdVC, animated: false)
+        flowNavController?.pushViewController(thirdVC, animated: false)
+        
+        // add a modally presented coordinator
         let fourthVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
-        navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (fourthVC, ""), parameters: noAnimationParams)
+        navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (fourthVC, ""), parameters: .noAnimation)
             .configureCoordinator { thirdCoordinator = $0 }
 
         expect(self.navigator.coordinators).to(haveCount(3))
@@ -151,9 +176,9 @@ class NavigatorGoTests: XCTestCase {
         expect(secondCoordinator.presentFirstVCCallCount).to(equal(1))
         expect(thirdCoordinator.presentFirstVCCallCount).to(equal(1))
 
-        expect(flowNavController.viewControllers).to(haveCount(2))
-        expect(flowNavController.viewControllers[0]).to(be(secondVC))
-        expect(flowNavController.viewControllers[1]).to(be(thirdVC))
+        expect(flowNavController?.viewControllers).to(haveCount(2))
+        expect(flowNavController?.viewControllers[0]).to(be(secondVC))
+        expect(flowNavController?.viewControllers[1]).to(be(thirdVC))
         expect(firstVC).to(be(self.window.rootViewController))
         expect(firstVC.presentedViewController).to(be(flowNavController))
         expect(secondVC.navigationController).to(be(flowNavController))
@@ -164,21 +189,26 @@ class NavigatorGoTests: XCTestCase {
     // Test that the navigator's `go(to:)` flow coordinator method produces the expected navigator and navigation controller stacks
     // when the flow coordinator's view controllers are part of a navigation controller along with other coordinators' view controllers
     func testGoToFlowCoordinatorAllInNavController() {
-        // setup the stack with all VCs in the same nav controller
-        let noAnimationParams = NavigationParameters(animateTransition: false) // don't animate so we can test without waiting
-        let firstVC = TestViewController()
-        let navController = CoordinatedNavigationController(rootViewController: firstVC, navigator: navigator)
-        let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: navController)
+        // start with a view controller embedded in a nav controller
+        let firstVC = TestEmbeddedViewController()
+        let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
+        let navController = firstVC.navigationController
+        expect(navController).toNot(beNil())
+        
+        // add a flow coordinator pushed on the same nav controller
         let secondVC = TestViewController()
         var secondCoordinator: TestFlowCoordinatorVoidCompletionModel!
-        navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .pushing, with: secondVC,
-            parameters: noAnimationParams, flowCompletion: { _, _ in })
+        navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .pushing, with: secondVC, parameters: .noAnimation, flowCompletion: { _, _ in })
             .configureCoordinator { secondCoordinator = $0 }
+        
+        // have the flow coordinator push a new view controller
         let thirdVC = TestViewController()
-        navController.pushViewController(thirdVC, animated: false)
+        secondCoordinator.present(thirdVC, by: .pushing, parameters: .noAnimation)
+        
+        // add a new coordinator pushed on the same nav controller
         let fourthVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
-        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (fourthVC, ""), parameters: noAnimationParams)
+        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (fourthVC, ""), parameters: .noAnimation)
             .configureCoordinator { thirdCoordinator = $0 }
 
         expect(self.navigator.coordinators).to(haveCount(3))
@@ -193,16 +223,15 @@ class NavigatorGoTests: XCTestCase {
         expect(secondCoordinator.presentFirstVCCallCount).to(equal(1))
         expect(thirdCoordinator.presentFirstVCCallCount).to(equal(1))
 
-        expect(navController.viewControllers).to(haveCount(4))
-        expect(navController.viewControllers[0]).to(be(firstVC))
-        expect(navController.viewControllers[1]).to(be(secondVC))
-        expect(navController.viewControllers[2]).to(be(thirdVC))
-        expect(navController.viewControllers[3]).to(be(fourthVC))
+        expect(navController?.viewControllers).to(haveCount(4))
+        expect(navController?.viewControllers[0]).to(be(firstVC))
+        expect(navController?.viewControllers[1]).to(be(secondVC))
+        expect(navController?.viewControllers[2]).to(be(thirdVC))
+        expect(navController?.viewControllers[3]).to(be(fourthVC))
         expect(navController).to(be(self.window.rootViewController))
     }
 
-    func testEvaluateAndGoToPassingStack() {
-        let noAnimationParams = NavigationParameters(animateTransition: false)
+    func testPassingPreconditionStack() {
         let firstVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
         let secondVC = TestViewController()
@@ -210,14 +239,14 @@ class NavigatorGoTests: XCTestCase {
         let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup?
         
-        self.navigator.go(to: TestPassingPreconditionRequiringCoordinator.self, by: .modallyPresenting, with: secondVC, parameters: noAnimationParams)
+        self.navigator.go(to: TestPassingPreconditionRequiringCoordinator.self, by: .modallyPresenting, with: secondVC, parameters: .noAnimation)
             .configureCoordinator { secondCoordinator = $0 }
             .onPreconditionFailed( { _ in XCTFail() })
         
         // evaluation is done with escaping closures (i.e. will finish evaluation after the current scope has returned),
         // so we need to push the next coordinator after a short delay so the second one's 'present first VC' is called
         DispatchQueue.main.asyncAfter(deadline: .now() + 0.1) {
-            self.navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""), parameters: noAnimationParams)
+            self.navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""), parameters: .noAnimation)
                 .configureCoordinator { thirdCoordinator = $0 }
         }
 

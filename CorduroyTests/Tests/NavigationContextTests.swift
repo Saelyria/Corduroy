@@ -21,7 +21,7 @@ class NavigationContextTests: XCTestCase {
 
     func testGoToCoordinatorDefaultContext() {
         let defaultParameters = NavigationParameters()
-        let firstCoordinatorVC = UIViewController()
+        let firstCoordinatorVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstCoordinatorVC)
         
         expect(firstCoordinator.navContext.fromCoordinator).to(beNil())
@@ -31,7 +31,7 @@ class NavigationContextTests: XCTestCase {
         expect(firstCoordinator.navContext.parameters).to(equal(defaultParameters))
         expect(firstCoordinator.navContext.navigator).to(be(self.navigator))
         
-        let secondCoordinatorVC = UIViewController()
+        let secondCoordinatorVC = TestViewController()
         var secondCoordinator: TestCoordinator!
         navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: secondCoordinatorVC)
             .configureCoordinator { secondCoordinator = $0 }

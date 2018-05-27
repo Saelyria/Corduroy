@@ -26,7 +26,14 @@ public class Navigator {
     
     /// The view controller currently being shown.
     public var currentViewController: UIViewController? {
-        return self.navigationStack.last?.viewControllersAndPresentMethods.last?.vc
+        for i in stride(from: self.navigationStack.count-1, through: 0, by: -1) {
+            let stackItem = self.navigationStack[i]
+            if let vc = stackItem.viewControllersAndPresentMethods.last?.vc {
+                return vc
+            }
+//            return stackItem.viewControllersAndPresentMethods.last?.vc
+        }
+        return nil
     }
     
     /// The application's tab bar controller, if the navigator was started with one.
@@ -137,14 +144,11 @@ public class Navigator {
     }
     
     /**
-     Navigate to the specified coordinator with the given setup model, evaluating the coordinator's preconditions and
-     rethrowing any precondition errors that arise.
+     Navigate to the specified coordinator with the given setup model.
      - parameter coordinator: The type of coordinator to navigate to.
      - parameter navMethod: The presentation method to use (e.g. push or modal present).
      - parameter model: A model of the given coordinator's setup model type.
      - parameter parameters: Additional navigation parameters. Optional.
-     - parameter preconditionCompletion: The block called when the navigator has completed evaluation of preconditions,
-        passing in either an error or the created coordinator. Optional.
      */
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: NavigationParameters = NavigationParameters()) -> NavigationResult<T> {
@@ -421,13 +425,18 @@ class _NavControllerDelegate: NSObject, UINavigationControllerDelegate {
     }
     
     func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if let indexOfTopVC = navigationController.viewControllers.index(of: viewController) {
+        if let currentVC = self.navigator.currentViewController, navigationController.viewControllers.contains(currentVC)
+        && navigationController.viewControllers.last !== currentVC {
+            var poppedViewControllers: [UIViewController] = []
             
-//            for index in stride(from: navigationController.viewControllers.count-1, to: indexOfTopVC, by: -1) {
-//
-//            }
-
-            let poppedViewControllers = Array(navigationController.viewControllers.suffix(from: indexOfTopVC))
+            for i in stride(from: self.navigator.navigationStack.count-1, through: 0, by: -1) {
+                let stackItem = self.navigator.navigationStack[i]
+                
+                for j in stride(from: stackItem.viewControllersAndPresentMethods.count-1, through: 0, by: -1) {
+                    poppedViewControllers.append(stackItem.viewControllersAndPresentMethods[j].vc)
+                }
+            }
+            
             self.navigator.navigationControllerDidPopViewControllers(poppedViewControllers)
         }
     }

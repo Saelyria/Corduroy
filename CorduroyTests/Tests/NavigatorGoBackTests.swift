@@ -22,13 +22,13 @@ class NavigatorGoBackTests: XCTestCase {
 
     // Test that the navigator's `goBack()` method pops the top-most coordinator
     func testGoBackStack() {
-        let firstVC = TestCoordinator.TestViewController()
+        let firstVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
-        let secondVC = TestCoordinator.TestViewController()
+        let secondVC = TestViewController()
         var secondCoordinator: TestCoordinator!
         navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: secondVC)
             .configureCoordinator { secondCoordinator = $0 }
-        let thirdVC = TestCoordinatorStringSetup.TestViewController()
+        let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
         navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""))
             .configureCoordinator { thirdCoordinator = $0 }
@@ -44,17 +44,17 @@ class NavigatorGoBackTests: XCTestCase {
 
     // Test that the navigator's `goBack(to:)` method pops the correct coordinators on its way back to the specified coordinator
     func testGoBackToStack() {
-        let firstVC = TestCoordinator.TestViewController()
+        let firstVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
-        let secondVC = TestCoordinator.TestViewController()
+        let secondVC = TestViewController()
         var secondCoordinator: TestCoordinator!
         navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: secondVC)
             .configureCoordinator { secondCoordinator = $0 }
-        let thirdVC = TestCoordinatorStringSetup.TestViewController()
+        let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
         navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""))
             .configureCoordinator { thirdCoordinator = $0 }
-        let fourthVC = TestCoordinatorStringSetup.TestViewController()
+        let fourthVC = TestViewController()
         var fourthCoordinator: TestCoordinatorStringSetup!
         navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (fourthVC, ""))
             .configureCoordinator { fourthCoordinator = $0 }
@@ -74,17 +74,20 @@ class NavigatorGoBackTests: XCTestCase {
     // specified type).
     func testGoBackToLastStack() {
         // set up stack
-        let firstVC = TestCoordinator.TestViewController()
+        let firstVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
-        let secondVC = TestCoordinator.TestViewController()
+        
+        let secondVC = TestViewController()
         var secondCoordinator: TestCoordinator!
         navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: secondVC)
             .configureCoordinator { secondCoordinator = $0 }
-        let thirdVC = TestCoordinatorStringSetup.TestViewController()
+        
+        let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
         navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (thirdVC, ""))
             .configureCoordinator { thirdCoordinator = $0 }
-        let fourthVC = TestCoordinatorStringSetup.TestViewController()
+        
+        let fourthVC = TestViewController()
         var fourthCoordinator: TestCoordinatorStringSetup!
         navigator.go(to: TestCoordinatorStringSetup.self, by: .modallyPresenting, with: (fourthVC, ""))
             .configureCoordinator { fourthCoordinator = $0 }
@@ -117,22 +120,27 @@ class NavigatorGoBackTests: XCTestCase {
     // Test that the navigation controller view controller stack and navigation item stack remain aligned when using the
     // navigator's `goBack(toLast:)` and `goBack(to:)` methods.
     func testGoBackNavControllerStack() {
-        // set up stack
-        let noAnimationParams = NavigationParameters(animateTransition: false)
-        let firstVC = TestCoordinator.TestViewController()
-        let navController = CoordinatedNavigationController(rootViewController: firstVC, navigator: navigator)
-        let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: navController)
-        let secondVC = TestCoordinator.TestViewController()
+        // start with a view controller in a nav controller
+        let firstVC = TestEmbeddedViewController()
+        let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
+        let navController = firstVC.navigationController
+        expect(navController).toNot(beNil())
+        
+        // add a pushed coordinator whose view expects to be in a nav controller
+        let secondVC = TestEmbeddedViewController()
         var secondCoordinator: TestCoordinator!
-        navigator.go(to: TestCoordinator.self, by: .pushing, with: secondVC, parameters: noAnimationParams)
+        navigator.go(to: TestCoordinator.self, by: .pushing, with: secondVC, parameters: .noAnimation)
             .configureCoordinator { secondCoordinator = $0 }
-        let thirdVC = TestCoordinatorStringSetup.TestViewController()
+        
+        // add a pushed coordinator
+        let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
-        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (thirdVC, ""), parameters: noAnimationParams)
+        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (thirdVC, ""), parameters: .noAnimation)
             .configureCoordinator { thirdCoordinator = $0 }
-        let fourthVC = TestCoordinatorStringSetup.TestViewController()
+        
+        let fourthVC = TestViewController()
         var fourthCoordinator: TestCoordinatorStringSetup!
-        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (fourthVC, ""), parameters: noAnimationParams)
+        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (fourthVC, ""), parameters: .noAnimation)
             .configureCoordinator { fourthCoordinator = $0 }
 
         expect(self.navigator.coordinators).to(haveCount(4))
@@ -141,25 +149,25 @@ class NavigatorGoBackTests: XCTestCase {
         expect(self.navigator.coordinators[2]).to(be(thirdCoordinator))
         expect(self.navigator.coordinators[3]).to(be(fourthCoordinator))
 
-        expect(navController.viewControllers).to(haveCount(4))
-        expect(navController.viewControllers[0]).to(be(firstVC))
-        expect(navController.viewControllers[1]).to(be(secondVC))
-        expect(navController.viewControllers[2]).to(be(thirdVC))
-        expect(navController.viewControllers[3]).to(be(fourthVC))
+        expect(navController?.viewControllers).to(haveCount(4))
+        expect(navController?.viewControllers[0]).to(be(firstVC))
+        expect(navController?.viewControllers[1]).to(be(secondVC))
+        expect(navController?.viewControllers[2]).to(be(thirdVC))
+        expect(navController?.viewControllers[3]).to(be(fourthVC))
 
-        // pop
-        navigator.goBack(toLast: TestCoordinator.self, parameters: noAnimationParams)
+        // pop to the last 'test coordinator' (should pop two coordinators)
+        navigator.goBack(toLast: TestCoordinator.self, parameters: .noAnimation)
 
         expect(self.navigator.coordinators).to(haveCount(2))
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
         expect(self.navigator.coordinators[1]).to(be(secondCoordinator))
 
-        expect(navController.viewControllers).to(haveCount(2))
-        expect(navController.viewControllers[0]).to(be(firstVC))
-        expect(navController.viewControllers[1]).to(be(secondVC))
+        expect(navController?.viewControllers).to(haveCount(2))
+        expect(navController?.viewControllers[0]).to(be(firstVC))
+        expect(navController?.viewControllers[1]).to(be(secondVC))
 
-        // pop
-        navigator.goBack(to: firstCoordinator, parameters: noAnimationParams)
+        // pop back to the first coordinator (should pop one coordinator)
+        navigator.goBack(to: firstCoordinator, parameters: .noAnimation)
 
         expect(self.navigator.coordinators).to(haveCount(1))
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
@@ -170,22 +178,28 @@ class NavigatorGoBackTests: XCTestCase {
     // Test that the navigation controller view controller stack and navigation item stack remain aligned when the nav
     // controller's `popViewController(_:animated:)` method is called (either explicitly or via its back button)
     func testGoBackStartedFromNavControllerStack() {
-        // set up the stack
-        let noAnimationParams = NavigationParameters(animateTransition: false)
-        let firstVC = TestCoordinator.TestViewController()
-        let navController = CoordinatedNavigationController(rootViewController: firstVC, navigator: navigator)
-        let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: navController)
-        let secondVC = TestCoordinator.TestViewController()
+        // start with a view controller in a nav controller
+        let firstVC = TestEmbeddedViewController()
+        let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
+        let navController = firstVC.navigationController
+        expect(navController).toNot(beNil())
+        
+        // add a pushed coordinator whose view expects to be in a nav controller
+        let secondVC = TestEmbeddedViewController()
         var secondCoordinator: TestCoordinator!
-        navigator.go(to: TestCoordinator.self, by: .pushing, with: secondVC, parameters: noAnimationParams)
+        navigator.go(to: TestCoordinator.self, by: .pushing, with: secondVC, parameters: .noAnimation)
             .configureCoordinator { secondCoordinator = $0 }
-        let thirdVC = TestCoordinatorStringSetup.TestViewController()
+        
+        // add a pushed coordinator
+        let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
-        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (thirdVC, ""), parameters: noAnimationParams)
+        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (thirdVC, ""), parameters: .noAnimation)
             .configureCoordinator { thirdCoordinator = $0 }
-        let fourthVC = TestCoordinatorStringSetup.TestViewController()
+        
+        // add a pushed coordinator
+        let fourthVC = TestViewController()
         var fourthCoordinator: TestCoordinatorStringSetup!
-        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (fourthVC, ""), parameters: noAnimationParams)
+        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (fourthVC, ""), parameters: .noAnimation)
             .configureCoordinator { fourthCoordinator = $0 }
 
         expect(self.navigator.coordinators).to(haveCount(4))
@@ -194,23 +208,23 @@ class NavigatorGoBackTests: XCTestCase {
         expect(self.navigator.coordinators[2]).to(be(thirdCoordinator))
         expect(self.navigator.coordinators[3]).to(be(fourthCoordinator))
 
-        expect(navController.viewControllers).to(haveCount(4))
-        expect(navController.viewControllers[0]).to(be(firstVC))
-        expect(navController.viewControllers[1]).to(be(secondVC))
-        expect(navController.viewControllers[2]).to(be(thirdVC))
-        expect(navController.viewControllers[3]).to(be(fourthVC))
+        expect(navController?.viewControllers).to(haveCount(4))
+        expect(navController?.viewControllers[0]).to(be(firstVC))
+        expect(navController?.viewControllers[1]).to(be(secondVC))
+        expect(navController?.viewControllers[2]).to(be(thirdVC))
+        expect(navController?.viewControllers[3]).to(be(fourthVC))
 
         // pop
-        navController.popViewController(animated: false)
+        navController?.popViewController(animated: false)
 
         expect(self.navigator.coordinators).to(haveCount(3))
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
         expect(self.navigator.coordinators[1]).to(be(secondCoordinator))
 
-        expect(navController.viewControllers).to(haveCount(3))
-        expect(navController.viewControllers[0]).to(be(firstVC))
-        expect(navController.viewControllers[1]).to(be(secondVC))
-        expect(navController.viewControllers[2]).to(be(thirdVC))
+        expect(navController?.viewControllers).to(haveCount(3))
+        expect(navController?.viewControllers[0]).to(be(firstVC))
+        expect(navController?.viewControllers[1]).to(be(secondVC))
+        expect(navController?.viewControllers[2]).to(be(thirdVC))
         
         expect(fourthCoordinator.onDismissalCallCount).to(equal(1))
         expect(thirdCoordinator.onDismissalCallCount).to(equal(0))
@@ -218,13 +232,13 @@ class NavigatorGoBackTests: XCTestCase {
         expect(firstCoordinator.onDismissalCallCount).to(equal(0))
 
         // pop
-        navController.popToRootViewController(animated: false)
+        navController?.popToRootViewController(animated: false)
 
         expect(self.navigator.coordinators).to(haveCount(1))
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
 
-        expect(navController.viewControllers).to(haveCount(1))
-        expect(navController.viewControllers[0]).to(be(firstVC))
+        expect(navController?.viewControllers).to(haveCount(1))
+        expect(navController?.viewControllers[0]).to(be(firstVC))
 
         expect(fourthCoordinator.onDismissalCallCount).to(equal(1))
         expect(thirdCoordinator.onDismissalCallCount).to(equal(1))

@@ -56,6 +56,8 @@
 		607FACC71AFB9204008FA782 = {
 			isa = PBXGroup;
 			children = (
+				930C0864200BF21000B0B934 /* Info.plist */,
+				930C0888200BF95A00B0B934 /* Corduroy.h */,
 				93069164200BEE8700B1C9B9 /* Core */,
 				9341551020276F4700860CE2 /* Routing */,
 				607FACD11AFB9204008FA782 /* Products */,
@@ -83,8 +85,6 @@
 				936D2EDA20A15018002574CA /* NavigationControllerEmbedded.swift */,
 				93580F032053A245005D96D3 /* NavigationResult.swift */,
 				9316D09B204F371600D1A5E8 /* NavigationStackManager.swift */,
-				930C0864200BF21000B0B934 /* Info.plist */,
-				930C0888200BF95A00B0B934 /* Corduroy.h */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -318,7 +318,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = Core/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
@@ -351,7 +351,7 @@
 				DYLIB_CURRENT_VERSION = 1;
 				DYLIB_INSTALL_NAME_BASE = "@rpath";
 				GCC_C_LANGUAGE_STANDARD = gnu11;
-				INFOPLIST_FILE = Core/Info.plist;
+				INFOPLIST_FILE = "$(SRCROOT)/Info.plist";
 				INSTALL_PATH = "$(LOCAL_LIBRARY_DIR)/Frameworks";
 				IPHONEOS_DEPLOYMENT_TARGET = 10.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";

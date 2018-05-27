@@ -6,18 +6,18 @@ import Corduroy
 // A basic test flow coordinator. Takes the view controller it should use as its first view controller via its SetupModel.
 // Has a Void FlowResult.
 final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
-    typealias SetupModel = TestViewController? //the VC to use as the first VC
+    typealias SetupModel = BaseTestController? //the VC to use as the first VC
     
     var navigator: Navigator!
     
-    var firstViewController: TestViewController?
+    var firstViewController: BaseTestController?
     var navContext: NavigationContext!
     var flowCompletion: ((Error?, Void?) -> Void)!
     var createCallCount: Int = 0
     var presentFirstVCCallCount: Int = 0
     var onDismissalCallCount: Int = 0
     
-    static func create(with firstViewController: TestViewController?, navigator: Navigator) -> TestFlowCoordinatorVoidCompletionModel {
+    static func create(with firstViewController: BaseTestController?, navigator: Navigator) -> TestFlowCoordinatorVoidCompletionModel {
         let coordinator = TestFlowCoordinatorVoidCompletionModel()
         coordinator.navigator = navigator
         coordinator.firstViewController = firstViewController
@@ -42,19 +42,19 @@ final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
 
 // A test coordinator whose flow completion gives a string value as its FlowResult
 final class TestFlowCoordinatorStringCompletionModel: FlowCoordinator {
-    typealias SetupModel = TestViewController? //the VC to use as the first VC
+    typealias SetupModel = BaseTestController? //the VC to use as the first VC
     typealias FlowResult = String
     
     var navigator: Navigator!
     
-    var firstViewController: TestViewController?
+    var firstViewController: BaseTestController?
     var navContext: NavigationContext!
     var flowCompletion: ((Error?, String?) -> Void)!
     var createCallCount: Int = 0
     var presentFirstVCCallCount: Int = 0
     var onDismissalCallCount: Int = 0
     
-    static func create(with firstViewController: TestViewController?, navigator: Navigator) -> TestFlowCoordinatorStringCompletionModel {
+    static func create(with firstViewController: BaseTestController?, navigator: Navigator) -> TestFlowCoordinatorStringCompletionModel {
         let coordinator = TestFlowCoordinatorStringCompletionModel()
         coordinator.navigator = navigator
         coordinator.firstViewController = firstViewController

@@ -17,17 +17,17 @@ import UIKit
  navigation controller of the view controller's type when embedding it in a new one.
  */
 public protocol NavigationControllerEmbedded where Self: UIViewController {
-    /// The type of navigation controller the view controller expects to be embedded in. Defaults to a vanilla
-    /// `UINavigationController`.
-    associatedtype NavigationControllerType: UINavigationController = UINavigationController
+//    /// The type of navigation controller the view controller expects to be embedded in. Defaults to a vanilla
+//    /// `UINavigationController`.
+//    associatedtype NavigationControllerType: UINavigationController = UINavigationController
 
     /// A method that the coordinator calls to create the view controller's navigation controller if it needs to create
     /// one. A default implementation is provided if the navigation controller type is just `UINavigationController`.
-    func createNavigationController() -> NavigationControllerType
+    func createNavigationController() -> UINavigationController
 }
 
-extension NavigationControllerEmbedded where Self.NavigationControllerType == UINavigationController {
-    func createNavigationController() -> NavigationControllerType {
+public extension NavigationControllerEmbedded {
+    func createNavigationController() -> UINavigationController {
         return UINavigationController(rootViewController: self)
     }
 }

@@ -2,7 +2,8 @@
 import UIKit
 
 /**
- A `UINavigationController` subclass that should be used instead of `UINavigationController` when using Corduroy.
+ A `UINavigationController` subclass that should be used instead of `UINavigationController` when using Corduroy if
+ the navigator is set to not use method swizzling.
  */
 public class CoordinatedNavigationController: UINavigationController {
     /// The navigator the navigation controller reports pop navigations to.
@@ -49,5 +50,57 @@ public class CoordinatedNavigationController: UINavigationController {
         precondition(self.navigator != nil, "CoordinatedNavigationController's navigator property was not set.")
 
         self.navigator?.navigationControllerDidPopViewControllers(poppedViewControllers)
+    }
+}
+
+internal func swizzle(c: AnyClass, original: Selector, swizzled: Selector) {
+    guard let originalMethod = class_getInstanceMethod(c, original),
+        let swizzledMethod = class_getInstanceMethod(c, swizzled) else { return }
+    
+    let didAddMethod = class_addMethod(c, original, method_getImplementation(swizzledMethod), method_getTypeEncoding(swizzledMethod))
+    
+    if didAddMethod {
+        class_replaceMethod(c, swizzled, method_getImplementation(originalMethod), method_getTypeEncoding(originalMethod))
+    } else {
+        method_exchangeImplementations(originalMethod, swizzledMethod)
+    }
+}
+
+extension UINavigationController {
+    private static var navigatorKey: String = "navcontroller_navigator"
+    
+    internal var _navigator: Navigator? {
+        get {
+            return objc_getAssociatedObject(self, &UINavigationController.navigatorKey) as? Navigator
+        }
+        set {
+            if let newValue = newValue {
+                objc_setAssociatedObject(self, &UINavigationController.navigatorKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+            }
+        }
+    }
+    
+    @objc internal func corduroy_popViewController(animated: Bool) -> UIViewController? {
+        let poppedVC = corduroy_popViewController(animated: animated)
+        if let poppedVC = poppedVC {
+            self._navigator?.navigationControllerDidPopViewControllers([poppedVC])
+        }
+        return poppedVC
+    }
+    
+    @objc internal func corduroy_popToViewController(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
+        let poppedVCs = corduroy_popToViewController(viewController, animated: animated)
+        if let poppedVCs = poppedVCs {
+            self._navigator?.navigationControllerDidPopViewControllers(poppedVCs)
+        }
+        return poppedVCs
+    }
+    
+    @objc internal func corduroy_popToRootViewController(animated: Bool) -> [UIViewController]? {
+        let poppedVCs = corduroy_popToRootViewController(animated: animated)
+        if let poppedVCs = poppedVCs {
+            self._navigator?.navigationControllerDidPopViewControllers(poppedVCs)
+        }
+        return poppedVCs
     }
 }

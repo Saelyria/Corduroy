@@ -44,9 +44,7 @@ public extension BaseCoordinator {
         }
         
         if let presentedNavVC = vcToPresent as? UINavigationController {
-            if presentedNavVC.delegate !== self.navigator {
-                presentedNavVC.delegate = self.navigator.navigationDelegate
-            }
+            presentedNavVC._navigator = self.navigator
             self.navigator.viewControllerDidAppear(presentedNavVC.topViewController!, coordinator: self, presentMethod: presentMethod)
         } else {
             self.navigator.viewControllerDidAppear(vcToPresent, coordinator: self, presentMethod: presentMethod)

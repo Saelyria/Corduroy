@@ -9,6 +9,10 @@ import UIKit
  preconditions that a coordinator may have as a requirement for navigation to it.
  */
 public class Navigator {
+    /// Whether Corduroy should use method swizzling for navigation controller popping observation. If this is set to
+    /// false, all navigation controllers in your application must be or subclass `CoordinatedNavigationController`.
+    static var useSwizzling: Bool = true
+    
     /// The coordinator coordinating the currently shown view controller.
     public var currentCoordinator: BaseCoordinator {
         return self.coordinators.last!
@@ -31,7 +35,6 @@ public class Navigator {
             if let vc = stackItem.viewControllersAndPresentMethods.last?.vc {
                 return vc
             }
-//            return stackItem.viewControllersAndPresentMethods.last?.vc
         }
         return nil
     }
@@ -49,10 +52,7 @@ public class Navigator {
     private var selectedTab: Int {
         return self.tabBarController?.selectedIndex ?? 0
     }
-    
-    // An object that is set as the delegate of all navigation controllers which informs the navigator of pops.
-    internal var navigationDelegate: _NavControllerDelegate!
-    
+
     private var hasStarted: Bool = false
     
     // There's no reliable way to determine whether a back navigation from a UINavigationController was started by it
@@ -61,9 +61,23 @@ public class Navigator {
     // don't end up with duplicate calls.
     private var shouldIgnoreNavControllerPopRequests: Bool = false
     
+    private static var hasSwizzled: Bool = false
+    
     /// Instantiate a new navigator.
     public required init() {
-        self.navigationDelegate = _NavControllerDelegate(navigator: self)
+        if Navigator.useSwizzling, Navigator.hasSwizzled == false {
+            swizzle(c: UINavigationController.self,
+                    original: #selector(UINavigationController.popViewController(animated:)),
+                    swizzled: #selector(UINavigationController.corduroy_popViewController(animated:)))
+            
+            swizzle(c: UINavigationController.self,
+                    original: #selector(UINavigationController.popToRootViewController(animated:)),
+                    swizzled: #selector(UINavigationController.corduroy_popToRootViewController(animated:)))
+            
+            swizzle(c: UINavigationController.self,
+                    original: #selector(UINavigationController.popToViewController(_:animated:)),
+                    swizzled: #selector(UINavigationController.corduroy_popToViewController(_:animated:)))
+        }
     }
     
     /**
@@ -414,30 +428,5 @@ public class Navigator {
         }
         
         return Array(recoveryMethods)
-    }
-}
-
-class _NavControllerDelegate: NSObject, UINavigationControllerDelegate {
-    weak var navigator: Navigator!
-    
-    required init(navigator: Navigator) {
-        self.navigator = navigator
-    }
-    
-    func navigationController(_ navigationController: UINavigationController, willShow viewController: UIViewController, animated: Bool) {
-        if let currentVC = self.navigator.currentViewController, navigationController.viewControllers.contains(currentVC)
-        && navigationController.viewControllers.last !== currentVC {
-            var poppedViewControllers: [UIViewController] = []
-            
-            for i in stride(from: self.navigator.navigationStack.count-1, through: 0, by: -1) {
-                let stackItem = self.navigator.navigationStack[i]
-                
-                for j in stride(from: stackItem.viewControllersAndPresentMethods.count-1, through: 0, by: -1) {
-                    poppedViewControllers.append(stackItem.viewControllersAndPresentMethods[j].vc)
-                }
-            }
-            
-            self.navigator.navigationControllerDidPopViewControllers(poppedViewControllers)
-        }
     }
 }

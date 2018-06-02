@@ -52,6 +52,7 @@ public class Navigator {
     private var selectedTab: Int {
         return self.tabBarController?.selectedIndex ?? 0
     }
+    internal var tabCoordinators: [TabCoordinator]?
 
     private var hasStarted: Bool = false
     
@@ -98,15 +99,18 @@ public class Navigator {
         self.hasStarted = true
         
         var viewControllers: [UIViewController] = []
+        var createdTabCoordinators: [TabCoordinator] = []
         var tabIndex: Int = 0
         for coordinator in tabCoordinators {
             let coordinator = coordinator.create(navigator: self)
+            createdTabCoordinators.append(coordinator)
             let vc = coordinator.createViewController()
             viewControllers.append(vc)
             let navStackItem = NavStackItem(coordinator: coordinator, presentMethod: .switchingToTab, canBeNavigatedBackTo: true)
             self.tabStack[tabIndex] = [navStackItem]
             tabIndex = tabIndex + 1
         }
+        self.tabCoordinators = createdTabCoordinators
         self.tabBarController?.viewControllers = viewControllers
         return self.tabStack[self.selectedTab][0].coordinator as! TabCoordinator
     }
@@ -138,7 +142,7 @@ public class Navigator {
         self.tabStack.append([stackItem])
         let context = NavigationContext(navigator: self, from: nil, to: firstCoordinator,
                                         present: .addingAsRoot(window: window), dismiss: nil, params: NavigationParameters())
-        firstCoordinator.presentViewController(presentMethod: .addingAsRoot(window: window), context: context)
+        firstCoordinator.presentViewController(context: context)
         
         return firstCoordinator
     }
@@ -167,7 +171,7 @@ public class Navigator {
     public func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: NavigationParameters = NavigationParameters()) -> NavigationResult<T> {
         return self.go(to: coordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { coordinator, context in
-            coordinator.presentViewController(presentMethod: navMethod, context: context)
+            coordinator.presentViewController(context: context)
         })
     }
     
@@ -198,7 +202,7 @@ public class Navigator {
     public func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowResult?) -> Void) -> NavigationResult<T> {
         return self.go(to: flowCoordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { flowCoordinator, context in
-            flowCoordinator.presentFirstViewController(presentMethod: navMethod, context: context, flowCompletion: flowCompletion)
+            flowCoordinator.presentFirstViewController(context: context, flowCompletion: flowCompletion)
         })
     }
     
@@ -264,6 +268,16 @@ public class Navigator {
         }
         
         return navResult
+    }
+    
+    // MARK: Tab coordinator navigation methods
+    
+    func `switch`(to coordinator: TabCoordinator) {
+        guard let index = self.tabCoordinators?.index(where: { $0 === coordinator }) else {
+            assertionFailure("Attempt to switch to a tab coordinator not setup with the navigator")
+        }
+        self.selectedTab = index
+        self.tabBarController?.selectedIndex = index
     }
     
     // MARK: Backwards navigation methods
@@ -390,8 +404,7 @@ public class Navigator {
         var recoveryMethods: Set<PreconditionRecoveryMethod> = []
         
         // instantiate an instance of each precondition and evaluate them
-        for preconditionType: NavigationPrecondition.Type in type(of: coordinator).preconditions {
-            let precondition = preconditionType.init()
+        for precondition: NavigationPrecondition in type(of: coordinator).preconditions {
             do {
                 try precondition.evaluate(context: context)
             } catch {

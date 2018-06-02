@@ -4,8 +4,8 @@ import Corduroy
 typealias AccountCoordinator = AccountViewController
 
 final class AccountViewController: UIViewController, Coordinator, NavigationPreconditionRequiring {
-    static let preconditions: [NavigationPrecondition.Type] = [
-        LoggedInPrecondition.self
+    static let preconditions: [NavigationPrecondition] = [
+        LoggedInPrecondition()
     ]
     
     var navigator: Navigator!

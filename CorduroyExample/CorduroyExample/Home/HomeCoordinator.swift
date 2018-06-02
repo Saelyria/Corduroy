@@ -13,8 +13,8 @@ import Corduroy
  array of precondition types.
  */
 final class HomeCoordinator: Coordinator, NavigationPreconditionRequiring {
-    static var preconditions: [NavigationPrecondition.Type] = [
-        LoggedInPrecondition.self
+    static var preconditions: [NavigationPrecondition] = [
+        LoggedInPrecondition()
     ]
     
     var navigator: Navigator!
@@ -22,7 +22,7 @@ final class HomeCoordinator: Coordinator, NavigationPreconditionRequiring {
     func presentViewController(context: NavigationContext) {
         let homeViewController = HomeViewController()
         homeViewController.coordinator = self
-        self.present(homeViewController, asDescribedBy: context)
+        self.present(homeViewController, context: context)
     }
     
     func buttonPressed() {

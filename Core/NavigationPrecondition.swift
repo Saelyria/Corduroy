@@ -14,7 +14,7 @@ public protocol NavigationPreconditionRequiring: BaseCoordinator {
     var shouldSortPreconditions: Bool { get }
     
     /// The array of preconditions that must pass in order to navigate to this coordinator.
-    static var preconditions: [NavigationPrecondition.Type] { get }
+    static var preconditions: [NavigationPrecondition] { get }
 }
 
 public extension NavigationPreconditionRequiring {
@@ -37,8 +37,6 @@ public extension NavigationPreconditionRequiring {
  error that they wish to throw, they can throw themselves.
  */
 public protocol NavigationPrecondition: Error {
-    init()
-    
     /**
      Evaluates whether the precondition passes. This is called when a navigation takes place with this precondition.
      - parameter context: A context object containing details about the navigation.

@@ -5,6 +5,6 @@ protocol LoginViewControllerCoordinator: BaseCoordinator {
     func loginViewController(_ vc: LoginViewController, didAttemptLoginWithUsername username: String, password: String)
 }
 
-final class LoginViewController: UIViewController, CoordinatorManageable {
+final class LoginViewController: UIViewController {
     var coordinator: LoginViewControllerCoordinator?
 }

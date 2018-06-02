@@ -81,6 +81,8 @@ extension UINavigationController {
     }
     
     @objc internal func corduroy_popViewController(animated: Bool) -> UIViewController? {
+        guard Navigator.useSwizzling == true else { return nil }
+        
         let poppedVC = corduroy_popViewController(animated: animated)
         if let poppedVC = poppedVC {
             self._navigator?.navigationControllerDidPopViewControllers([poppedVC])
@@ -89,6 +91,8 @@ extension UINavigationController {
     }
     
     @objc internal func corduroy_popToViewController(_ viewController: UIViewController, animated: Bool) -> [UIViewController]? {
+        guard Navigator.useSwizzling == true else { return nil }
+        
         let poppedVCs = corduroy_popToViewController(viewController, animated: animated)
         if let poppedVCs = poppedVCs {
             self._navigator?.navigationControllerDidPopViewControllers(poppedVCs)
@@ -97,6 +101,8 @@ extension UINavigationController {
     }
     
     @objc internal func corduroy_popToRootViewController(animated: Bool) -> [UIViewController]? {
+        guard Navigator.useSwizzling == true else { return nil }
+        
         let poppedVCs = corduroy_popToRootViewController(animated: animated)
         if let poppedVCs = poppedVCs {
             self._navigator?.navigationControllerDidPopViewControllers(poppedVCs)

@@ -2,7 +2,7 @@
 import UIKit
 import Corduroy
 
-class HomeViewController: UIViewController, CoordinatorManageable {    
+class HomeViewController: UIViewController {    
     var coordinator: HomeCoordinator?
     
     override func viewDidLoad() {

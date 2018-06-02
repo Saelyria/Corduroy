@@ -32,6 +32,49 @@ public struct NavigationContext {
     }
 }
 
+public struct _PresentMethod {
+    public struct PresentContext {
+        public let navigator: Navigator
+        public let currentViewController: UIViewController?
+        public let viewControllerToPresent: UIViewController
+        public let window: UIWindow
+        public let currentCoordinator: BaseCoordinator?
+        public let parameters: NavigationParameters
+    }
+    
+    public let handler: (_ context: PresentContext) -> Void
+    
+    public init(handler: @escaping (_ context: PresentContext) -> Void) {
+        self.handler = handler
+    }
+}
+
+public extension _PresentMethod {
+    public static let pushing: _PresentMethod = _PresentMethod { (context) in
+        let animate = context.parameters.animateTransition
+        let vc = context.viewControllerToPresent
+        context.currentViewController?.navigationController?.pushViewController(vc, animated: animate)
+    }
+    
+    public static let modallyPresenting: _PresentMethod = _PresentMethod { (context) in
+        let vc = context.viewControllerToPresent
+        let animate = context.parameters.animateTransition
+        vc.modalPresentationStyle = context.parameters.modalPresentationStyle
+        vc.modalTransitionStyle = context.parameters.modalTransitionStyle
+        context.currentViewController?.present(vc, animated: animate, completion: nil)
+    }
+}
+
+internal extension _PresentMethod {
+    static let addingAsRoot: _PresentMethod = _PresentMethod { (context) in
+        context.window.rootViewController = context.viewControllerToPresent
+    }
+    
+    static let switchingToTab: _PresentMethod = _PresentMethod { (context) in
+        
+    }
+}
+
 /**
  An enum describing a type of presentation between view controllers, such as a navigation controller push or modal
  present.
@@ -44,9 +87,6 @@ public enum PresentMethod: Equatable {
     /// The view controller should be set as the root view controller of the associated window. This should only be
     /// used for the first view controller.
     case addingAsRoot(window: UIWindow)
-    /// The view controller should be presented by switching to its tab on the tab bar controller. The view controller
-    /// must be one of the root view controllers of the navigator's assigned `UITabBarController` to use this method.
-    case switchingToTab
     
     internal var inverseDismissMethod: DismissMethod {
         switch self {
@@ -54,7 +94,7 @@ public enum PresentMethod: Equatable {
             return .modallyDismissing
         case .pushing:
             return .popping
-        case .addingAsRoot, .switchingToTab:
+        case .addingAsRoot:
             return .none
         }
     }
@@ -66,8 +106,6 @@ public enum PresentMethod: Equatable {
         case (.modallyPresenting, .modallyPresenting):
             return true
         case (.addingAsRoot, .addingAsRoot):
-            return true
-        case (.switchingToTab, .switchingToTab):
             return true
         default:
             return false

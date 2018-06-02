@@ -32,12 +32,12 @@ public protocol Coordinator: BaseCoordinator, SetupModelRequiring {
      controller and push/present it from the context's `currentViewController`.
      - parameter context: A context object containing the involved coordinators and other navigation details.
      */
-    func presentViewController(presentMethod: PresentMethod, context: NavigationContext)
+    func presentViewController(context: NavigationContext)
 }
 
 public extension Coordinator where Self: UIViewController {
-    func presentViewController(presentMethod: PresentMethod, context: NavigationContext) {
-        self.present(self, by: presentMethod)
+    func presentViewController(context: NavigationContext) {
+        self.present(self, context: context)
     }
 }
 
@@ -74,7 +74,7 @@ public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
      - parameter context: A context object containing the involved coordinators and other navigation details.
      - parameter flowCompletion: A closure to call after the flow has completed.
      */
-    func presentFirstViewController(presentMethod: PresentMethod, context: NavigationContext, flowCompletion: @escaping (Error?, FlowResult?) -> Void)
+    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, FlowResult?) -> Void)
 }
 
 

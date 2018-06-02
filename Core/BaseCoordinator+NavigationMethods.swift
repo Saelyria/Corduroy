@@ -3,12 +3,12 @@ import UIKit
 
 public extension BaseCoordinator {
     /**
-     Present the given view controller with the given present method and context from the navigator.
+     Present the given view controller in the style described by the given context.
      - parameter toVC: The view controller to present.
-     - parameter presentMethod: The presentation method to use (e.g. push or modal present).
      - parameter context: The context object given to the coordinator by the navigator.
     */
-    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, context: NavigationContext) {
+    func present(_ toVC: UIViewController, context: NavigationContext) {
+        guard let presentMethod = context.requestedPresentMethod else { return }
         self.present(toVC, by: presentMethod, parameters: context.parameters)
     }
     

@@ -2,7 +2,7 @@
 import UIKit
 import Corduroy
 
-final class SignupSecurityQuestionViewController: UIViewController, CoordinatorManageable {    
+final class SignupSecurityQuestionViewController: UIViewController {    
     var coordinator: SignupFlowCoordinator?
     
     private let securityQuestion: String = "What was the name of your first pet?"

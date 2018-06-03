@@ -75,7 +75,7 @@ extension UINavigationController {
         }
         set {
             if let newValue = newValue {
-                objc_setAssociatedObject(self, &UINavigationController.navigatorKey, newValue, .OBJC_ASSOCIATION_RETAIN_NONATOMIC)
+                objc_setAssociatedObject(self, &UINavigationController.navigatorKey, newValue, .OBJC_ASSOCIATION_ASSIGN)
             }
         }
     }

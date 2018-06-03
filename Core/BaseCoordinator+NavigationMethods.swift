@@ -30,7 +30,7 @@ public extension BaseCoordinator {
         let context = PresentMethod.PresentContext(
             navigator: self.navigator,
             currentViewController: self.navigator.currentViewController,
-            viewControllerToPresent: toVC,
+            viewControllerToPresent: vcToPresent,
             parameters: parameters)
         
         presentMethod.presentHandler(context)

@@ -25,10 +25,10 @@ final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
         return coordinator
     }
     
-    func presentFirstViewController(presentMethod: PresentMethod, context: NavigationContext, flowCompletion: @escaping (Error?, ()?) -> Void) {
+    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, ()?) -> Void) {
         if let vc = self.firstViewController {
             vc.coordinator = self
-            self.present(vc, by: presentMethod, parameters: context.parameters)
+            self.present(vc, context: context)
         }
         self.flowCompletion = flowCompletion
         self.presentFirstVCCallCount += 1
@@ -62,10 +62,10 @@ final class TestFlowCoordinatorStringCompletionModel: FlowCoordinator {
         return coordinator
     }
     
-    func presentFirstViewController(presentMethod: PresentMethod, context: NavigationContext, flowCompletion: @escaping (Error?, String?) -> Void) {
+    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, String?) -> Void) {
         if let vc = self.firstViewController {
             vc.coordinator = self
-            self.present(vc, by: presentMethod, context: context)
+            self.present(vc, context: context)
         }
         self.flowCompletion = flowCompletion
         self.presentFirstVCCallCount += 1

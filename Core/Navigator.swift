@@ -39,6 +39,8 @@ public class Navigator {
         return nil
     }
     
+    public private(set) var window: UIWindow!
+    
     /// The application's tab bar controller, if the navigator was started with one.
     public private(set) var tabBarController: UITabBarController?
     
@@ -91,6 +93,8 @@ public class Navigator {
     @discardableResult
     public func start(onWindow window: UIWindow, tabCoordinators: [TabCoordinator.Type], tabBarController: UITabBarController? = nil) -> TabCoordinator {
         precondition(self.hasStarted == false, "One of the navigator's `start` methods was already called.")
+        
+        self.window = window
         if let tabBarController = tabBarController {
             self.tabBarController = tabBarController
         } else {
@@ -135,13 +139,14 @@ public class Navigator {
     public func start<T: Coordinator>(onWindow window: UIWindow, firstCoordinator: T.Type, with model: T.SetupModel) -> T {
         precondition(!(firstCoordinator is NavigationPreconditionRequiring.Type), "The first coordinator of the app should not have navigation preconditions.")
         precondition(self.hasStarted == false, "One of the navigator's `start` methods was already called.")
+        
         self.hasStarted = true
+        self.window = window
         
         let firstCoordinator = firstCoordinator.create(with: model, navigator: self)
-        let stackItem = NavStackItem(coordinator: firstCoordinator, presentMethod: .addingAsRoot(window: window), canBeNavigatedBackTo: true)
+        let stackItem = NavStackItem(coordinator: firstCoordinator, presentMethod: .addingAsRoot, canBeNavigatedBackTo: true)
         self.tabStack.append([stackItem])
-        let context = NavigationContext(navigator: self, from: nil, to: firstCoordinator,
-                                        present: .addingAsRoot(window: window), dismiss: nil, params: NavigationParameters())
+        let context = NavigationContext(navigator: self, from: firstCoordinator, to: firstCoordinator, by: .addingAsRoot, params: NavigationParameters())
         firstCoordinator.presentViewController(context: context)
         
         return firstCoordinator
@@ -218,8 +223,7 @@ public class Navigator {
         // were bindings, it will dealloc at the end of the scope in which the 'go(to:)' method was called (as long as a
         // reference to it was not held). If there were preconditions, it will go out of scope after the 'completion' on
         // 'evaluatePreconditions(on:context:completion:)' finishes.
-        let context = NavigationContext(navigator: self, from: self.currentCoordinator, to: coordinator,
-                                        present: navMethod, dismiss: nil, params: parameters)
+        let context = NavigationContext(navigator: self, from: self.currentCoordinator, to: coordinator, by: navMethod, params: parameters)
         let navResult = NavigationResult<T>(onDealloc: {
             if Thread.isMainThread {
                 presentBlock(coordinator, context)
@@ -275,8 +279,8 @@ public class Navigator {
     func `switch`(to coordinator: TabCoordinator) {
         guard let index = self.tabCoordinators?.index(where: { $0 === coordinator }) else {
             assertionFailure("Attempt to switch to a tab coordinator not setup with the navigator")
+            return
         }
-        self.selectedTab = index
         self.tabBarController?.selectedIndex = index
     }
     

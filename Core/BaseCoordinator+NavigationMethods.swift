@@ -8,8 +8,7 @@ public extension BaseCoordinator {
      - parameter context: The context object given to the coordinator by the navigator.
     */
     func present(_ toVC: UIViewController, context: NavigationContext) {
-        guard let presentMethod = context.requestedPresentMethod else { return }
-        self.present(toVC, by: presentMethod, parameters: context.parameters)
+        self.present(toVC, by: context.requestedPresentMethod, parameters: context.parameters)
     }
     
     /**
@@ -20,7 +19,7 @@ public extension BaseCoordinator {
      */
     func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
         var vcToPresent: UIViewController = toVC
-        if let toVC = toVC as? UIViewController & NavigationControllerEmbedded, presentMethod != .pushing {
+        if let toVC = toVC as? UIViewController & NavigationControllerEmbedded, presentMethod.shouldAutomaticallyEmbedNavigationControllers {
             let navController = toVC.createNavigationController()
             if navController.viewControllers.first !== toVC {
                 navController.viewControllers = [toVC]
@@ -28,22 +27,18 @@ public extension BaseCoordinator {
             vcToPresent = navController
         }
         
-        switch presentMethod {
-        case .modallyPresenting:
-            guard let currentVC = self.navigator.currentViewController else { return }
-            vcToPresent.modalPresentationStyle = parameters.modalPresentationStyle
-            vcToPresent.modalTransitionStyle = parameters.modalTransitionStyle
-            currentVC.present(vcToPresent, animated: parameters.animateTransition, completion: nil)
-        case .pushing:
-            guard let currentVC = self.navigator.currentViewController else { return }
-            currentVC.navigationController?.pushViewController(vcToPresent, animated: parameters.animateTransition)
-        case .addingAsRoot(let window):
-            window.rootViewController = vcToPresent
-        case .switchingToTab:
-            break //TODO: switch to the tab
-        }
+        let context = PresentMethod.PresentContext(
+            navigator: self.navigator,
+            currentViewController: self.navigator.currentViewController,
+            viewControllerToPresent: toVC,
+            parameters: parameters)
         
-        if let presentedNavVC = vcToPresent as? UINavigationController {
+        presentMethod.presentHandler(context)
+        
+        if let presentedNavVC = vcToPresent as? CoordinatedNavigationController {
+            presentedNavVC.navigator = self.navigator
+            self.navigator.viewControllerDidAppear(presentedNavVC.topViewController!, coordinator: self, presentMethod: presentMethod)
+        } else if let presentedNavVC = vcToPresent as? UINavigationController {
             presentedNavVC._navigator = self.navigator
             self.navigator.viewControllerDidAppear(presentedNavVC.topViewController!, coordinator: self, presentMethod: presentMethod)
         } else {
@@ -60,15 +55,17 @@ public extension BaseCoordinator {
      - parameter parameters: Additional navigation parameters. Optional.
      */
     func dismiss(_ vc: UIViewController, parameters: NavigationParameters = NavigationParameters()) {
-        let dismissMethod = self.navigator.navigationStack.last!.viewControllersAndPresentMethods.last!.presentMethod.inverseDismissMethod
-        switch dismissMethod {
-        case .modallyDismissing:
-            vc.dismiss(animated: parameters.animateTransition, completion: nil)
-        case .popping:
-            vc.navigationController?.popViewController(animated: parameters.animateTransition)
-        case .none:
-            break
+        let index: Int = self.navigator.navigationStack.count - 2
+        guard let (previousVC, presentMethod) = self.navigator.navigationStack[index].viewControllersAndPresentMethods.last else {
+            return
         }
+        let context = PresentMethod.DismissContext(
+            navigator: self.navigator,
+            previousViewController: previousVC,
+            viewControllerToDismiss: vc,
+            parameters: parameters)
+        
+        presentMethod.dismissHandler(context)
         
         self.navigator.viewControllerDidDisappear(vc, coordinator: self)
     }

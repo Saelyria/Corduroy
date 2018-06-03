@@ -6,127 +6,93 @@ import UIKit
  presentation method.
  */
 public struct NavigationContext {
-    /// The coordinator being navigated away from. Will be `nil` if this is the first coordinator navigation.
-    public let fromCoordinator: BaseCoordinator?
+    /// The coordinator being navigated away from.
+    public let fromCoordinator: BaseCoordinator
     /// The coordinator being navigated to.
     public let toCoordinator: BaseCoordinator
     /// The presentation method requested to be used to present the to coordinator's first view controller. Will be
     /// `nil` if the navigation is a dismissal.
-    public let requestedPresentMethod: PresentMethod?
-    /// The dissmissal method requested to be used to dismiss the coordinator's top view controller Will be `nil` if
-    /// the navigation is a presentation.
-    public let requestedDismissMethod: DismissMethod?
+    public let requestedPresentMethod: PresentMethod
     /// Other parameters for the navigation, such as the requested modal presentation style.
     public let parameters: NavigationParameters
     /// The navigator handling the navigation.
     public let navigator: Navigator
     
-    internal init(navigator: Navigator, from: BaseCoordinator?, to: BaseCoordinator, present: PresentMethod?,
-    dismiss: DismissMethod?, params: NavigationParameters) {
+    internal init(navigator: Navigator, from: BaseCoordinator, to: BaseCoordinator, by: PresentMethod, params: NavigationParameters) {
         self.navigator = navigator
         self.fromCoordinator = from
         self.toCoordinator = to
-        self.requestedPresentMethod = present
-        self.requestedDismissMethod = dismiss
+        self.requestedPresentMethod = by
         self.parameters = params
     }
 }
 
-public struct _PresentMethod {
+public struct PresentMethod {
     public struct PresentContext {
         public let navigator: Navigator
         public let currentViewController: UIViewController?
         public let viewControllerToPresent: UIViewController
-        public let window: UIWindow
-        public let currentCoordinator: BaseCoordinator?
         public let parameters: NavigationParameters
     }
     
-    public let handler: (_ context: PresentContext) -> Void
+    public struct DismissContext {
+        public let navigator: Navigator
+        public let previousViewController: UIViewController
+        public let viewControllerToDismiss: UIViewController
+        public let parameters: NavigationParameters
+    }
     
-    public init(handler: @escaping (_ context: PresentContext) -> Void) {
-        self.handler = handler
+    public let shouldAutomaticallyEmbedNavigationControllers: Bool
+    public let presentHandler: (_ context: PresentContext) -> Void
+    public let dismissHandler: (_ context: DismissContext) -> Void
+    
+    public init(shouldAutomaticallyEmbedNavigationControllers: Bool = true,
+                presentHandler: @escaping (_ context: PresentContext) -> Void,
+                dismissHandler: @escaping (_ context: DismissContext) -> Void)
+    {
+        self.shouldAutomaticallyEmbedNavigationControllers = shouldAutomaticallyEmbedNavigationControllers
+        self.presentHandler = presentHandler
+        self.dismissHandler = dismissHandler
     }
 }
 
-public extension _PresentMethod {
-    public static let pushing: _PresentMethod = _PresentMethod { (context) in
-        let animate = context.parameters.animateTransition
-        let vc = context.viewControllerToPresent
-        context.currentViewController?.navigationController?.pushViewController(vc, animated: animate)
-    }
+public extension PresentMethod {
+    public static let pushing: PresentMethod = PresentMethod(
+        shouldAutomaticallyEmbedNavigationControllers: false,
+        presentHandler: { (context) in
+            let animate = context.parameters.animateTransition
+            let vc = context.viewControllerToPresent
+            context.currentViewController?.navigationController?.pushViewController(vc, animated: animate)
+        },
+        dismissHandler: { (context) in
+            let animate = context.parameters.animateTransition
+            let navController = context.viewControllerToDismiss.navigationController
+            navController?.popViewController(animated: animate)
+        })
     
-    public static let modallyPresenting: _PresentMethod = _PresentMethod { (context) in
+    public static let modallyPresenting: PresentMethod = PresentMethod(presentHandler: { (context) in
         let vc = context.viewControllerToPresent
         let animate = context.parameters.animateTransition
         vc.modalPresentationStyle = context.parameters.modalPresentationStyle
         vc.modalTransitionStyle = context.parameters.modalTransitionStyle
         context.currentViewController?.present(vc, animated: animate, completion: nil)
-    }
+    }, dismissHandler: { (context) in
+        let animate = context.parameters.animateTransition
+        context.previousViewController.dismiss(animated: animate, completion: nil)
+    })
 }
 
-internal extension _PresentMethod {
-    static let addingAsRoot: _PresentMethod = _PresentMethod { (context) in
-        context.window.rootViewController = context.viewControllerToPresent
-    }
+internal extension PresentMethod {
+    static let addingAsRoot: PresentMethod = PresentMethod(presentHandler: { (context) in
+        context.navigator.window.rootViewController = context.viewControllerToPresent
+    }, dismissHandler: { _ in })
     
-    static let switchingToTab: _PresentMethod = _PresentMethod { (context) in
+    static let switchingToTab: PresentMethod = PresentMethod(presentHandler: { (context) in
         
-    }
+    }, dismissHandler: { (context) in
+        
+    })
 }
-
-/**
- An enum describing a type of presentation between view controllers, such as a navigation controller push or modal
- present.
- */
-public enum PresentMethod: Equatable {
-    /// The view controller should be pushed with a navigation controller.
-    case pushing
-    /// The view controller should be modally presented.
-    case modallyPresenting
-    /// The view controller should be set as the root view controller of the associated window. This should only be
-    /// used for the first view controller.
-    case addingAsRoot(window: UIWindow)
-    
-    internal var inverseDismissMethod: DismissMethod {
-        switch self {
-        case .modallyPresenting:
-            return .modallyDismissing
-        case .pushing:
-            return .popping
-        case .addingAsRoot:
-            return .none
-        }
-    }
-    
-    public static func ==(lhs: PresentMethod, rhs: PresentMethod) -> Bool {
-        switch (lhs, rhs) {
-        case (.pushing, .pushing):
-            return true
-        case (.modallyPresenting, .modallyPresenting):
-            return true
-        case (.addingAsRoot, .addingAsRoot):
-            return true
-        default:
-            return false
-        }
-    }
-}
-
-/**
- An enum describing a type of dismissal between view controllers, such as a navigation controller pop or modal
- dismiss.
- */
-public enum DismissMethod {
-    /// The view controller should be popped from its navigation controller.
-    case popping
-    /// The view controller should be modally dismissed.
-    case modallyDismissing
-    /// No dismiss action can occur. This is the dismiss method given for the inverse of a present method with no clear
-    /// inverse dismiss method.
-    case none
-}
-
 
 
 /**

@@ -31,10 +31,10 @@ final class TestCoordinator: Coordinator {
         return coordinator
     }
     
-    func presentViewController(presentMethod: PresentMethod, context: NavigationContext) {
+    func presentViewController(context: NavigationContext) {
         if let vc = self.firstViewController {
             vc.coordinator = self
-            self.present(vc, by: presentMethod, context: context)
+            self.present(vc, context: context)
         }
         self.presentFirstVCCallCount += 1
         self.navContext = context
@@ -67,10 +67,10 @@ final class TestCoordinatorStringSetup: Coordinator {
         return coordinator
     }
     
-    func presentViewController(presentMethod: PresentMethod, context: NavigationContext) {
+    func presentViewController(context: NavigationContext) {
         if let vc = self.firstViewController {
             vc.coordinator = self
-            self.present(vc, by: presentMethod, context: context)
+            self.present(vc, context: context)
         }
         self.presentFirstVCCallCount += 1
         self.navContext = context
@@ -81,9 +81,9 @@ final class TestCoordinatorStringSetup: Coordinator {
     }
 }
 
-final class TestPassingPreconditionRequiringCoordinator: Coordinator, NavigationPreconditionRequiring {
-    static var preconditions: [NavigationPrecondition.Type] {
-        return [PassingPrecondition.self, PassingPrecondition.self]
+final class TestPassingPreconditionRequiringCoordinator: Coordinator, NavigationPreconditionRequiring {    
+    static var preconditions: [NavigationPrecondition] {
+        return [PassingPrecondition(), PassingPrecondition()]
     }
     
     typealias SetupModel = BaseTestController?
@@ -104,10 +104,10 @@ final class TestPassingPreconditionRequiringCoordinator: Coordinator, Navigation
         return coordinator
     }
     
-    func presentViewController(presentMethod: PresentMethod, context: NavigationContext) {
+    func presentViewController(context: NavigationContext) {
         if let vc = self.firstViewController {
             vc.coordinator = self
-            self.present(vc, by: presentMethod, context: context)
+            self.present(vc, context: context)
         }
         self.presentFirstVCCallCount += 1
         self.navContext = context

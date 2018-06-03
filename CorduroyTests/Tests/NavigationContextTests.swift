@@ -1,7 +1,7 @@
 
 import XCTest
 import Nimble
-import Corduroy
+@testable import Corduroy
 
 class NavigationContextTests: XCTestCase {
     var navigator: Navigator!
@@ -24,10 +24,8 @@ class NavigationContextTests: XCTestCase {
         let firstCoordinatorVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstCoordinatorVC)
         
-        expect(firstCoordinator.navContext.fromCoordinator).to(beNil())
+        expect(firstCoordinator.navContext.fromCoordinator).to(be(firstCoordinator))
         expect(firstCoordinator.navContext.toCoordinator).to(be(firstCoordinator))
-        expect(firstCoordinator.navContext.requestedPresentMethod).to(equal(PresentMethod.addingAsRoot(window: self.window)))
-        expect(firstCoordinator.navContext.requestedDismissMethod).to(beNil())
         expect(firstCoordinator.navContext.parameters).to(equal(defaultParameters))
         expect(firstCoordinator.navContext.navigator).to(be(self.navigator))
         
@@ -38,8 +36,6 @@ class NavigationContextTests: XCTestCase {
         
         expect(secondCoordinator.navContext.fromCoordinator).toEventually(be(firstCoordinator))
         expect(secondCoordinator.navContext.toCoordinator).toEventually(be(secondCoordinator))
-        expect(secondCoordinator.navContext.requestedPresentMethod).toEventually(equal(PresentMethod.modallyPresenting))
-        expect(secondCoordinator.navContext.requestedDismissMethod).toEventually(beNil())
         expect(secondCoordinator.navContext.parameters).toEventually(equal(defaultParameters))
         expect(secondCoordinator.navContext.navigator).toEventually(be(self.navigator))
     }

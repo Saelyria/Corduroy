@@ -20,7 +20,8 @@
 		93580F042053A245005D96D3 /* NavigationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93580F032053A245005D96D3 /* NavigationResult.swift */; };
 		936D2EDB20A15018002574CA /* NavigationControllerEmbedded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936D2EDA20A15018002574CA /* NavigationControllerEmbedded.swift */; };
 		939826D0203B3A0F00B205C0 /* RoutingURLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939826CF203B3A0F00B205C0 /* RoutingURLParser.swift */; };
-		93C5955B20688D21004EACA7 /* CoordinatedTabBarController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5955A20688D21004EACA7 /* CoordinatedTabBarController.swift */; };
+		93C5955B20688D21004EACA7 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */; };
+		ABA711462115D1AD0063BB71 /* UIStoryboardInitable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -39,7 +40,8 @@
 		93580F032053A245005D96D3 /* NavigationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationResult.swift; sourceTree = "<group>"; };
 		936D2EDA20A15018002574CA /* NavigationControllerEmbedded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerEmbedded.swift; sourceTree = "<group>"; };
 		939826CF203B3A0F00B205C0 /* RoutingURLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingURLParser.swift; sourceTree = "<group>"; };
-		93C5955A20688D21004EACA7 /* CoordinatedTabBarController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatedTabBarController.swift; sourceTree = "<group>"; };
+		93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
+		ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStoryboardInitable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -80,11 +82,12 @@
 				93069169200BEEBD00B1C9B9 /* NavigationContext.swift */,
 				93069167200BEEBD00B1C9B9 /* NavigationPrecondition.swift */,
 				930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */,
-				93C5955A20688D21004EACA7 /* CoordinatedTabBarController.swift */,
+				93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */,
 				9306916A200BEEBD00B1C9B9 /* BaseCoordinator+NavigationMethods.swift */,
 				936D2EDA20A15018002574CA /* NavigationControllerEmbedded.swift */,
 				93580F032053A245005D96D3 /* NavigationResult.swift */,
 				9316D09B204F371600D1A5E8 /* NavigationStackManager.swift */,
+				ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";
@@ -187,7 +190,8 @@
 				93580F042053A245005D96D3 /* NavigationResult.swift in Sources */,
 				930C088A200BFA1400B0B934 /* Coordinator.swift in Sources */,
 				930C088B200BFA1600B0B934 /* Navigator.swift in Sources */,
-				93C5955B20688D21004EACA7 /* CoordinatedTabBarController.swift in Sources */,
+				ABA711462115D1AD0063BB71 /* UIStoryboardInitable.swift in Sources */,
+				93C5955B20688D21004EACA7 /* TabBarCoordinator.swift in Sources */,
 				9316D09C204F371600D1A5E8 /* NavigationStackManager.swift in Sources */,
 				930C088C200BFA1800B0B934 /* NavigationContext.swift in Sources */,
 				936D2EDB20A15018002574CA /* NavigationControllerEmbedded.swift in Sources */,

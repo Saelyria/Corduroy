@@ -16,6 +16,25 @@ public class NavStackItem {
     }
 }
 
+/// Holds all the information for a navigation performed with the navigator. Acts as an 'edge' on the navigation graph.
+public class Navigation {
+    public let fromCoordinator: BaseCoordinator
+    public let toCoordinator: BaseCoordinator
+    public let presentMethod: PresentMethod
+    public private(set) var isCurrent: Bool
+    
+    public init(from: BaseCoordinator, to: BaseCoordinator, method: PresentMethod, isCurrent: Bool) {
+        self.fromCoordinator = from
+        self.toCoordinator = to
+        self.presentMethod = method
+        self.isCurrent = isCurrent
+    }
+}
+
+public class NavigationGraphManager {
+    
+}
+
 // TODO: Move the nav stack from the navigator into a dedicated manager
 //internal class NavigationStackManager {
 //    let shared: NavigationStackManager = NavigationStackManager()

@@ -83,6 +83,9 @@ public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
  A protocol describing an object that manages navigation for the view controller of one of the tab bar buttons.
  */
 public protocol TabCoordinator: BaseCoordinator {
+    /// The 
+    var parentCoordinator: BaseCoordinator? { get set }
+    
     /**
      Creates an instance of the tab coordinator.
      - parameter navigator: The navigator the coordinator should use to navigate from.
@@ -95,7 +98,15 @@ public protocol TabCoordinator: BaseCoordinator {
     func createViewController() -> UIViewController
 }
 
-extension TabCoordinator where Self: UIViewController {
+public extension TabCoordinator {
+    static func create(navigator: Navigator) -> Self {
+        let coordinator = Self.init()
+        coordinator.navigator = navigator
+        return coordinator
+    }
+}
+
+public extension TabCoordinator where Self: UIViewController {
     func createViewController() -> UIViewController {
         return self
     }

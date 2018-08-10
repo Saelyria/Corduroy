@@ -78,62 +78,42 @@ public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
 }
 
 
-
-/**
- A protocol describing an object that manages navigation for the view controller of one of the tab bar buttons.
- */
-public protocol TabCoordinator: BaseCoordinator {
-    /// The 
-    var parentCoordinator: BaseCoordinator? { get set }
-    
-    /**
-     Creates an instance of the tab coordinator.
-     - parameter navigator: The navigator the coordinator should use to navigate from.
-     */
-    static func create(navigator: Navigator) -> Self
-    
-    init()
-    
-    /// Create the view controller that will be used for a tab on the tab bar.
-    func createViewController() -> UIViewController
-}
-
-public extension TabCoordinator {
-    static func create(navigator: Navigator) -> Self {
-        let coordinator = Self.init()
-        coordinator.navigator = navigator
-        return coordinator
-    }
-}
-
-public extension TabCoordinator where Self: UIViewController {
-    func createViewController() -> UIViewController {
-        return self
-    }
-}
-
-
-
 /**
  A basic protocol that all coordinator types implement. This is mostly used internally and should not be implemented on
  its own - instead, implement one of either `Coordinator`, `FlowCoordinator`, or `SelfCoordinating`.
  */
 public protocol BaseCoordinator: AnyObject {
-    /// The navigator managing navigation to this coordinator and that it should use to perform navigation to other
+    /// The navigator managing navigation to this coordinator that it should use to perform navigation to other
     /// coordinators.
     var navigator: Navigator! { get set }
     
     /// Whether this coordinator can be navigated back to (i.e. if it should be skipped over when its navigator's
     /// `goBack(to:)` method is called). This can be useful, for example, for precondition recovering flow coordinators
     /// or login view controllers after a user has logged in. Defaults to `true`.
-    var canBeNavigatedBackTo: Bool { get }
+//    var canBeNavigatedBackTo: Bool { get }
     
-    /// Optional event method called when the navigator has been dismissed by the navigator.
-    func onDismissal()
+    /**
+     Optional event method called when the coordinator has become the active coordinator for the currently presented
+     view controller. This can be called anytime one of the coordinator's underlying view controllers becomes the
+     actively shown view controller, such as when it is first presented, when a view controller is dismissed to it,
+     or when the view controller's tab is switched to. This method is always called after the coordinator's
+    `presentViewController` method.
+     */
+    func didBecomeActive()
+    /**
+     Optional event method called when a new coordinator is shown and this coordinator becomes inactive.
+    */
+    func didBecomeInactive()
+    /// Optional event method called when the coordinator has been dismissed by the navigator.
+    func didDismiss()
 }
 
 public extension BaseCoordinator {
-    func onDismissal() { }
+    func didBecomeActive() { }
+    
+    func didBecomeInactive() { }
+    
+    func didDismiss() { }
     
     var canBeNavigatedBackTo: Bool {
         return true

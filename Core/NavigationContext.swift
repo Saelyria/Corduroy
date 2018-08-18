@@ -127,7 +127,10 @@ public extension PresentMethod {
     }
     
     /**
-     
+     A present method that displays a tabbed view controller by switching to its tab. The view controller must be setup
+     as one of the root view controllers managed by a `UITabBarController`/`TabBarCoordinator`. When this present method
+     is used, the navigator will search its navigation stack for the last presented `TabBarCoordinator` that has the
+     presented `TabCoordinator` and have the tab bar coordinator switch to it.
     */
     public static let switchingToTab: PresentMethod = PresentMethod(
         presentHandler: { (context: PresentContext) in
@@ -138,7 +141,9 @@ public extension PresentMethod {
         })
     
     /**
-     
+     A present method that pushes a view controller in a navigation controller. Use of this method assumes that the
+     current view controller that the new view controller is being pushed from is already contained in a navigation
+     controller.
     */
     public static let pushing: PresentMethod = PresentMethod(
         shouldAutomaticallyEmbedNavigationControllers: false,

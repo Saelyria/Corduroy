@@ -81,11 +81,3 @@ public enum PreconditionRecoveryMethod {
     /// The precondition started an asynchronous task (such as a network request) to attempt to recover.
     case asyncTask
 }
-
-
-
-/// An error representing an aggregate of underlying errors.
-public struct AggregateError: Error {
-    public let underlyingErrors: [Error]
-}
-

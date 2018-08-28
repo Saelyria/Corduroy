@@ -28,12 +28,3 @@ public extension UIStoryboardInitable {
         return viewController
     }
 }
-
-public extension Coordinator where Self: UIStoryboardInitable, Self.SetupModel == Void {
-    static func create(with model: (), navigator: Navigator) -> Self {
-        let vc = self.createFromStoryboard()
-        vc.navigator = navigator
-        return vc
-    }
-}
-

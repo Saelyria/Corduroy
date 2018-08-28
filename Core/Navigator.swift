@@ -233,16 +233,6 @@ public class Navigator {
         return navResult
     }
     
-    // MARK: Tab coordinator navigation methods
-    
-    func `switch`(to coordinator: TabCoordinator) {
-//        guard let index = self.tabCoordinators?.index(where: { $0 === coordinator }) else {
-//            assertionFailure("Attempt to switch to a tab coordinator not setup with the navigator")
-//            return
-//        }
-//        self.tabBarController?.selectedIndex = index
-    }
-    
     // MARK: Backwards navigation methods
     
     /**
@@ -295,8 +285,21 @@ public class Navigator {
             for (viewController, _) in navStackItem.viewControllersAndPresentMethods {
                 navStackItem.coordinator.dismiss(viewController, parameters: params)
             }
+            
+            let previousCoordinator: BaseCoordinator
+            if index > 0 {
+                previousCoordinator = self.navigationStack[index-1].coordinator
+            } else {
+                previousCoordinator = coordinatorToRemove
+            }
+            let context = NavigationContext(
+                navigator: self,
+                from: coordinatorToRemove,
+                to: previousCoordinator,
+                by: navStackItem.presentMethod,
+                params: params)
 
-            coordinatorToRemove.didDismiss()
+            coordinatorToRemove.didDismiss(context: context)
             self.navigationStack.remove(at: index)
         }
         
@@ -312,14 +315,31 @@ public class Navigator {
         
         for index in stride(from: viewControllers.count-1, through: 0, by: -1) {
             let vc: UIViewController = viewControllers[index]
+            // as we remove view controllers, we always expect the 
             guard vc === self.navigationStack.last!.viewControllersAndPresentMethods.last!.vc else {
                 fatalError("Wrong")
             }
+            
             self.navigationStack.last!.viewControllersAndPresentMethods.removeLast()
             if self.navigationStack.last!.viewControllersAndPresentMethods.isEmpty {
-                let removedCoordinator: BaseCoordinator = self.navigationStack.last!.coordinator
+                let coordinatorToRemove: BaseCoordinator = self.navigationStack.last!.coordinator
+                
+                let navStackItem: NavStackItem = self.navigationStack.last!
+                let previousCoordinator: BaseCoordinator
+                if index > 0 {
+                    previousCoordinator = self.navigationStack[index-1].coordinator
+                } else {
+                    previousCoordinator = coordinatorToRemove
+                }
+                let context = NavigationContext(
+                    navigator: self,
+                    from: coordinatorToRemove,
+                    to: previousCoordinator,
+                    by: navStackItem.presentMethod,
+                    params: NavigationParameters.default)
+                
                 self.navigationStack.removeLast()
-                removedCoordinator.didDismiss()
+                coordinatorToRemove.didDismiss(context: context)
             }
         }
     }
@@ -396,8 +416,7 @@ public class Navigator {
         // call the completion block once all the async tasks are complete
         dispatchGroup.notify(queue: .main) {
             if preconditionErrors.count >= 1 {
-                let aggregateError = AggregateError(underlyingErrors: preconditionErrors)
-                completion(aggregateError)
+                completion(preconditionErrors.first)
             } else {
                 completion(nil)
             }

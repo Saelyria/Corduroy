@@ -2,6 +2,10 @@ import UIKit
 
 /**
  An internal model type that holds the information of a navigation operation that is stored on a navigator's stack.
+ 
+ Each nav stack item represents a navigation to a new coordinator. All view controllers that the coordinator presents
+ are stored in its associated nav stack item under the `viewControllersAndPresentMethods` property, where the view
+ controller is stored with the present method it was presented with.
  */
 public class NavStackItem {
     public let coordinator: BaseCoordinator

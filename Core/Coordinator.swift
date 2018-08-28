@@ -93,31 +93,35 @@ public protocol BaseCoordinator: AnyObject {
 //    var canBeNavigatedBackTo: Bool { get }
     
     /**
-     Optional event method called when the coordinator has become the active coordinator for the currently presented
-     view controller. This can be called anytime one of the coordinator's underlying view controllers becomes the
+     Optional lifecycle method called when the coordinator has become the active coordinator for the currently presented
+     view controller. This is called anytime one of the coordinator's underlying view controllers becomes the
      actively shown view controller, such as when it is first presented, when a view controller is dismissed to it,
      or when the view controller's tab is switched to. This method is always called after the coordinator's
     `presentViewController` method.
      */
-    func didBecomeActive()
+    func didBecomeActive(context: NavigationContext)
     /**
-     Optional event method called when a new coordinator is shown and this coordinator becomes inactive.
+     Optional lifecycle method called when a new coordinator is shown and this coordinator becomes inactive.
     */
-    func didBecomeInactive()
-    /// Optional event method called when the coordinator has been dismissed by the navigator.
-    func didDismiss()
+    func didBecomeInactive(context: NavigationContext)
+    /**
+     Optional lifecycle method called when the coordinator has been dismissed by the navigator.
+    */
+    func didDismiss(context: NavigationContext)
 }
 
 public extension BaseCoordinator {
-    func didBecomeActive() { }
-    
-    func didBecomeInactive() { }
-    
-    func didDismiss() { }
-    
-    var canBeNavigatedBackTo: Bool {
-        return true
+    var coordinatedViewControllers: [UIViewController] {
+        let item = self.navigator.navigationStack.last(where: { $0.coordinator === self })
+        let vcs: [UIViewController]? = item?.viewControllersAndPresentMethods.map({ return $0.vc })
+        return vcs ?? []
     }
+    
+    func didBecomeActive(context: NavigationContext) { }
+    
+    func didBecomeInactive(context: NavigationContext) { }
+    
+    func didDismiss(context: NavigationContext) { }
 }
 
 
@@ -135,7 +139,8 @@ public protocol SetupModelRequiring {
      Creates an instance of the coordinator. In the implemented method, the coordinator should be instantiated and
      configured with the given `model` object, which is an instance of its aliased `SetupModel` type. A basic
      implementation of this method is provided if the `SetupModel` type is `Void`.
-     - parameter model: The context object containing all dependencies the view controller needs.
+     - parameter model: The context object containing all dependencies the view controller needs. The type of this
+        'setup model' is determined by the coordinator.
      - parameter navigator: The navigator the coordinator should use to navigate from.
      */
     static func create(with model: SetupModel, navigator: Navigator) -> Self
@@ -152,10 +157,18 @@ public extension SetupModelRequiring where Self.SetupModel == Void, Self: BaseCo
 }
 
 public extension SetupModelRequiring where Self: UIViewController, Self: BaseCoordinator, Self.SetupModel == Void {
-    // NOTE: This default behaviour should be overriden for view controllers that must be initialized from storyboards.
     static func create(with model: SetupModel, navigator: Navigator) -> Self {
         let selfCoordinatingVC = Self(nibName: nil, bundle: nil)
         selfCoordinatingVC.navigator = navigator
         return selfCoordinatingVC
     }
 }
+
+public extension SetupModelRequiring where Self: UIStoryboardInitable, Self: BaseCoordinator, Self.SetupModel == Void {
+    static func create(with model: (), navigator: Navigator) -> Self {
+        let selfCoordinatingVC = self.createFromStoryboard()
+        selfCoordinatingVC.navigator = navigator
+        return selfCoordinatingVC
+    }
+}
+

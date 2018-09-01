@@ -115,8 +115,6 @@ class NavigatorGoTests: XCTestCase {
         expect(fourthVC.presentingViewController).to(be(navController))
     }
     
-    // MARK: Flow coordinator tests
-
     /**
      Test that the navigator's `go(to:)` flow coordinator method produces the expected stack when presenting it modally
      

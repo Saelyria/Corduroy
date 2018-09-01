@@ -74,14 +74,25 @@ public struct PresentMethod {
     public let presentHandler: (_ context: PresentContext) -> Void
     /// The closure called when a view controller should be dismissed that used this present method to be presented.
     public let dismissHandler: (_ context: DismissContext) -> Void
+    /// The name for this present method. This should be a human-readable string that can be used to identify the
+    /// present method, especially for debugging.
+    public let name: String
     
-    public init(shouldAutomaticallyEmbedNavigationControllers: Bool = true,
+    public init(name: String,
+                shouldAutomaticallyEmbedNavigationControllers: Bool = true,
                 presentHandler: @escaping (_ context: PresentContext) -> Void,
                 dismissHandler: @escaping (_ context: DismissContext) -> Void)
     {
+        self.name = name
         self.shouldAutomaticallyEmbedNavigationControllers = shouldAutomaticallyEmbedNavigationControllers
         self.presentHandler = presentHandler
         self.dismissHandler = dismissHandler
+    }
+}
+
+extension PresentMethod: CustomDebugStringConvertible {
+    public var debugDescription: String {
+        return "PresentMethod.\(self.name)"
     }
 }
 
@@ -91,6 +102,7 @@ public extension PresentMethod {
      */
     public static func switchingToTab(on tabBarCoordinator: TabBarCoordinator) -> PresentMethod {
         return PresentMethod(
+            name: "switchingToTab(on:)",
             presentHandler: { (context: PresentContext) in
                 
         },
@@ -106,6 +118,7 @@ public extension PresentMethod {
      presented `TabCoordinator` and have the tab bar coordinator switch to it.
      */
     public static let switchingToTab: PresentMethod = PresentMethod(
+        name: "switchingToTab",
         presentHandler: { (context: PresentContext) in
             
     },
@@ -119,6 +132,7 @@ public extension PresentMethod {
      controller.
      */
     public static let pushing: PresentMethod = PresentMethod(
+        name: "pushing",
         shouldAutomaticallyEmbedNavigationControllers: false,
         presentHandler: { (context: PresentContext) in
             let animate = context.parameters.animateTransition
@@ -136,6 +150,7 @@ public extension PresentMethod {
      and transition styles given in the navigation's parameters.
      */
     public static let modallyPresenting: PresentMethod = PresentMethod(
+        name: "modallyPresenting",
         presentHandler: { (context) in
             let vc = context.viewControllerToPresent
             let animate = context.parameters.animateTransition
@@ -149,7 +164,9 @@ public extension PresentMethod {
 }
 
 internal extension PresentMethod {
-    static let addingAsRoot: PresentMethod = PresentMethod(presentHandler: { (context) in
-        context.navigator.window.rootViewController = context.viewControllerToPresent
-    }, dismissHandler: { _ in })
+    static let addingAsRoot: PresentMethod = PresentMethod(
+        name: "addingAsRoot",
+        presentHandler: { (context) in
+            context.navigator.window.rootViewController = context.viewControllerToPresent
+        }, dismissHandler: { _ in })
 }

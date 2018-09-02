@@ -39,7 +39,7 @@ class NavigatorGoBackTests: XCTestCase {
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
         expect(self.navigator.coordinators[1]).to(be(secondCoordinator))
 
-        expect(thirdCoordinator.onDismissalCallCount).to(equal(1))
+        expect(thirdCoordinator.didDismissCallCount).to(equal(1))
     }
 
     // Test that the navigator's `goBack(to:)` method pops the correct coordinators on its way back to the specified coordinator
@@ -64,9 +64,9 @@ class NavigatorGoBackTests: XCTestCase {
         expect(self.navigator.coordinators).to(haveCount(1))
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
 
-        expect(secondCoordinator.onDismissalCallCount).to(equal(1))
-        expect(thirdCoordinator.onDismissalCallCount).to(equal(1))
-        expect(fourthCoordinator.onDismissalCallCount).to(equal(1))
+        expect(secondCoordinator.didDismissCallCount).to(equal(1))
+        expect(thirdCoordinator.didDismissCallCount).to(equal(1))
+        expect(fourthCoordinator.didDismissCallCount).to(equal(1))
     }
 
     // Test that the navigator's `goBack(toLast:)` method pops the right number of coordinators on its way back to the last
@@ -105,8 +105,8 @@ class NavigatorGoBackTests: XCTestCase {
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
         expect(self.navigator.coordinators[1]).to(be(secondCoordinator))
 
-        expect(thirdCoordinator.onDismissalCallCount).to(equal(1))
-        expect(fourthCoordinator.onDismissalCallCount).to(equal(1))
+        expect(thirdCoordinator.didDismissCallCount).to(equal(1))
+        expect(fourthCoordinator.didDismissCallCount).to(equal(1))
 
         // pop
         navigator.goBack(toLast: TestCoordinator.self)
@@ -114,7 +114,7 @@ class NavigatorGoBackTests: XCTestCase {
         expect(self.navigator.coordinators).to(haveCount(1))
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
 
-        expect(secondCoordinator.onDismissalCallCount).to(equal(1))
+        expect(secondCoordinator.didDismissCallCount).to(equal(1))
     }
 
     // Test that the navigation controller view controller stack and navigation item stack remain aligned when using the
@@ -172,7 +172,7 @@ class NavigatorGoBackTests: XCTestCase {
         expect(self.navigator.coordinators).to(haveCount(1))
         expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
 
-        expect(secondCoordinator.onDismissalCallCount).to(equal(1))
+        expect(secondCoordinator.didDismissCallCount).to(equal(1))
     }
 
     // Test that the navigation controller view controller stack and navigation item stack remain aligned when the nav
@@ -226,10 +226,10 @@ class NavigatorGoBackTests: XCTestCase {
         expect(navController?.viewControllers[1]).to(be(secondVC))
         expect(navController?.viewControllers[2]).to(be(thirdVC))
         
-        expect(fourthCoordinator.onDismissalCallCount).to(equal(1))
-        expect(thirdCoordinator.onDismissalCallCount).to(equal(0))
-        expect(secondCoordinator.onDismissalCallCount).to(equal(0))
-        expect(firstCoordinator.onDismissalCallCount).to(equal(0))
+        expect(fourthCoordinator.didDismissCallCount).to(equal(1))
+        expect(thirdCoordinator.didDismissCallCount).to(equal(0))
+        expect(secondCoordinator.didDismissCallCount).to(equal(0))
+        expect(firstCoordinator.didDismissCallCount).to(equal(0))
 
         // pop
         navController?.popToRootViewController(animated: false)
@@ -240,9 +240,9 @@ class NavigatorGoBackTests: XCTestCase {
         expect(navController?.viewControllers).to(haveCount(1))
         expect(navController?.viewControllers[0]).to(be(firstVC))
 
-        expect(fourthCoordinator.onDismissalCallCount).to(equal(1))
-        expect(thirdCoordinator.onDismissalCallCount).to(equal(1))
-        expect(secondCoordinator.onDismissalCallCount).to(equal(1))
-        expect(firstCoordinator.onDismissalCallCount).to(equal(0))
+        expect(fourthCoordinator.didDismissCallCount).to(equal(1))
+        expect(thirdCoordinator.didDismissCallCount).to(equal(1))
+        expect(secondCoordinator.didDismissCallCount).to(equal(1))
+        expect(firstCoordinator.didDismissCallCount).to(equal(0))
     }
 }

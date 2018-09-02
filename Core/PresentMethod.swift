@@ -17,9 +17,8 @@ import UIKit
  
  `PresentMethod` instances are the verbs given to the navigator when going to a new coordinator. Custom present methods
  can be created by adding an extension on `PresentMethod` with a new static `PresentMethod` property. It is recommended
- that you name your custom present methods be named using a verb in the gerund form (e.g. `pushing`, `switching`, etc).
- This would look something like this:
- 
+ that your custom present methods be named using a verb in the gerund form (e.g. `pushing`, `switching`, etc). This
+ would look something like this:
  ```
  extension PresentMethod {
     static let usingMyCoolAnimation = PresentMethod(
@@ -98,52 +97,30 @@ extension PresentMethod: CustomDebugStringConvertible {
 
 public extension PresentMethod {
     /**
+     A present method that pushes a view controller in a navigation controller.
      
-     */
-    public static func switchingToTab(on tabBarCoordinator: TabBarCoordinator) -> PresentMethod {
-        return PresentMethod(
-            name: "switchingToTab(on:)",
-            presentHandler: { (context: PresentContext) in
-                
-        },
-            dismissHandler: { (context: DismissContext) in
-                
-        })
-    }
-    
-    /**
-     A present method that displays a tabbed view controller by switching to its tab. The view controller must be setup
-     as one of the root view controllers managed by a `UITabBarController`/`TabBarCoordinator`. When this present method
-     is used, the navigator will search its navigation stack for the last presented `TabBarCoordinator` that has the
-     presented `TabCoordinator` and have the tab bar coordinator switch to it.
-     */
-    public static let switchingToTab: PresentMethod = PresentMethod(
-        name: "switchingToTab",
-        presentHandler: { (context: PresentContext) in
-            
-    },
-        dismissHandler: { (context: DismissContext) in
-            
-    })
-    
-    /**
-     A present method that pushes a view controller in a navigation controller. Use of this method assumes that the
-     current view controller that the new view controller is being pushed from is already contained in a navigation
-     controller.
+     Use of this method assumes that the current view controller that the new view controller is being pushed from is
+     already contained in a navigation controller.
      */
     public static let pushing: PresentMethod = PresentMethod(
         name: "pushing",
         shouldAutomaticallyEmbedNavigationControllers: false,
         presentHandler: { (context: PresentContext) in
+            if context.currentViewController?.navigationController == nil {
+                print("""
+                    WARNING: Unable to push \(String(describing: context.viewControllerToPresent)); the previous view
+                    controller was not in a navigation controller.
+                """)
+            }
             let animate = context.parameters.animateTransition
             let vc = context.viewControllerToPresent
             context.currentViewController?.navigationController?.pushViewController(vc, animated: animate)
-    },
+        },
         dismissHandler: { (context: DismissContext) in
             let animate = context.parameters.animateTransition
             let navController = context.viewControllerToDismiss.navigationController
             navController?.popViewController(animated: animate)
-    })
+        })
     
     /**
      A present method that modally presents a view controller. This presents the view controller using the presentation
@@ -157,10 +134,10 @@ public extension PresentMethod {
             vc.modalPresentationStyle = context.parameters.modalPresentationStyle
             vc.modalTransitionStyle = context.parameters.modalTransitionStyle
             context.currentViewController?.present(vc, animated: animate, completion: nil)
-    }, dismissHandler: { (context) in
-        let animate = context.parameters.animateTransition
-        context.previousViewController.dismiss(animated: animate, completion: nil)
-    })
+        }, dismissHandler: { (context) in
+            let animate = context.parameters.animateTransition
+            context.previousViewController.dismiss(animated: animate, completion: nil)
+        })
 }
 
 internal extension PresentMethod {

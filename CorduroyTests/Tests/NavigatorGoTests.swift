@@ -89,21 +89,32 @@ class NavigatorGoTests: XCTestCase {
         let firstVC = TestEmbeddedViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstVC)
         let navController = firstVC.navigationController
+        expect(firstCoordinator.didBecomeActiveCallCount).to(equal(1))
+        expect(firstCoordinator.didBecomeInactiveCallCount).to(equal(0))
         
         let secondVC = TestEmbeddedViewController()
         var secondCoordinator: TestCoordinator!
         navigator.go(to: TestCoordinator.self, by: .pushing, with: secondVC, parameters: .noAnimation)
             .configureCoordinator { secondCoordinator = $0 }
+        expect(secondCoordinator.didBecomeActiveCallCount).to(equal(1))
+        expect(secondCoordinator.didBecomeInactiveCallCount).to(equal(0))
+        expect(firstCoordinator.didBecomeInactiveCallCount).to(equal(1))
         
         let thirdVC = TestViewController()
         var thirdCoordinator: TestCoordinatorStringSetup!
         navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (thirdVC, ""), parameters: .noAnimation)
             .configureCoordinator { thirdCoordinator = $0 }
+        expect(thirdCoordinator.didBecomeActiveCallCount).to(equal(1))
+        expect(thirdCoordinator.didBecomeInactiveCallCount).to(equal(0))
+        expect(secondCoordinator.didBecomeInactiveCallCount).to(equal(1))
         
         let fourthVC = TestViewController()
         var fourthCoordinator: TestCoordinator!
         navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: fourthVC, parameters: .noAnimation)
             .configureCoordinator { fourthCoordinator = $0 }
+        expect(fourthCoordinator.didBecomeActiveCallCount).to(equal(1))
+        expect(fourthCoordinator.didBecomeInactiveCallCount).to(equal(0))
+        expect(thirdCoordinator.didBecomeInactiveCallCount).to(equal(1))
 
         // check the navigator coordinator stack
         expect(self.navigator.coordinators).to(haveCount(4))
@@ -121,6 +132,10 @@ class NavigatorGoTests: XCTestCase {
         expect(secondCoordinator.presentFirstVCCallCount).to(equal(1))
         expect(thirdCoordinator.presentFirstVCCallCount).to(equal(1))
         expect(fourthCoordinator.presentFirstVCCallCount).to(equal(1))
+        expect(firstCoordinator.didDismissCallCount).to(equal(0))
+        expect(secondCoordinator.didDismissCallCount).to(equal(0))
+        expect(thirdCoordinator.didDismissCallCount).to(equal(0))
+        expect(fourthCoordinator.didDismissCallCount).to(equal(0))
         
         // check coordinator and view controller relationships
         expect(firstVC.coordinator).to(be(firstCoordinator))

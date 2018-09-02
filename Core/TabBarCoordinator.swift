@@ -84,8 +84,8 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
     // internal jagged array representing the current navigation stack for each tabbed coordinator. TabBarCoordinators
     // are 'sub-navigating', meaning they manage a portion of the full navigation stack and report the current portion
     // to their navigator when asked.
-    internal var stackForTabCoordinator: [[NavStackItem]] = []
-    internal var managedNavigationStack: [NavStackItem] {
+    internal var stackForTabCoordinator: [[Navigation]] = []
+    internal var managedNavigationStack: [Navigation] {
         return self.stackForTabCoordinator[self.activeTabCoordinatorIndex]
     }
     
@@ -114,7 +114,7 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
         self.activeTabCoordinator.didBecomeActive(context: context)
     }
     
-    public func `switch`<T: TabCoordinator>(to tabCoordinator: T.Type) {
+    internal func `switch`<T: TabCoordinator>(to tabCoordinator: T.Type) {
         guard let index = self.tabCoordinators.firstIndex(where: { $0 is T }) else {
             assertionFailure("The tab bar coordinator was not setup with an instance of the given TabCoordinator type to switch to.")
             return

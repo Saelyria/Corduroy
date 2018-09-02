@@ -5,7 +5,7 @@ import UIKit
  Describes an object (a coordinator specifically) that manages a subset of the app's navigation stack.
  */
 internal protocol SubNavigating {
-    var managedNavigationStack: [NavStackItem] { get }
+    var managedNavigationStack: [Navigation] { get }
 }
 
 
@@ -50,7 +50,7 @@ public class Navigator {
     public private(set) var window: UIWindow!
 
     /// The active navigation stack.
-    public var navigationStack: [NavStackItem] = []
+    public var navigationStack: [Navigation] = []
     private var hasStarted: Bool = false
     
     // There's no reliable way to determine whether a back navigation from a UINavigationController was started by it
@@ -103,10 +103,11 @@ public class Navigator {
         self.window = window
         
         let firstCoordinator = firstCoordinator.create(with: model, navigator: self)
-        let stackItem = NavStackItem(coordinator: firstCoordinator, presentMethod: .addingAsRoot, canBeNavigatedBackTo: true)
+        let stackItem = Navigation(coordinator: firstCoordinator, presentMethod: .addingAsRoot, canBeNavigatedBackTo: true)
         self.navigationStack.append(stackItem)
         let context = NavigationContext(navigator: self, from: firstCoordinator, to: firstCoordinator, by: .addingAsRoot, params: NavigationParameters())
         firstCoordinator.presentViewController(context: context)
+        firstCoordinator.didBecomeActive(context: context)
         
         return firstCoordinator
     }
@@ -136,6 +137,7 @@ public class Navigator {
     parameters: NavigationParameters = NavigationParameters()) -> NavigationResult<T> {
         return self.go(to: coordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { coordinator, context in
             coordinator.presentViewController(context: context)
+            coordinator.didBecomeActive(context: context)
         })
     }
     
@@ -167,6 +169,7 @@ public class Navigator {
     parameters: NavigationParameters = NavigationParameters(), flowCompletion: @escaping (Error?, T.FlowResult?) -> Void) -> NavigationResult<T> {
         return self.go(to: flowCoordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { flowCoordinator, context in
             flowCoordinator.presentFirstViewController(context: context, flowCompletion: flowCompletion)
+            flowCoordinator.didBecomeActive(context: context)
         })
     }
     
@@ -201,7 +204,7 @@ public class Navigator {
                     if let error = error {
                         navResult.preconditonError = error
                     } else {
-                        let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
+                        let stackItem = Navigation(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
                         self.navigationStack.append(stackItem)
                         navResult.coordinator = coordinator
                     }
@@ -225,12 +228,21 @@ public class Navigator {
         
         // otherwise, just add the coordinator to the stack and let the nav result object go out of scope to call present
         else {
-            let stackItem = NavStackItem(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
+            let stackItem = Navigation(coordinator: coordinator, presentMethod: navMethod, canBeNavigatedBackTo: true)
             self.navigationStack.append(stackItem)
             navResult.coordinator = coordinator
         }
         
         return navResult
+    }
+    
+    // MARK: Tab bar navigation methods
+    
+    /**
+     Switch to the tab managed by the given `TabCoordinator`.
+    */
+    public func `switch`<T: TabCoordinator>(toTabFor tabCoordinator: T, on tabBarCoordinator: TabBarCoordinator? = nil) {
+        
     }
     
     // MARK: Backwards navigation methods
@@ -324,7 +336,7 @@ public class Navigator {
             if self.navigationStack.last!.viewControllersAndPresentMethods.isEmpty {
                 let coordinatorToRemove: BaseCoordinator = self.navigationStack.last!.coordinator
                 
-                let navStackItem: NavStackItem = self.navigationStack.last!
+                let navStackItem: Navigation = self.navigationStack.last!
                 let previousCoordinator: BaseCoordinator
                 if index > 0 {
                     previousCoordinator = self.navigationStack[index-1].coordinator
@@ -374,10 +386,6 @@ public class Navigator {
     
     /**
      Evaluate the preconditions on a given coordinator.
-     - parameter coordinator: The coordinator whose preconditions need to be evaluated.
-     - parameter context: The full context of the navigation.
-     - parameter completion: The completion to call when all preconditions have been evaluated.
-     - returns: A boolean indicating whether an asynchronous recovery for a precondition is required.
      */
     private func evaluatePreconditions(on coordinator: NavigationPreconditionRequiring, context: NavigationContext,
     completion: @escaping (Error?) -> Void) -> [PreconditionRecoveryMethod] {

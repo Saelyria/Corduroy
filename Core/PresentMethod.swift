@@ -146,4 +146,9 @@ internal extension PresentMethod {
         presentHandler: { (context) in
             context.navigator.window.rootViewController = context.viewControllerToPresent
         }, dismissHandler: { _ in })
+    
+    static let switchingToTab: PresentMethod = PresentMethod(
+        name: "switchingToTab",
+        presentHandler: { _ in },
+        dismissHandler: { _ in })
 }

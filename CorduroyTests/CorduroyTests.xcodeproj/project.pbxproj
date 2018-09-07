@@ -17,6 +17,7 @@
 		9353956D201D5027005F584E /* TestCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353956A201D5026005F584E /* TestCoordinators.swift */; };
 		9353956E201D502B005F584E /* TestFlowCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539568201D5026005F584E /* TestFlowCoordinators.swift */; };
 		9384A44F201D41EF00B9AFE7 /* Corduroy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 9384A44E201D41E000B9AFE7 /* Corduroy.framework */; };
+		AB6762F22140EA27005C3A0F /* TestTabCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6762F12140EA27005C3A0F /* TestTabCoordinators.swift */; };
 		AB82E89D213A373200FDCE50 /* Nimble.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = AB82E896213A36FC00FDCE50 /* Nimble.framework */; };
 /* End PBXBuildFile section */
 
@@ -107,6 +108,7 @@
 		93539569201D5026005F584E /* TestPreconditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPreconditions.swift; sourceTree = "<group>"; };
 		9353956A201D5026005F584E /* TestCoordinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCoordinators.swift; sourceTree = "<group>"; };
 		9384A449201D41E000B9AFE7 /* Corduroy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Corduroy.xcodeproj; path = ../Corduroy.xcodeproj; sourceTree = "<group>"; };
+		AB6762F12140EA27005C3A0F /* TestTabCoordinators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTabCoordinators.swift; sourceTree = "<group>"; };
 		AB82E887213A36FB00FDCE50 /* Nimble.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Nimble.xcodeproj; path = NImble/Nimble.xcodeproj; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
@@ -180,6 +182,7 @@
 				9353956A201D5026005F584E /* TestCoordinators.swift */,
 				93539568201D5026005F584E /* TestFlowCoordinators.swift */,
 				93539569201D5026005F584E /* TestPreconditions.swift */,
+				AB6762F12140EA27005C3A0F /* TestTabCoordinators.swift */,
 			);
 			path = "Test Objects";
 			sourceTree = "<group>";
@@ -263,10 +266,12 @@
 				TargetAttributes = {
 					934847E2201D34F50032332E = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 					};
 					93539558201D4FF6005F584E = {
 						CreatedOnToolsVersion = 9.2;
+						LastSwiftMigration = 1000;
 						ProvisioningStyle = Automatic;
 						TestTargetID = 934847E2201D34F50032332E;
 					};
@@ -391,6 +396,7 @@
 				9353956D201D5027005F584E /* TestCoordinators.swift in Sources */,
 				93539565201D5020005F584E /* NavigationContextTests.swift in Sources */,
 				934936A2201E9F8C005106FE /* NavigatorGoTests.swift in Sources */,
+				AB6762F22140EA27005C3A0F /* TestTabCoordinators.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
@@ -535,7 +541,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.CorduroyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Debug;
@@ -552,7 +558,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.CorduroyTests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 			};
 			name = Release;
@@ -569,7 +575,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CorduroyTests.app/CorduroyTests";
 			};
@@ -587,7 +593,7 @@
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks @loader_path/Frameworks";
 				PRODUCT_BUNDLE_IDENTIFIER = com.AaronBosnjak.Tests;
 				PRODUCT_NAME = "$(TARGET_NAME)";
-				SWIFT_VERSION = 4.0;
+				SWIFT_VERSION = 4.2;
 				TARGETED_DEVICE_FAMILY = "1,2";
 				TEST_HOST = "$(BUILT_PRODUCTS_DIR)/CorduroyTests.app/CorduroyTests";
 			};

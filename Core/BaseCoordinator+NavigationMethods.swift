@@ -18,8 +18,9 @@ public extension BaseCoordinator {
      - parameter parameters: Additional navigation parameters. Optional.
      */
     func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
+        // if the present method used isn't a navigation push, put the VC in a nav controller if it expects to be
         var vcToPresent: UIViewController = toVC
-        if let toVC = toVC as? UIViewController & NavigationControllerEmbedded, presentMethod.shouldAutomaticallyEmbedNavigationControllers {
+        if let toVC = toVC as? UIViewController & NavigationControllerEmbedded, presentMethod.style != .navigationControllerPush {
             let navController = toVC.createNavigationController()
             if navController.viewControllers.first !== toVC {
                 navController.viewControllers = [toVC]

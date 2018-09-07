@@ -60,36 +60,52 @@ public struct PresentMethod {
         public let parameters: NavigationParameters
     }
     
-    /**
-     Whether the view controller being presented should be embedded in a `UINavigationController` if it conforms to
-     `NavigationControllerEmbedded`. If the present method embeds the view controller in a navigation controller
-     itself or if it is expected to already be in one (such as for the `pushing` present method), this should be set
-     to false to ensure Corduroy doesn't try to embed a view controller already in a navigation controller. Otherwise,
-     it should be left as true.
-     */
-    public let shouldAutomaticallyEmbedNavigationControllers: Bool
+    /// An enum that describes the underlying UIKit method that a present method uses to display new view controllers.
+    public enum Style {
+        /// The present method uses a 'modal presentation' (the `UIViewController.present(_:animated:completion)` method
+        /// is called somewhere) to present the view controller.
+        case modalPresentation
+        /// The present method uses a 'navigation push' (the `UINavigationController.pushViewController(_:animated:)`
+        /// method is called somewhere) to present the view controller.
+        case navigationControllerPush
+        /// The present method displays the view controller by adding it as the `rootViewController` on a `UIWindow`.
+        case addAsWindowRootViewController
+        /// The present method displays the view controller by switching to its tab on a `UITabBarController`.
+        case tabBarControllerTabSwitch
+    }
+    
+    /// The name for this present method. This should be a human-readable string that can be used to identify the
+    /// present method, especially for debugging.
+    public let name: String
     /// The closure called when this present method is used to navigate to a new coordinator that presents the given
     /// view controller.
     public let presentHandler: (_ context: PresentContext) -> Void
     /// The closure called when a view controller should be dismissed that used this present method to be presented.
     public let dismissHandler: (_ context: DismissContext) -> Void
-    /// The name for this present method. This should be a human-readable string that can be used to identify the
-    /// present method, especially for debugging.
-    public let name: String
+    /// The UIKit method that this present method uses to display a view controller.
+    public let style: Style
     
     public init(name: String,
-                shouldAutomaticallyEmbedNavigationControllers: Bool = true,
+                style: Style,
                 presentHandler: @escaping (_ context: PresentContext) -> Void,
                 dismissHandler: @escaping (_ context: DismissContext) -> Void)
     {
         self.name = name
-        self.shouldAutomaticallyEmbedNavigationControllers = shouldAutomaticallyEmbedNavigationControllers
+        self.style = style
         self.presentHandler = presentHandler
         self.dismissHandler = dismissHandler
     }
 }
 
-extension PresentMethod: CustomDebugStringConvertible {
+extension PresentMethod: CustomDebugStringConvertible, Hashable {
+    public static func == (lhs: PresentMethod, rhs: PresentMethod) -> Bool {
+        return lhs.name == rhs.name
+    }
+    
+    public var hashValue: Int {
+        return self.name.hashValue
+    }
+    
     public var debugDescription: String {
         return "PresentMethod.\(self.name)"
     }
@@ -104,7 +120,7 @@ public extension PresentMethod {
      */
     public static let pushing: PresentMethod = PresentMethod(
         name: "pushing",
-        shouldAutomaticallyEmbedNavigationControllers: false,
+        style: .navigationControllerPush,
         presentHandler: { (context: PresentContext) in
             if context.currentViewController?.navigationController == nil {
                 print("""
@@ -128,6 +144,7 @@ public extension PresentMethod {
      */
     public static let modallyPresenting: PresentMethod = PresentMethod(
         name: "modallyPresenting",
+        style: .modalPresentation,
         presentHandler: { (context) in
             let vc = context.viewControllerToPresent
             let animate = context.parameters.animateTransition
@@ -143,12 +160,14 @@ public extension PresentMethod {
 internal extension PresentMethod {
     static let addingAsRoot: PresentMethod = PresentMethod(
         name: "addingAsRoot",
+        style: .addAsWindowRootViewController,
         presentHandler: { (context) in
             context.navigator.window.rootViewController = context.viewControllerToPresent
         }, dismissHandler: { _ in })
     
     static let switchingToTab: PresentMethod = PresentMethod(
         name: "switchingToTab",
+        style: .tabBarControllerTabSwitch,
         presentHandler: { _ in },
         dismissHandler: { _ in })
 }

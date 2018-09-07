@@ -10,13 +10,11 @@ import UIKit
 public class Navigation {
     public let coordinator: BaseCoordinator
     public let presentMethod: PresentMethod
-    public let canBeNavigatedBackTo: Bool
     public var viewControllersAndPresentMethods: [(vc: UIViewController, presentMethod: PresentMethod)] = []
     
-    public init(coordinator: BaseCoordinator, presentMethod: PresentMethod, canBeNavigatedBackTo: Bool) {
+    public init(coordinator: BaseCoordinator, presentMethod: PresentMethod) {
         self.coordinator = coordinator
         self.presentMethod = presentMethod
-        self.canBeNavigatedBackTo = canBeNavigatedBackTo
     }
 }
 

@@ -66,7 +66,6 @@ public extension TabCoordinator where Self: UIViewController {
  create a `UITabBarController` itself.
  */
 public final class TabBarCoordinator: Coordinator, SubNavigating {
-    public typealias SetupModel = (tabCoordinators: [TabCoordinator.Type], tabController: UITabBarController?)
     /// The tab bar coordinator's navigator.
     public var navigator: Navigator!
     /// The tab bar controller given to the coordinator through its setup model that it coordinates.
@@ -75,43 +74,63 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
     public private(set) var tabCoordinators: [TabCoordinator] = []
     
     /// The index in the `tabCoordinators` array for the currently active tab coordinator.
-    public var activeTabCoordinatorIndex: Int {
+    public var selectedIndex: Int {
         return self.tabBarController.selectedIndex
     }
     /// The `TabCoordinator` child that is coordinating the active tabbed view controller currently being displayed.
-    public private(set) var activeTabCoordinator: TabCoordinator!
+    public var activeTabCoordinator: TabCoordinator {
+        return self.tabCoordinators[self.selectedIndex]
+    }
     
     // internal jagged array representing the current navigation stack for each tabbed coordinator. TabBarCoordinators
     // are 'sub-navigating', meaning they manage a portion of the full navigation stack and report the current portion
-    // to their navigator when asked.
+    // to their navigator when asked. The 'portion' that they report is the stack corresponding to the currently
+    // selected tab.
     internal var stackForTabCoordinator: [[Navigation]] = []
-    internal var managedNavigationStack: [Navigation] {
-        return self.stackForTabCoordinator[self.activeTabCoordinatorIndex]
+    internal var navigationStack: [Navigation] {
+        return self.stackForTabCoordinator[self.selectedIndex]
     }
     
     public static func create(with model: SetupModel, navigator: Navigator) -> TabBarCoordinator {
         let coordinator = TabBarCoordinator()
         coordinator.navigator = navigator
         
-        guard model.tabCoordinators.isEmpty == false else {
-            assertionFailure("A TabBarCoordinator must be given at least one TabCoordinator.")
-            return coordinator
+        guard model.tabCoordinatorTypes.isEmpty == false else {
+            fatalError("A TabBarCoordinator must be given at least one TabCoordinator.")
         }
         
-        coordinator.tabBarController = model.tabController ?? UITabBarController()
-        coordinator.tabCoordinators = model.tabCoordinators.map({ $0.create(tabBarCoordinator: coordinator, navigator: navigator) })
-        coordinator.tabCoordinators.forEach({ $0.tabBarCoordinator = coordinator })
-        let viewControllers = coordinator.tabCoordinators.map({ $0.createViewController() })
+        coordinator.tabBarController = model.tabBarController ?? UITabBarController()
+        var viewControllers: [UIViewController] = []
+        for tabCoordinatorType in model.tabCoordinatorTypes {
+            let tabCoordinator: TabCoordinator = tabCoordinatorType.create(tabBarCoordinator: coordinator, navigator: navigator)
+            let viewController: UIViewController = tabCoordinator.createViewController()
+            viewControllers.append(viewController)
+            let navigation = Navigation(coordinator: tabCoordinator, presentMethod: .switchingToTab)
+            coordinator.tabCoordinators.append(tabCoordinator)
+            coordinator.stackForTabCoordinator.append([navigation])
+        }
         coordinator.tabBarController.viewControllers = viewControllers
         coordinator.tabBarController.selectedIndex = 0
-        coordinator.activeTabCoordinator = coordinator.tabCoordinators.first
-        
+
         return coordinator
     }
     
     public func presentViewController(context: NavigationContext) {
         self.present(self.tabBarController, context: context)
         self.activeTabCoordinator.didBecomeActive(context: context)
+    }
+    
+    internal func add(navigation: Navigation) {
+        self.stackForTabCoordinator[self.selectedIndex].append(navigation)
+    }
+    
+    internal func canManage(navigationDescribedBy context: NavigationContext) -> Bool {
+        // view controller presentations that involve adding the presented view controller as a root to the window
+        // cannot logically be handled by a tab bar controller. Modal view controllers cover tab bar controllers, so
+        // a modally presented coordinator should be added as a stack item after anything the tab bar coordinator
+        // manages (i.e. should be managed by the navigator).
+        return context.requestedPresentMethod.style != .addAsWindowRootViewController
+            && context.requestedPresentMethod.style != .modalPresentation
     }
     
     internal func `switch`<T: TabCoordinator>(to tabCoordinator: T.Type) {
@@ -128,10 +147,28 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
             by: .switchingToTab,
             params: NavigationParameters())
         self.activeTabCoordinator.didBecomeInactive(context: context)
-        self.activeTabCoordinator = coordinator
         self.tabBarController.selectedIndex = index
         coordinator.didBecomeActive(context: context)
     }
     
     public init() { }
+}
+
+public extension TabBarCoordinator {
+    public struct SetupModel: ExpressibleByArrayLiteral {
+        public typealias ArrayLiteralElement = TabCoordinator.Type
+        
+        public let tabCoordinatorTypes: [TabCoordinator.Type]
+        public let tabBarController: UITabBarController?
+        
+        public init(arrayLiteral elements: TabCoordinator.Type...) {
+            self.tabCoordinatorTypes = elements
+            self.tabBarController = nil
+        }
+        
+        public init(tabCoordinators: [TabCoordinator.Type], tabBarController: UITabBarController?) {
+            self.tabCoordinatorTypes = tabCoordinators
+            self.tabBarController = tabBarController
+        }
+    }
 }

@@ -110,16 +110,6 @@ public protocol BaseCoordinator: AnyObject {
     func didDismiss(context: NavigationContext)
 }
 
-//extension AnyObject: Hashable where Self: BaseCoordinator {
-//    var hashValue: Int {
-//        return ObjectIdentifier(self).hashValue
-//    }
-//    
-//    static func == (lhs: BaseCoordinator, rhs: BaseCoordinator) -> Bool {
-//        return ObjectIdentifier(lhs) == ObjectIdentifier(rhs)
-//    }
-//}
-
 public extension BaseCoordinator {
     var coordinatedViewControllers: [UIViewController] {
         let item = self.navigator.navigationStack.last(where: { $0.coordinator === self })

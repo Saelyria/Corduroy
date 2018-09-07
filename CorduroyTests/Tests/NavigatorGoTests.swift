@@ -154,7 +154,10 @@ class NavigatorGoTests: XCTestCase {
     }
     
     /**
-     Test that the navigator's `go(to:)` flow coordinator method produces the expected stack when presenting it modally
+     Test that the navigator's `go(to:)` flow coordinator method produces the expected stack when a coordinator pushes
+     a flow coordinator that uses a navigation controller, a new coordinator is pushed that uses that same navigation
+     controller for its view controller, then a new coordinator is modally presented that starts a new navigation
+     controller.
      
      This is the expected coordinator/view controller stack:
      ___________________________________________________________________________________________________________________________
@@ -230,6 +233,102 @@ class NavigatorGoTests: XCTestCase {
         expect(firstVC.presentedViewController).to(be(firstNavController))
         expect(firstNavController?.presentingViewController).to(be(firstVC))
     }
+    
+    /**
+     Test that the navigator's `go(to:)` flow coordinator method produces the expected stack when presenting it modally
+     
+     This is the expected coordinator/view controller stack:
+     ____________________________________________________________________________________________________________________________
+     | TabCoordinator -(modal)-> | FlowCoordinator->Void           -(push)-> | Coordinator(String)  -(modal)-> | Coordinator    |
+     |---------------------------|-------------------------|-----------------|---------------------------------|----------------|
+     | VC             -(modal)-> | (Nav) _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _   -(modal)-> | (Nav) _ _ _ _  |
+     |                           | EmbeddedVC    -(push)-> | VC    -(push)-> | EmbeddedVC        \             | EmbeddedVC   \ |
+     |---------------------------------------------------------------------------------------------------------------------------
+     ____________________________________________________________________________________________________________________________
+     | TabCoordinator -(modal)-> | FlowCoordinator->Void           -(push)-> | Coordinator(String)  -(modal)-> | Coordinator    |
+     |---------------------------|-------------------------|-----------------|---------------------------------|----------------|
+     | VC             -(modal)-> | (Nav) _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _   -(modal)-> | (Nav) _ _ _ _  |
+     |                           | EmbeddedVC    -(push)-> | VC    -(push)-> | EmbeddedVC        \             | EmbeddedVC   \ |
+     |---------------------------------------------------------------------------------------------------------------------------
+     _____________________________
+     | TabCoordinator            |
+     |---------------------------|
+     | VC                        |
+     |                           |
+     |----------------------------
+     */
+    func testTabBarCoordinatorStack() {
+//        let tabBarController = UITabBarController()
+//        let firstCoordinator = navigator.start(onWindow: window,
+//                                               firstCoordinator: TabBarCoordinator.self,
+//                                               with: (tabCoordinators: [TestTabCoordinator1.self,
+//                                                                        TestTabCoordinator2.self,
+//                                                                        TestTabCoordinator3.self],
+//                                                      tabController: tabBarController))
+//        
+//        let secondVC = TestEmbeddedViewController()
+//        var secondCoordinator: TestFlowCoordinatorVoidCompletionModel!
+//        navigator.go(to: TestFlowCoordinatorVoidCompletionModel.self, by: .modallyPresenting, with: secondVC, parameters: .noAnimation, flowCompletion: { _, _ in })
+//            .configureCoordinator { secondCoordinator = $0 }
+//        let firstNavController = secondVC.navigationController
+//        
+//        let thirdVC = TestViewController()
+//        thirdVC.coordinator = secondCoordinator
+//        secondCoordinator.present(thirdVC, by: .pushing, parameters: .noAnimation)
+//        
+//        let fourthVC = TestEmbeddedViewController()
+//        var thirdCoordinator: TestCoordinatorStringSetup!
+//        navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (fourthVC, ""), parameters: .noAnimation)
+//            .configureCoordinator { thirdCoordinator = $0 }
+//        
+//        let fifthVC = TestEmbeddedViewController()
+//        var fourthCoordinator: TestCoordinator!
+//        navigator.go(to: TestCoordinator.self, by: .modallyPresenting, with: fifthVC, parameters: .noAnimation)
+//            .configureCoordinator { fourthCoordinator = $0 }
+//        let secondNavController = fifthVC.navigationController
+//        
+//        // check the navigator coordinator stack
+//        expect(self.navigator.coordinators).to(haveCount(4))
+//        expect(self.navigator.coordinators[0]).to(be(firstCoordinator))
+//        expect(self.navigator.coordinators[1]).to(be(secondCoordinator))
+//        expect(self.navigator.coordinators[2]).to(be(thirdCoordinator))
+//        expect(self.navigator.coordinators[3]).to(be(fourthCoordinator))
+//        
+//        // check lifecycle call counts
+//        expect(firstCoordinator.createCallCount).to(equal(1))
+//        expect(secondCoordinator.createCallCount).to(equal(1))
+//        expect(thirdCoordinator.createCallCount).to(equal(1))
+//        expect(fourthCoordinator.createCallCount).to(equal(1))
+//        expect(firstCoordinator.presentFirstVCCallCount).to(equal(1))
+//        expect(secondCoordinator.presentFirstVCCallCount).to(equal(1))
+//        expect(thirdCoordinator.presentFirstVCCallCount).to(equal(1))
+//        expect(fourthCoordinator.presentFirstVCCallCount).to(equal(1))
+//        
+//        // check coordinator and view controller relationships
+//        expect(firstVC.coordinator).to(be(firstCoordinator))
+//        expect(secondVC.coordinator).to(be(secondCoordinator))
+//        expect(thirdVC.coordinator).to(be(secondCoordinator))
+//        expect(fourthVC.coordinator).to(be(thirdCoordinator))
+//        expect(fifthVC.coordinator).to(be(fourthCoordinator))
+//        
+//        // check view controller relationships to one another
+//        expect(firstNavController).toNot(beNil())
+//        expect(firstNavController?.viewControllers).to(haveCount(3))
+//        expect(secondVC.navigationController).to(be(firstNavController))
+//        expect(thirdVC.navigationController).to(be(firstNavController))
+//        expect(fourthVC.navigationController).to(be(firstNavController))
+//        
+//        expect(secondNavController).toNot(beNil())
+//        expect(secondNavController).toNot(be(firstNavController))
+//        expect(secondNavController?.viewControllers).to(haveCount(1))
+//        expect(fifthVC.navigationController).to(be(secondNavController))
+//        
+//        expect(firstVC).to(be(self.window.rootViewController))
+//        expect(firstVC.navigationController).to(beNil())
+//        expect(firstVC.presentedViewController).to(be(firstNavController))
+//        expect(firstNavController?.presentingViewController).to(be(firstVC))
+    }
+
 
     func testPassingPreconditionStack() {
         let firstVC = TestViewController()

@@ -76,6 +76,7 @@ public class NavigationResult<C: AnyCoordinator> {
      created coordinator's `presentViewController` or `presentFirstViewController` methods, so additional configuration
      of the coordinator can be done in this handler.
      - parameter onCreated: The handler that will be called with the created coordinator.
+     - returns: The navigation result object to optionally add additional handlers.
      */
     @discardableResult
     public func configureCoordinator(_ onCreated: @escaping (C) -> Void) -> NavigationResult<C> {
@@ -93,6 +94,7 @@ public class NavigationResult<C: AnyCoordinator> {
      The passed in handler is called when a precondition fails and was not recoverable. The error from the failed
      precondition is passed into this handler.
      - parameter onFail: The handler that will be called when a precondition fails.
+     - returns: The navigation result object to optionally add additional handlers.
      */
     @discardableResult
     public func onPreconditionFailed(_ onFail: @escaping (Error) -> Void) -> NavigationResult<C> {
@@ -112,6 +114,7 @@ public class NavigationResult<C: AnyCoordinator> {
      when it has started a flow. This handler can be used to indicate to the user that an asynchronous task has started,
      such as displaying a loading indicator.
      - parameter onStarted: The handler that will be called when precondition recovery starts.
+     - returns: The navigation result object to optionally add additional handlers.
      */
     @discardableResult
     public func onPreconditionRecoveryStarted(_ onStarted: @escaping () -> Void) -> NavigationResult<C> {
@@ -126,6 +129,8 @@ public class NavigationResult<C: AnyCoordinator> {
     /**
      Adds a handler to the navigation that is called when an an auxilliary flow coordinator was navigated to attempt
      recovery for a failed precondition.
+     - parameter onStarted: The handler that will be called when a recovery flow has started.
+     - returns: The navigation result object to optionally add additional handlers.
      */
     @discardableResult
     public func onPreconditionFlowStarted(_ onStarted: @escaping () -> Void) -> NavigationResult<C> {

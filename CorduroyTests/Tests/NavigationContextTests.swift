@@ -20,7 +20,7 @@ class NavigationContextTests: XCTestCase {
     }
 
     func testGoToCoordinatorDefaultContext() {
-        let defaultParameters = NavigationParameters()
+        let defaultParameters = [NavigationParameter].defaults
         let firstCoordinatorVC = TestViewController()
         let firstCoordinator = navigator.start(onWindow: window, firstCoordinator: TestCoordinator.self, with: firstCoordinatorVC)
         

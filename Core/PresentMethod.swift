@@ -44,7 +44,7 @@ public struct PresentMethod {
         /// The view controller that the present handler should present.
         public let viewControllerToPresent: UIViewController
         /// The parameters given to the navigator to perform the navigation with.
-        public let parameters: NavigationParameters
+        public let parameters: [NavigationParameter]
     }
     
     /// An object that is passed into a `PresentMethod`'s `dismissHandler` that contains the information that the
@@ -57,7 +57,7 @@ public struct PresentMethod {
         /// The view controller to dismiss.
         public let viewControllerToDismiss: UIViewController
         /// The parameters given to the navigator to perform the navigation with.
-        public let parameters: NavigationParameters
+        public let parameters: [NavigationParameter]
     }
     
     /// An enum that describes the underlying UIKit method that a present method uses to display new view controllers.
@@ -128,12 +128,12 @@ public extension PresentMethod {
                     controller was not in a navigation controller.
                 """)
             }
-            let animate = context.parameters.animateTransition
+            let animate = context.parameters.shouldAnimateTransition
             let vc = context.viewControllerToPresent
             context.currentViewController?.navigationController?.pushViewController(vc, animated: animate)
         },
         dismissHandler: { (context: DismissContext) in
-            let animate = context.parameters.animateTransition
+            let animate = context.parameters.shouldAnimateTransition
             let navController = context.viewControllerToDismiss.navigationController
             navController?.popViewController(animated: animate)
         })
@@ -147,12 +147,12 @@ public extension PresentMethod {
         style: .modalPresentation,
         presentHandler: { (context) in
             let vc = context.viewControllerToPresent
-            let animate = context.parameters.animateTransition
+            let animate = context.parameters.shouldAnimateTransition
             vc.modalPresentationStyle = context.parameters.modalPresentationStyle
             vc.modalTransitionStyle = context.parameters.modalTransitionStyle
             context.currentViewController?.present(vc, animated: animate, completion: nil)
         }, dismissHandler: { (context) in
-            let animate = context.parameters.animateTransition
+            let animate = context.parameters.shouldAnimateTransition
             context.previousViewController.dismiss(animated: animate, completion: nil)
         })
 }

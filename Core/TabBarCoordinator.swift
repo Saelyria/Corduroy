@@ -157,7 +157,7 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
             from: self.activeTabCoordinator,
             to: coordinator,
             by: .switchingToTab,
-            params: NavigationParameters())
+            params: .defaults)
         self.activeTabCoordinator.didBecomeInactive(context: context)
         self.selectedIndex = index
         coordinator.didBecomeActive(context: context)

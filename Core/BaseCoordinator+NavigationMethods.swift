@@ -22,7 +22,7 @@ public extension AnyCoordinator {
      - parameter presentMethod: The presentation method to use (e.g. push or modal present).
      - parameter parameters: Additional navigation parameters. Optional.
      */
-    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
+    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: [NavigationParameter] = .defaults) {
         // if the present method used isn't a navigation push, put the VC in a nav controller if it expects to be
         let vcToPresent: UIViewController = self.embedInNavControllerIfNeeded(toVC, presentMethod: presentMethod)
         
@@ -53,7 +53,7 @@ public extension AnyCoordinator {
      - parameter vc: The view controller to dismiss.
      - parameter parameters: Additional navigation parameters. Optional.
      */
-    func dismiss(_ vc: UIViewController, parameters: NavigationParameters = NavigationParameters()) {
+    func dismiss(_ vc: UIViewController, parameters: [NavigationParameter] = .defaults) {
         let index: Int = self.navigator.navigationStack.count - 2
         guard let (previousVC, presentMethod) = self.navigator.navigationStack[index].viewControllersAndPresentMethods.last else {
             return

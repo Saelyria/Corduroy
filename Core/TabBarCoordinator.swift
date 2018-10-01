@@ -8,7 +8,7 @@ import UIKit
  objects are added as a kind of 'child' coordinator to a managing `TabBarCoordinator`, which is what the navigator will
  use to represent these tabbed 'child' coordinators on its navigation stack.
  */
-public protocol TabCoordinator: BaseCoordinator {
+public protocol TabCoordinator: AnyCoordinator {
     /// The tab bar coordinator object that manages this coordinator.
     var tabBarCoordinator: TabBarCoordinator! { get set }
     

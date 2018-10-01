@@ -1,7 +1,7 @@
 
 import UIKit
 
-public extension BaseCoordinator {
+public extension AnyCoordinator {
     var viewControllers: [UIViewController] {
         guard let navigation: Navigation = self.navigator.navigationStack.filter({ $0.coordinator === self }).first else { return [] }
         return navigation.viewControllersAndPresentMethods.map({ $0.vc })
@@ -70,7 +70,7 @@ public extension BaseCoordinator {
     }
 }
 
-internal extension BaseCoordinator {
+internal extension AnyCoordinator {
     func embedInNavControllerIfNeeded(_ vc: UIViewController, presentMethod: PresentMethod) -> UIViewController {
         var vcToPresent: UIViewController = vc
         if let vc = vc as? UIViewController & NavigationControllerEmbedded, presentMethod.style != .navigationControllerPush {

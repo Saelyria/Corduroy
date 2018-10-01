@@ -26,7 +26,7 @@ import UIKit
  `create(with:navigator:)`. View controllers that are created from a storyboard should always implement their static
  `create` method, as this default implementation simply creates them with their `init(nibName:bundle:)` initializer.
  */
-public protocol Coordinator: BaseCoordinator, SetupModelRequiring {
+public protocol Coordinator: AnyCoordinator, SetupModelRequiring {
     /**
      Called when the coordinator is navigated to. In this method, the coordinator should instantiate its first view
      controller and push/present it from the context's `currentViewController`.
@@ -63,7 +63,7 @@ public extension Coordinator where Self: UIViewController {
  as `Void`, in which case the coordinator starting the flow coordinator can provide a `flowCompletion` block ignoring
  this object.
  */
-public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
+public protocol FlowCoordinator: AnyCoordinator, SetupModelRequiring {
     /// The type of the model object that this flow coordinator will return in its completion containing data about or
     /// as a result of its flow. Defaults to 'Void' if no explicit type is set.
     associatedtype FlowResult = Void
@@ -82,7 +82,7 @@ public protocol FlowCoordinator: BaseCoordinator, SetupModelRequiring {
  A basic protocol that all coordinator types implement. This is mostly used internally and should not be implemented on
  its own - instead, implement one of either `Coordinator`, `FlowCoordinator`, or `SelfCoordinating`.
  */
-public protocol BaseCoordinator: AnyObject {
+public protocol AnyCoordinator: AnyObject {
     /// The navigator managing navigation to this coordinator that it should use to perform navigation to other
     /// coordinators.
     var navigator: Navigator! { get set }
@@ -110,7 +110,7 @@ public protocol BaseCoordinator: AnyObject {
     func didDismiss(context: NavigationContext)
 }
 
-public extension BaseCoordinator {
+public extension AnyCoordinator {
     var coordinatedViewControllers: [UIViewController] {
         let item = self.navigator.navigationStack.last(where: { $0.coordinator === self })
         let vcs: [UIViewController]? = item?.viewControllersAndPresentMethods.map({ return $0.vc })
@@ -148,7 +148,7 @@ public protocol SetupModelRequiring {
     init()
 }
 
-public extension SetupModelRequiring where Self.SetupModel == Void, Self: BaseCoordinator {
+public extension SetupModelRequiring where Self.SetupModel == Void, Self: AnyCoordinator {
     static func create(with model: SetupModel, navigator: Navigator) -> Self {
         let coordinator = Self()
         coordinator.navigator = navigator
@@ -156,7 +156,7 @@ public extension SetupModelRequiring where Self.SetupModel == Void, Self: BaseCo
     }
 }
 
-public extension SetupModelRequiring where Self: UIViewController, Self: BaseCoordinator, Self.SetupModel == Void {
+public extension SetupModelRequiring where Self: UIViewController, Self: AnyCoordinator, Self.SetupModel == Void {
     static func create(with model: SetupModel, navigator: Navigator) -> Self {
         let selfCoordinatingVC = Self(nibName: nil, bundle: nil)
         selfCoordinatingVC.navigator = navigator
@@ -164,7 +164,7 @@ public extension SetupModelRequiring where Self: UIViewController, Self: BaseCoo
     }
 }
 
-public extension SetupModelRequiring where Self: UIStoryboardInitable, Self: BaseCoordinator, Self.SetupModel == Void {
+public extension SetupModelRequiring where Self: UIStoryboardInitable, Self: AnyCoordinator, Self.SetupModel == Void {
     static func create(with model: (), navigator: Navigator) -> Self {
         let selfCoordinatingVC = self.createFromStoryboard()
         selfCoordinatingVC.navigator = navigator

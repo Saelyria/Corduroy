@@ -11,7 +11,7 @@ public typealias RoutableSelfCoordinating = SelfCoordinating & Routable
  In a URL-routed application, coordinators correspond to the path segments in a URL's path (i.e. "home" and "profiles"
  in "/home/profiles" each correspond to a different coordinator in the navigation stack).
  */
-public protocol Routable: BaseCoordinator {
+public protocol Routable: AnyCoordinator {
     static var pathSegment: String { get }
 }
 

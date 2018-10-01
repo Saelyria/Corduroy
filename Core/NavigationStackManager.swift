@@ -8,12 +8,12 @@ import UIKit
  controller is stored with the present method it was presented with.
  */
 public class Navigation {
-    public let coordinator: BaseCoordinator
+    public let coordinator: AnyCoordinator
     public let presentMethod: PresentMethod
     public var viewControllersAndPresentMethods: [(vc: UIViewController, presentMethod: PresentMethod)] = []
     internal let parentCoordinator: SubNavigating?
     
-    internal init(coordinator: BaseCoordinator, presentMethod: PresentMethod, parentCoordinator: SubNavigating?) {
+    internal init(coordinator: AnyCoordinator, presentMethod: PresentMethod, parentCoordinator: SubNavigating?) {
         self.coordinator = coordinator
         self.presentMethod = presentMethod
         self.parentCoordinator = parentCoordinator
@@ -26,7 +26,7 @@ public class Navigation {
 //
 //    private(set) var stack: [NavigationStackItem] = []
 //
-//    func coordinatorDidAppear(_ coordinator: BaseCoordinator) {
+//    func coordinatorDidAppear(_ coordinator: AnyCoordinator) {
 //
 //    }
 //

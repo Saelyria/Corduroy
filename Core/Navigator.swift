@@ -32,15 +32,15 @@ open class Navigator {
     static var useSwizzling: Bool = true
     
     /// The coordinator coordinating the currently shown view controller.
-    public var currentCoordinator: BaseCoordinator {
+    public var currentCoordinator: AnyCoordinator {
         return self.coordinators.last!
     }
     
     /// The current stack of coordinators in historical order of their navigation.
-    public var coordinators: [BaseCoordinator] {
+    public var coordinators: [AnyCoordinator] {
         return self.navigationStack.map({ $0.coordinator })
     }
-    private var previousCoordinator: BaseCoordinator? {
+    private var previousCoordinator: AnyCoordinator? {
         guard self.coordinators.count >= 2 else { return nil }
         return self.coordinators[self.coordinators.count-2]
     }
@@ -195,7 +195,7 @@ open class Navigator {
         })
     }
     
-    private func go<T: BaseCoordinator & SetupModelRequiring>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
+    private func go<T: AnyCoordinator & SetupModelRequiring>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: NavigationParameters, presentBlock: @escaping (T, NavigationContext) -> Void) -> NavigationResult<T> {
         precondition(self.hasStarted, "The navigator hasn't been started - call `start(onWindow:firstCoordinator:with:)` first.")
         
@@ -246,7 +246,7 @@ open class Navigator {
         return navResult
     }
     
-    private func add(coordinator: BaseCoordinator, presentMethod: PresentMethod, context: NavigationContext) {
+    private func add(coordinator: AnyCoordinator, presentMethod: PresentMethod, context: NavigationContext) {
         if let subNavigatingCoordinator = self.navigationStack.last?.parentCoordinator,
         subNavigatingCoordinator.canManage(navigationDescribedBy: context) {
             let navigation = Navigation(coordinator: coordinator, presentMethod: presentMethod, parentCoordinator: subNavigatingCoordinator)
@@ -299,7 +299,7 @@ open class Navigator {
      - parameter coordinatorType: The coordinator type to navigate back to.
      - parameter parameters: Additional navigation parameters. Optional.
      */
-    open func goBack<T: BaseCoordinator>(toLast coordinatorType: T.Type, parameters: NavigationParameters = NavigationParameters()) {
+    open func goBack<T: AnyCoordinator>(toLast coordinatorType: T.Type, parameters: NavigationParameters = NavigationParameters()) {
         let coordinator = self.coordinators.reversed().first(where: { (coordinator) -> Bool in
             return coordinator is T && coordinator !== self.coordinators.last
         })
@@ -313,7 +313,7 @@ open class Navigator {
      - parameter coordinator: The coordinator to navigate back to.
      - parameter parameters: Additional navigation parameters. Optional.
      */
-    open func goBack(to coordinator: BaseCoordinator, parameters: NavigationParameters = NavigationParameters()) {
+    open func goBack(to coordinator: AnyCoordinator, parameters: NavigationParameters = NavigationParameters()) {
         precondition(self.hasStarted, "The navigator hasn't been started - call `start(onWindow:firstCoordinator:with:)` first.")
         
         // start ignoring calls to 'coordinatedNavControllerDidPopCoordinators'. See comment on `shouldIgnoreNavControllerPopRequests`'s declaration.
@@ -324,7 +324,7 @@ open class Navigator {
         for index in stride(from: self.navigationStack.count-1, to: coordinatorIndex, by: -1) {
             let navStackItem = self.navigationStack[index]
 
-            let coordinatorToRemove: BaseCoordinator = navStackItem.coordinator
+            let coordinatorToRemove: AnyCoordinator = navStackItem.coordinator
             let params: NavigationParameters
             if index == coordinatorIndex+1 {
                 params =  parameters
@@ -336,7 +336,7 @@ open class Navigator {
                 navStackItem.coordinator.dismiss(viewController, parameters: params)
             }
             
-            let previousCoordinator: BaseCoordinator
+            let previousCoordinator: AnyCoordinator
             if index > 0 {
                 previousCoordinator = self.navigationStack[index-1].coordinator
             } else {
@@ -372,10 +372,10 @@ open class Navigator {
             
             self.navigationStack.last!.viewControllersAndPresentMethods.removeLast()
             if self.navigationStack.last!.viewControllersAndPresentMethods.isEmpty {
-                let coordinatorToRemove: BaseCoordinator = self.navigationStack.last!.coordinator
+                let coordinatorToRemove: AnyCoordinator = self.navigationStack.last!.coordinator
                 
                 let navStackItem: Navigation = self.navigationStack.last!
-                let previousCoordinator: BaseCoordinator
+                let previousCoordinator: AnyCoordinator
                 if index > 0 {
                     previousCoordinator = self.navigationStack[index-1].coordinator
                 } else {
@@ -394,7 +394,7 @@ open class Navigator {
         }
     }
     
-    internal func viewControllerDidAppear(_ viewController: UIViewController, coordinator: BaseCoordinator, presentMethod: PresentMethod) {
+    internal func viewControllerDidAppear(_ viewController: UIViewController, coordinator: AnyCoordinator, presentMethod: PresentMethod) {
         // The first view controller presented by a sub-navigating coordinator is either a tab bar controller or a split
         // view. We don't want these coordinators or their view controllers to show up in the nav stack, so ignore them.
         guard !(coordinator is SubNavigating) else { return }
@@ -410,7 +410,7 @@ open class Navigator {
         }
     }
 
-    internal func viewControllerDidDisappear(_ viewController: UIViewController, coordinator: BaseCoordinator) {
+    internal func viewControllerDidDisappear(_ viewController: UIViewController, coordinator: AnyCoordinator) {
         if self.shouldIgnoreNavControllerPopRequests {
             return
         }

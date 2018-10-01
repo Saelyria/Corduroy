@@ -31,7 +31,7 @@ public class RoutingNavigator: Navigator {
     var routingDelegates: [Routing] = []
     
     fileprivate typealias NavigationHandler
-        = (_ previousCoordinator: BaseCoordinator?, _ queryItems: [String: String], Routing) throws -> Void
+        = (_ previousCoordinator: AnyCoordinator?, _ queryItems: [String: String], Routing) throws -> Void
     
     private var navHandlersForPathComponents: [String: NavigationHandler] = [:]
     
@@ -188,7 +188,7 @@ public class RoutingNavigator: Navigator {
      - parameter coordinator: The coordinator to navigate back to.
      - parameter parameters: Additional navigation parameters. Optional.
      */
-    public override func goBack(to coordinator: BaseCoordinator, parameters: NavigationParameters = NavigationParameters()) {
+    public override func goBack(to coordinator: AnyCoordinator, parameters: NavigationParameters = NavigationParameters()) {
         super.goBack(to: coordinator, parameters: parameters)
     }
 

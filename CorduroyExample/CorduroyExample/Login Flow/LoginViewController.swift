@@ -1,7 +1,7 @@
 import UIKit
 import Corduroy
 
-protocol LoginViewControllerCoordinator: BaseCoordinator {
+protocol LoginViewControllerCoordinator: AnyCoordinator {
     func loginViewController(_ vc: LoginViewController, didAttemptLoginWithUsername username: String, password: String)
 }
 

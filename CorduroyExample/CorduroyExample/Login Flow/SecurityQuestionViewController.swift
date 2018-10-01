@@ -1,7 +1,7 @@
 import UIKit
 import Corduroy
 
-protocol SecurityQuestionsViewControllerCoordinator: BaseCoordinator {
+protocol SecurityQuestionsViewControllerCoordinator: AnyCoordinator {
     func securityQuestionsViewController(_ vc: LoginViewController, didAttemptLoginWithQuestion question: String, answer: String)
 }
 

@@ -7,9 +7,9 @@ import UIKit
  */
 public struct NavigationContext {
     /// The coordinator being navigated away from.
-    public let fromCoordinator: BaseCoordinator
+    public let fromCoordinator: AnyCoordinator
     /// The coordinator being navigated to.
-    public let toCoordinator: BaseCoordinator
+    public let toCoordinator: AnyCoordinator
     /// The presentation method requested to be used to present the to coordinator's first view controller. Will be
     /// `nil` if the navigation is a dismissal.
     public let requestedPresentMethod: PresentMethod
@@ -18,7 +18,7 @@ public struct NavigationContext {
     /// The navigator handling the navigation.
     public let navigator: Navigator
     
-    internal init(navigator: Navigator, from: BaseCoordinator, to: BaseCoordinator, by: PresentMethod, params: NavigationParameters) {
+    internal init(navigator: Navigator, from: AnyCoordinator, to: AnyCoordinator, by: PresentMethod, params: NavigationParameters) {
         self.navigator = navigator
         self.fromCoordinator = from
         self.toCoordinator = to

@@ -4,7 +4,7 @@ import UIKit
 /**
  Describes a coordinator that has preconditions that must be fulfilled before navigation to it is allowed.
  */
-public protocol NavigationPreconditionRequiring: BaseCoordinator {
+public protocol NavigationPreconditionRequiring: AnyCoordinator {
     /**
      Whether the navigator should sort the preconditions array when evaluating them. If `true`, the navigator will
      evaluate non-asynchronous preconditions (i.e. non-`RecoveringNavigationPrecondition`s) before asynchronous ones in

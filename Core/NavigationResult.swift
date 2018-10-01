@@ -6,7 +6,7 @@ import UIKit
  
  Note: do not hold reference to this object - simply call its various methods for adding callbacks.
  */
-public class NavigationResult<C: BaseCoordinator> {
+public class NavigationResult<C: AnyCoordinator> {
     private var onFail: ((Error) -> Void)?
     private var onRecoveringPreconditionStarted: (() -> Void)?
     private var onFlowRecoveryStarted: (() -> Void)?

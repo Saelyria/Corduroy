@@ -3,7 +3,7 @@ import Nimble
 import Corduroy
 
 class BaseTestController: UIViewController {
-    var coordinator: BaseCoordinator?
+    var coordinator: AnyCoordinator?
 }
 
 class TestViewController: BaseTestController { }

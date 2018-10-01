@@ -11,10 +11,12 @@ public class Navigation {
     public let coordinator: BaseCoordinator
     public let presentMethod: PresentMethod
     public var viewControllersAndPresentMethods: [(vc: UIViewController, presentMethod: PresentMethod)] = []
+    internal let parentCoordinator: SubNavigating?
     
-    public init(coordinator: BaseCoordinator, presentMethod: PresentMethod) {
+    internal init(coordinator: BaseCoordinator, presentMethod: PresentMethod, parentCoordinator: SubNavigating?) {
         self.coordinator = coordinator
         self.presentMethod = presentMethod
+        self.parentCoordinator = parentCoordinator
     }
 }
 

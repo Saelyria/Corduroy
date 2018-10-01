@@ -2,6 +2,11 @@
 import UIKit
 
 public extension BaseCoordinator {
+    var viewControllers: [UIViewController] {
+        guard let navigation: Navigation = self.navigator.navigationStack.filter({ $0.coordinator === self }).first else { return [] }
+        return navigation.viewControllersAndPresentMethods.map({ $0.vc })
+    }
+    
     /**
      Present the given view controller in the style described by the given context.
      - parameter toVC: The view controller to present.
@@ -19,14 +24,7 @@ public extension BaseCoordinator {
      */
     func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: NavigationParameters = NavigationParameters()) {
         // if the present method used isn't a navigation push, put the VC in a nav controller if it expects to be
-        var vcToPresent: UIViewController = toVC
-        if let toVC = toVC as? UIViewController & NavigationControllerEmbedded, presentMethod.style != .navigationControllerPush {
-            let navController = toVC.createNavigationController()
-            if navController.viewControllers.first !== toVC {
-                navController.viewControllers = [toVC]
-            }
-            vcToPresent = navController
-        }
+        let vcToPresent: UIViewController = self.embedInNavControllerIfNeeded(toVC, presentMethod: presentMethod)
         
         let context = PresentMethod.PresentContext(
             navigator: self.navigator,
@@ -69,5 +67,19 @@ public extension BaseCoordinator {
         presentMethod.dismissHandler(context)
         
         self.navigator.viewControllerDidDisappear(vc, coordinator: self)
+    }
+}
+
+internal extension BaseCoordinator {
+    func embedInNavControllerIfNeeded(_ vc: UIViewController, presentMethod: PresentMethod) -> UIViewController {
+        var vcToPresent: UIViewController = vc
+        if let vc = vc as? UIViewController & NavigationControllerEmbedded, presentMethod.style != .navigationControllerPush {
+            let navController = vc.createNavigationController()
+            if navController.viewControllers.first !== vc {
+                navController.viewControllers = [vc]
+            }
+            vcToPresent = navController
+        }
+        return vcToPresent
     }
 }

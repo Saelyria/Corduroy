@@ -9,7 +9,7 @@ import UIKit
  navigating' coordinator, it will attempt to forward all navigations to it while the sub-navigating coordinator reports
  that it can manage the navigation via its `canManager(navigationDescribedBy:)` method.
  */
-internal protocol SubNavigating where Self: BaseCoordinator {
+internal protocol SubNavigating {
     /// The navigations that this coordinator managed on behalf of the navigator.
     var navigationStack: [Navigation] { get }
     
@@ -64,8 +64,9 @@ open class Navigator {
         for navigation in self.navigatorManagedNavigationStack {
             if let subNavigatingCoordinator = navigation.coordinator as? SubNavigating {
                 navigations.append(contentsOf: subNavigatingCoordinator.navigationStack)
+            } else {
+                navigations.append(navigation)
             }
-            navigations.append(navigation)
         }
         return navigations
     }
@@ -124,7 +125,7 @@ open class Navigator {
         self.window = window
         
         let firstCoordinator = firstCoordinator.create(with: model, navigator: self)
-        let stackItem = Navigation(coordinator: firstCoordinator, presentMethod: .addingAsRoot)
+        let stackItem = Navigation(coordinator: firstCoordinator, presentMethod: .addingAsRoot, parentCoordinator: nil)
         self.navigatorManagedNavigationStack.append(stackItem)
         let context = NavigationContext(navigator: self, from: firstCoordinator, to: firstCoordinator, by: .addingAsRoot, params: NavigationParameters())
         firstCoordinator.presentViewController(context: context)
@@ -224,8 +225,7 @@ open class Navigator {
                 if let error = error {
                     navResult.preconditonError = error
                 } else {
-                    let navigation = Navigation(coordinator: coordinator, presentMethod: navMethod)
-                    self.add(navigation: navigation, context: context)
+                    self.add(coordinator: coordinator, presentMethod: navMethod, context: context)
                     navResult.coordinator = coordinator
                 }
             })
@@ -239,19 +239,20 @@ open class Navigator {
         
         // otherwise, just add the coordinator to the stack and let the nav result object go out of scope to call present
         else {
-            let navigation = Navigation(coordinator: coordinator, presentMethod: navMethod)
-            self.add(navigation: navigation, context: context)
+            self.add(coordinator: coordinator, presentMethod: navMethod, context: context)
             navResult.coordinator = coordinator
         }
         
         return navResult
     }
     
-    private func add(navigation: Navigation, context: NavigationContext) {
-        if let subNavigatingCoordinator = self.currentCoordinator as? SubNavigating,
+    private func add(coordinator: BaseCoordinator, presentMethod: PresentMethod, context: NavigationContext) {
+        if let subNavigatingCoordinator = self.navigationStack.last?.parentCoordinator,
         subNavigatingCoordinator.canManage(navigationDescribedBy: context) {
+            let navigation = Navigation(coordinator: coordinator, presentMethod: presentMethod, parentCoordinator: subNavigatingCoordinator)
             subNavigatingCoordinator.add(navigation: navigation)
         } else {
+            let navigation = Navigation(coordinator: coordinator, presentMethod: presentMethod, parentCoordinator: nil)
             self.navigatorManagedNavigationStack.append(navigation)
         }
     }
@@ -264,10 +265,10 @@ open class Navigator {
     open func `switch`<T: TabCoordinator>(toTabFor tabCoordinator: T.Type, on tabBarCoordinator: TabBarCoordinator? = nil) {
         var _tabBarCoordinator: TabBarCoordinator? = tabBarCoordinator
         if _tabBarCoordinator == nil {
-            for i in stride(from: self.navigationStack.count-1, through: 0, by: -1) {
-                let stackItem = self.navigationStack[i]
+            for i in stride(from: self.navigatorManagedNavigationStack.count-1, through: 0, by: -1) {
+                let stackItem = self.navigatorManagedNavigationStack[i]
                 if let lastTabBarCoordinator = stackItem.coordinator as? TabBarCoordinator,
-                lastTabBarCoordinator.tabCoordinators.contains(where: { $0 === tabCoordinator }){
+                lastTabBarCoordinator.tabCoordinators.contains(where: { $0 is T }) {
                     _tabBarCoordinator = lastTabBarCoordinator
                     break
                 }
@@ -394,14 +395,18 @@ open class Navigator {
     }
     
     internal func viewControllerDidAppear(_ viewController: UIViewController, coordinator: BaseCoordinator, presentMethod: PresentMethod) {
+        // The first view controller presented by a sub-navigating coordinator is either a tab bar controller or a split
+        // view. We don't want these coordinators or their view controllers to show up in the nav stack, so ignore them.
+        guard !(coordinator is SubNavigating) else { return }
+        
         guard coordinator === self.currentCoordinator else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
 
         if let navController = viewController as? UINavigationController, let topVC = navController.topViewController {
-            self.navigationStack.last!.viewControllersAndPresentMethods.append((topVC, presentMethod))
+            self.navigationStack.last?.viewControllersAndPresentMethods.append((topVC, presentMethod))
         } else {
-            self.navigationStack.last!.viewControllersAndPresentMethods.append((viewController, presentMethod))
+            self.navigationStack.last?.viewControllersAndPresentMethods.append((viewController, presentMethod))
         }
     }
 

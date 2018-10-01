@@ -75,7 +75,8 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
     
     /// The index in the `tabCoordinators` array for the currently active tab coordinator.
     public var selectedIndex: Int {
-        return self.tabBarController.selectedIndex
+        get { return self.tabBarController.selectedIndex }
+        set { self.tabBarController.selectedIndex = newValue }
     }
     /// The `TabCoordinator` child that is coordinating the active tabbed view controller currently being displayed.
     public var activeTabCoordinator: TabCoordinator {
@@ -104,19 +105,30 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
         for tabCoordinatorType in model.tabCoordinatorTypes {
             let tabCoordinator: TabCoordinator = tabCoordinatorType.create(tabBarCoordinator: coordinator, navigator: navigator)
             let viewController: UIViewController = tabCoordinator.createViewController()
-            viewControllers.append(viewController)
-            let navigation = Navigation(coordinator: tabCoordinator, presentMethod: .switchingToTab)
+            let tabbedVC = coordinator.embedInNavControllerIfNeeded(viewController, presentMethod: .switchingToTab)
+            viewControllers.append(tabbedVC)
             coordinator.tabCoordinators.append(tabCoordinator)
-            coordinator.stackForTabCoordinator.append([navigation])
+            coordinator.stackForTabCoordinator.append([])
         }
         coordinator.tabBarController.viewControllers = viewControllers
-        coordinator.tabBarController.selectedIndex = 0
+        coordinator.selectedIndex = 0
 
         return coordinator
     }
     
     public func presentViewController(context: NavigationContext) {
         self.present(self.tabBarController, context: context)
+        // we wait until presentation to actually populate the 'navigation stack'
+        for (i, tabCoordinator) in self.tabCoordinators.enumerated() {
+            guard let vc = self.tabBarController.viewControllers?[i] else { return }
+            let navigation = Navigation(coordinator: tabCoordinator, presentMethod: .switchingToTab, parentCoordinator: self)
+            if let navController = vc as? UINavigationController {
+                navigation.viewControllersAndPresentMethods.append((vc: navController.topViewController!, presentMethod: .switchingToTab))
+            } else {
+                navigation.viewControllersAndPresentMethods.append((vc: vc, presentMethod: .switchingToTab))
+            }
+            self.stackForTabCoordinator[i].append(navigation)
+        }
         self.activeTabCoordinator.didBecomeActive(context: context)
     }
     
@@ -147,7 +159,7 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
             by: .switchingToTab,
             params: NavigationParameters())
         self.activeTabCoordinator.didBecomeInactive(context: context)
-        self.tabBarController.selectedIndex = index
+        self.selectedIndex = index
         coordinator.didBecomeActive(context: context)
     }
     

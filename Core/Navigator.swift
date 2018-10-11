@@ -416,9 +416,9 @@ open class Navigator {
         guard coordinator === self.currentCoordinator else {
             fatalError("Misalignment of view controllers and coordinators on the nav stack.")
         }
-        self.navigationStack.last!.viewControllersAndPresentMethods.removeLast()
-        if self.navigationStack.last!.viewControllersAndPresentMethods.isEmpty {
-            self.navigatorManagedNavigationStack.removeLast()
+        coordinator.navigation.viewControllersAndPresentMethods.removeLast()
+        if coordinator.navigation.viewControllersAndPresentMethods.isEmpty {
+            self.goBack()
         }
     }
     

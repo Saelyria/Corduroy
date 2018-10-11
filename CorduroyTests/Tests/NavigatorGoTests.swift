@@ -266,18 +266,18 @@ class NavigatorGoTests: XCTestCase {
      coordinator.
      
      This is the expected coordinator/view controller stack:
-     ___________________________________________________________________________________________________________ _________________________
-     | TabCoordinator  -(push)-> | FlowCoordinator->Void           -(push)-> | Coordinator(String)             | | Coordinator(String)   |
-     |---------------------------|-------------------------|-----------------|---------------------------------| |-----------------------|
-     | (Nav) _ _ _ _   -(push)-> | (Nav) _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _              | | (Nav) _ _ _ _         |
-     | EmbeddedVC   \            | EmbeddedVC    -(push)-> | VC    -(push)-> | EmbeddedVC        \             | | EmbeddedVC   \        |
-     ----------------------------------------------------------------------------------------------------------- |                       |
-     ____________________________________________________________________________________________________________|                       |
-     | TabCoordinator                                                                                 -(modal)-> |                       |
-     |-----------------------------------------------------------------------------------------------------------|                       |
-     | VC                                                                                             -(modal)-> |                       |
-     |                                                                                                           |                       |
-     -------------------------------------------------------------------------------------------------------------------------------------
+     _________________________ ___________________________________________________________________________________________________________ _________________________
+     | TabBarCoordinator     | | TabCoordinator  -(push)-> | FlowCoordinator->Void           -(push)-> | Coordinator(String)             | | Coordinator(String)   |
+     |-----------------------| |---------------------------|-------------------------|-----------------|---------------------------------| |-----------------------|
+     | TabBarController      | | (Nav) _ _ _ _   -(push)-> | (Nav) _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _              | | (Nav) _ _ _ _         |
+     |                       | | EmbeddedVC   \            | EmbeddedVC    -(push)-> | VC    -(push)-> | EmbeddedVC        \             | | EmbeddedVC   \        |
+     |                       | ----------------------------------------------------------------------------------------------------------- |                       |
+     |                       | ____________________________________________________________________________________________________________|                       |
+     |                       | | TabCoordinator                                                                                 -(modal)-> |                       |
+     |                       | |-----------------------------------------------------------------------------------------------------------|                       |
+     |                       | | VC                                                                                             -(modal)-> |                       |
+     |                       | |                                                                                                           |                       |
+     ------------------------- -------------------------------------------------------------------------------------------------------------------------------------
      */
     func testTabBarCoordinatorStack() {
         let tabBarController = UITabBarController()
@@ -320,6 +320,8 @@ class NavigatorGoTests: XCTestCase {
         expect(tab1_thirdCoordinator.presentFirstVCCallCount).to(equal(1))
         
         // check coordinator and view controller relationships
+        expect(tabCoordinator.viewControllers).to(haveCount(1))
+        expect(tabCoordinator.viewControllers[0]).to(be(tabBarController))
         expect(tab1_firstVC.coordinator).to(be(tab1_firstCoordinator))
         expect(tab1_firstCoordinator.viewControllers).to(haveCount(1))
         expect(tab1_firstCoordinator.viewControllers[0]).to(be(tab1_firstVC))

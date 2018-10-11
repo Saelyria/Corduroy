@@ -23,6 +23,7 @@
 		93C5955B20688D21004EACA7 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */; };
 		ABA711462115D1AD0063BB71 /* UIStoryboardInitable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */; };
 		ABA71185212A04D20063BB71 /* PresentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA71184212A04D20063BB71 /* PresentMethod.swift */; };
+		ABB9631E216591AC00519963 /* SplitViewCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9631D216591AC00519963 /* SplitViewCoordinator.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -44,6 +45,7 @@
 		93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
 		ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStoryboardInitable.swift; sourceTree = "<group>"; };
 		ABA71184212A04D20063BB71 /* PresentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentMethod.swift; sourceTree = "<group>"; };
+		ABB9631D216591AC00519963 /* SplitViewCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SplitViewCoordinator.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -86,6 +88,7 @@
 				93069167200BEEBD00B1C9B9 /* NavigationPrecondition.swift */,
 				930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */,
 				93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */,
+				ABB9631D216591AC00519963 /* SplitViewCoordinator.swift */,
 				9306916A200BEEBD00B1C9B9 /* BaseCoordinator+NavigationMethods.swift */,
 				936D2EDA20A15018002574CA /* NavigationControllerEmbedded.swift */,
 				93580F032053A245005D96D3 /* NavigationResult.swift */,
@@ -188,6 +191,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				ABB9631E216591AC00519963 /* SplitViewCoordinator.swift in Sources */,
 				930C0899200C132400B0B934 /* CoordinatedNavigationController.swift in Sources */,
 				939826D0203B3A0F00B205C0 /* RoutingURLParser.swift in Sources */,
 				9341551420276F9800860CE2 /* RoutingNavigator.swift in Sources */,

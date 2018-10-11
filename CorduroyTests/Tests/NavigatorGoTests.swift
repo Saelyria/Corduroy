@@ -307,10 +307,11 @@ class NavigatorGoTests: XCTestCase {
             .configureCoordinator { tab1_thirdCoordinator = $0 }
         
         // check the navigator coordinator stack
-        expect(self.navigator.coordinators).to(haveCount(3))
-        expect(self.navigator.coordinators[0]).to(be(tab1_firstCoordinator))
-        expect(self.navigator.coordinators[1]).to(be(tab1_secondCoordinator))
-        expect(self.navigator.coordinators[2]).to(be(tab1_thirdCoordinator))
+        expect(self.navigator.coordinators).to(haveCount(4))
+        expect(self.navigator.coordinators[0]).to(be(tabCoordinator))
+        expect(self.navigator.coordinators[1]).to(be(tab1_firstCoordinator))
+        expect(self.navigator.coordinators[2]).to(be(tab1_secondCoordinator))
+        expect(self.navigator.coordinators[3]).to(be(tab1_thirdCoordinator))
         
         // check lifecycle call counts
         expect(tab1_secondCoordinator.createCallCount).to(equal(1))
@@ -352,9 +353,10 @@ class NavigatorGoTests: XCTestCase {
         let tab2_firstNavController = tab2_secondVC.navigationController
         
         // check the navigator coordinator stack
-        expect(self.navigator.coordinators).to(haveCount(2))
-        expect(self.navigator.coordinators[0]).to(be(tab2_firstCoordinator))
-        expect(self.navigator.coordinators[1]).to(be(tab2_secondCoordinator))
+        expect(self.navigator.coordinators).to(haveCount(3))
+        expect(self.navigator.coordinators[0]).to(be(tabCoordinator))
+        expect(self.navigator.coordinators[1]).to(be(tab2_firstCoordinator))
+        expect(self.navigator.coordinators[2]).to(be(tab2_secondCoordinator))
         
         // check coordinator and view controller relationships
         expect(tab2_firstVC.coordinator).to(be(tab2_firstCoordinator))
@@ -371,11 +373,12 @@ class NavigatorGoTests: XCTestCase {
         self.navigator.switch(toTabFor: TestTabCoordinator1.self)
         
         // check the navigator coordinator stack
-        expect(self.navigator.coordinators).to(haveCount(4))
-        expect(self.navigator.coordinators[0]).to(be(tab1_firstCoordinator))
-        expect(self.navigator.coordinators[1]).to(be(tab1_secondCoordinator))
-        expect(self.navigator.coordinators[2]).to(be(tab1_thirdCoordinator))
-        expect(self.navigator.coordinators[3]).to(be(tab2_secondCoordinator))
+        expect(self.navigator.coordinators).to(haveCount(5))
+        expect(self.navigator.coordinators[0]).to(be(tabCoordinator))
+        expect(self.navigator.coordinators[1]).to(be(tab1_firstCoordinator))
+        expect(self.navigator.coordinators[2]).to(be(tab1_secondCoordinator))
+        expect(self.navigator.coordinators[3]).to(be(tab1_thirdCoordinator))
+        expect(self.navigator.coordinators[4]).to(be(tab2_secondCoordinator))
         
         // check lifecycle call counts
         expect(tab1_secondCoordinator.createCallCount).to(equal(1))

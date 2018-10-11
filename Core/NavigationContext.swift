@@ -14,11 +14,11 @@ public struct NavigationContext {
     /// `nil` if the navigation is a dismissal.
     public let requestedPresentMethod: PresentMethod
     /// Other parameters for the navigation, such as the requested modal presentation style.
-    public let parameters: [NavigationParameter]
+    public let parameters: Set<NavigationParameter>
     /// The navigator handling the navigation.
     public let navigator: Navigator
     
-    internal init(navigator: Navigator, from: AnyCoordinator, to: AnyCoordinator, by: PresentMethod, params: [NavigationParameter]) {
+    internal init(navigator: Navigator, from: AnyCoordinator, to: AnyCoordinator, by: PresentMethod, params: Set<NavigationParameter>) {
         self.navigator = navigator
         self.fromCoordinator = from
         self.toCoordinator = to
@@ -28,49 +28,35 @@ public struct NavigationContext {
 }
 
 /**
- An object containing additional parameters regarding view controller navigation that a coordinator should follow.
- 
- Note that its initializer contains the default values used by UIKit - you only need to provide an argument to the
- initializer for values different from the default.
+ An enum containing additional parameters regarding view controller presentation and other elements of navigation that
+ a coordinator should follow. Some of these parameters are used by the navigator for performing work on its navigation
+ stack, while others are passed on to the presented coordinator for it to use when presenting its first view controller.
  */
-//public struct NavigationParameters: Equatable {
-//    /// The modal transition style for the navigation.
-//    let modalTransitionStyle: UIModalTransitionStyle
-//    /// The modal presentation style for the navigation.
-//    let modalPresentationStyle: UIModalPresentationStyle
-//    /// Whether the navigation should be animated.
-//    let animateTransition: Bool
-//
-//    /// A convenience parameter set of all the UIKit default parameters.
-//    public static let `default`: NavigationParameters = NavigationParameters()
-//    /// The default set of parameters with `animateTransition` set to `false`.
-//    public static let noAnimation: NavigationParameters = NavigationParameters(animateTransition: false)
-//
-//    public init(modalTransitionStyle: UIModalTransitionStyle = .coverVertical,
-//                modalPresentationStyle: UIModalPresentationStyle = .overFullScreen,
-//                animateTransition: Bool = true)
-//    {
-//        self.modalTransitionStyle = modalTransitionStyle
-//        self.modalPresentationStyle = modalPresentationStyle
-//        self.animateTransition = animateTransition
-//    }
-//
-//    public static func == (lhs: NavigationParameters, rhs: NavigationParameters) -> Bool {
-//        return lhs.modalTransitionStyle == rhs.modalTransitionStyle &&
-//            lhs.modalPresentationStyle == rhs.modalPresentationStyle &&
-//            lhs.animateTransition == rhs.animateTransition
-//    }
-//}
-
-public enum NavigationParameter: Equatable {
-    /// The modal transition style to use for the navigation.
+public enum NavigationParameter: Equatable, Hashable {
+    /// The modal transition style that should be used for the navigation.
     case modalTransitionStyle(UIModalTransitionStyle)
-    /// The modal presentation style to use for the navigation.
+    /// The modal presentation style that should be used for the navigation.
     case modalPresentationStyle(UIModalPresentationStyle)
     /// Whether the navigation should be animated.
     case shouldAnimateTransition(Bool)
-    /// A custom parameter containing a flag specific to your application.
-    case custom(Any)
+    /// Has the navigator clear the coordinators on its stack back to the last coordinator of the given type after the
+    /// coordinator being presented has finished presenting.
+    case clearBackTo(AnyCoordinator.Type)
+    
+    case addPreconditions([NavigationPrecondition])
+    /// A custom parameter containing a flag or value specific to your application logic.
+    case custom(key: String, value: Any)
+    
+    public var hashValue: Int {
+        switch self {
+        case .modalTransitionStyle(_): return 0
+        case .modalPresentationStyle(_): return 1
+        case .shouldAnimateTransition(_): return 2
+        case .clearBackTo(_): return 3
+        case .addPreconditions(_): return 4
+        case .custom(let key, _): return key.hashValue
+        }
+    }
     
     public static func == (lhs: NavigationParameter, rhs: NavigationParameter) -> Bool {
         switch (lhs, rhs) {
@@ -86,28 +72,26 @@ public enum NavigationParameter: Equatable {
     }
     
     /// A convenience parameter set of all the UIKit default parameters.
-    public static let defaults: [NavigationParameter] = [
+    public static let defaults: Set<NavigationParameter> = [
         .modalTransitionStyle(.coverVertical),
         .modalPresentationStyle(.overFullScreen),
         .shouldAnimateTransition(true)
     ]
     
     /// The default set of parameters with `animateTransition` set to `false`.
-    public static let noAnimation: [NavigationParameter] = [
-        .modalTransitionStyle(.coverVertical),
-        .modalPresentationStyle(.overFullScreen),
-        .shouldAnimateTransition(false)
-    ]
+    public static var noAnimation: Set<NavigationParameter> {
+        return NavigationParameter.defaults.replacingValues(in: [.shouldAnimateTransition(false)])
+    }
 }
 
-public extension Array where Element == NavigationParameter {
+public extension Set where Element == NavigationParameter {
     /// A convenience parameter set of all the UIKit default parameters.
-    public static var defaults: [NavigationParameter] {
+    public static var defaults: Set<NavigationParameter> {
         return NavigationParameter.defaults
     }
     
     /// The default set of parameters with `animateTransition` set to `false`.
-    public static var noAnimation: [NavigationParameter] {
+    public static var noAnimation: Set<NavigationParameter> {
         return NavigationParameter.noAnimation
     }
     
@@ -154,12 +138,20 @@ public extension Array where Element == NavigationParameter {
     }
     
     /// All of the `custom` parameters included in the array.
-    var customParameters: [NavigationParameter] {
+    var customParameters: Set<NavigationParameter> {
         return self.filter({
             switch $0 {
             case .custom: return true
             default: return false
             }
         })
+    }
+    
+    func replacingValues(in replacement: Set<NavigationParameter>) -> Set<NavigationParameter> {
+        var replaced: Set<NavigationParameter> = self
+        for replacementValue in replacement {
+            replaced.update(with: replacementValue)
+        }
+        return replaced
     }
 }

@@ -23,7 +23,9 @@
 		9316D0A720538FB000D1A5E8 /* LoggedInPrecondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0A620538FB000D1A5E8 /* LoggedInPrecondition.swift */; };
 		9316D0A92053901400D1A5E8 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0A82053901400D1A5E8 /* LoginViewController.swift */; };
 		9316D0AB2053903A00D1A5E8 /* SecurityQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0AA2053903A00D1A5E8 /* SecurityQuestionViewController.swift */; };
-		936CC8C320673FEB0073076D /* AccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936CC8C220673FEB0073076D /* AccountViewController.swift */; };
+		936CC8C320673FEB0073076D /* ProductsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936CC8C220673FEB0073076D /* ProductsViewController.swift */; };
+		ABB9631A21632C7800519963 /* SettingsViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB9631921632C7800519963 /* SettingsViewController.swift */; };
+		ABB9631C21658FB200519963 /* Signup.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = ABB9631B21658FB200519963 /* Signup.storyboard */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXContainerItemProxy section */
@@ -75,7 +77,9 @@
 		9316D0A620538FB000D1A5E8 /* LoggedInPrecondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedInPrecondition.swift; sourceTree = "<group>"; };
 		9316D0A82053901400D1A5E8 /* LoginViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
 		9316D0AA2053903A00D1A5E8 /* SecurityQuestionViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SecurityQuestionViewController.swift; sourceTree = "<group>"; };
-		936CC8C220673FEB0073076D /* AccountViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = AccountViewController.swift; sourceTree = "<group>"; };
+		936CC8C220673FEB0073076D /* ProductsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = ProductsViewController.swift; sourceTree = "<group>"; };
+		ABB9631921632C7800519963 /* SettingsViewController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = SettingsViewController.swift; sourceTree = "<group>"; };
+		ABB9631B21658FB200519963 /* Signup.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Signup.storyboard; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -115,7 +119,8 @@
 				93069156200BED5000B1C9B9 /* Signup Flow */,
 				9316D0A220538F0A00D1A5E8 /* Login Flow */,
 				93069157200BED5900B1C9B9 /* Home */,
-				936CC8C120673FD50073076D /* Account */,
+				936CC8C120673FD50073076D /* Products */,
+				ABB9631821632C5D00519963 /* Settings */,
 				9316D0A520538F9800D1A5E8 /* Preconditions */,
 				93069153200BECD500B1C9B9 /* Supporting Files */,
 			);
@@ -127,6 +132,7 @@
 			children = (
 				9306914D200BEC1D00B1C9B9 /* Info.plist */,
 				9316D09D20520CB700D1A5E8 /* Main.storyboard */,
+				ABB9631B21658FB200519963 /* Signup.storyboard */,
 				9306914A200BEC1D00B1C9B9 /* LaunchScreen.storyboard */,
 			);
 			path = "Supporting Files";
@@ -186,12 +192,20 @@
 			path = Welcome;
 			sourceTree = "<group>";
 		};
-		936CC8C120673FD50073076D /* Account */ = {
+		936CC8C120673FD50073076D /* Products */ = {
 			isa = PBXGroup;
 			children = (
-				936CC8C220673FEB0073076D /* AccountViewController.swift */,
+				936CC8C220673FEB0073076D /* ProductsViewController.swift */,
 			);
-			path = Account;
+			path = Products;
+			sourceTree = "<group>";
+		};
+		ABB9631821632C5D00519963 /* Settings */ = {
+			isa = PBXGroup;
+			children = (
+				ABB9631921632C7800519963 /* SettingsViewController.swift */,
+			);
+			path = Settings;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -272,6 +286,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				9306914C200BEC1D00B1C9B9 /* LaunchScreen.storyboard in Resources */,
+				ABB9631C21658FB200519963 /* Signup.storyboard in Resources */,
 				9316D09E20520CB700D1A5E8 /* Main.storyboard in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -285,13 +300,14 @@
 			files = (
 				9306915C200BED6D00B1C9B9 /* SignupFormViewController.swift in Sources */,
 				93069155200BED0000B1C9B9 /* WelcomeViewController.swift in Sources */,
-				936CC8C320673FEB0073076D /* AccountViewController.swift in Sources */,
+				936CC8C320673FEB0073076D /* ProductsViewController.swift in Sources */,
 				9306915F200BED6D00B1C9B9 /* SignupFlowCoordinator.swift in Sources */,
 				93069163200BED9F00B1C9B9 /* HomeViewController.swift in Sources */,
 				93069142200BEC1D00B1C9B9 /* AppDelegate.swift in Sources */,
 				9306915E200BED6D00B1C9B9 /* SignupSecurityQuestionViewController.swift in Sources */,
 				9316D0A720538FB000D1A5E8 /* LoggedInPrecondition.swift in Sources */,
 				9316D0A420538F2000D1A5E8 /* LoginFlowCoordinator.swift in Sources */,
+				ABB9631A21632C7800519963 /* SettingsViewController.swift in Sources */,
 				93069162200BED9F00B1C9B9 /* HomeCoordinator.swift in Sources */,
 				9306915D200BED6D00B1C9B9 /* SignupCompleteViewController.swift in Sources */,
 				9316D0AB2053903A00D1A5E8 /* SecurityQuestionViewController.swift in Sources */,

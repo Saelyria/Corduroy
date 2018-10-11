@@ -20,11 +20,15 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // The only things we really need to do to get started are create a navigator (an object that will do all
         /// navigation for the app) then tell the navigator to start with a given coordinator type.
         self.navigator = Navigator()
-        if AppDelegate.hasSignedUp {
-            navigator.start(onWindow: self.window!, firstCoordinator: HomeCoordinator.self)
-        } else {
-            navigator.start(onWindow: self.window!, firstCoordinator: WelcomeCoordinator.self)
-        }
+        navigator.start(onWindow: self.window!, firstCoordinator: TabBarCoordinator.self, with: [
+            HomeCoordinator.self,
+            ProductsCoordinator.self,
+            SettingsCoordinator.self
+        ])
+        
+//        if !AppDelegate.hasSignedUp {
+            self.navigator.go(to: WelcomeCoordinator.self, by: .modallyPresenting, parameters: [.shouldAnimateTransition(false)])
+//        }
         
         return true
     }

@@ -44,7 +44,7 @@ public struct PresentMethod {
         /// The view controller that the present handler should present.
         public let viewControllerToPresent: UIViewController
         /// The parameters given to the navigator to perform the navigation with.
-        public let parameters: [NavigationParameter]
+        public let parameters: Set<NavigationParameter>
     }
     
     /// An object that is passed into a `PresentMethod`'s `dismissHandler` that contains the information that the
@@ -57,7 +57,7 @@ public struct PresentMethod {
         /// The view controller to dismiss.
         public let viewControllerToDismiss: UIViewController
         /// The parameters given to the navigator to perform the navigation with.
-        public let parameters: [NavigationParameter]
+        public let parameters: Set<NavigationParameter>
     }
     
     /// An enum that describes the underlying UIKit method that a present method uses to display new view controllers.
@@ -72,6 +72,9 @@ public struct PresentMethod {
         case addAsWindowRootViewController
         /// The present method displays the view controller by switching to its tab on a `UITabBarController`.
         case tabBarControllerTabSwitch
+        /// The present method displays the view controller by adding it as either the master or detail of a
+        /// `UISplitViewController`.
+        case addingToSplitView
     }
     
     /// The name for this present method. This should be a human-readable string that can be used to identify the
@@ -145,15 +148,28 @@ public extension PresentMethod {
     public static let modallyPresenting: PresentMethod = PresentMethod(
         name: "modallyPresenting",
         style: .modalPresentation,
-        presentHandler: { (context) in
+        presentHandler: { (context: PresentContext) in
             let vc = context.viewControllerToPresent
             let animate = context.parameters.shouldAnimateTransition
             vc.modalPresentationStyle = context.parameters.modalPresentationStyle
             vc.modalTransitionStyle = context.parameters.modalTransitionStyle
-            context.currentViewController?.present(vc, animated: animate, completion: nil)
-        }, dismissHandler: { (context) in
+            if let parent = context.currentViewController?.parent {
+                parent.present(vc, animated: animate, completion: nil)
+            } else {
+                context.currentViewController?.present(vc, animated: animate, completion: nil)
+            }
+        }, dismissHandler: { (context: DismissContext) in
             let animate = context.parameters.shouldAnimateTransition
             context.previousViewController.dismiss(animated: animate, completion: nil)
+        })
+    
+    public static let swappingRootView: PresentMethod = PresentMethod(
+        name: "swappingRootView",
+        style: .addAsWindowRootViewController,
+        presentHandler: { (context: PresentContext) in
+            context.navigator.window.rootViewController = context.viewControllerToPresent
+        }, dismissHandler: { (context: DismissContext) in
+            context.navigator.window.rootViewController = context.previousViewController
         })
 }
 
@@ -170,4 +186,13 @@ internal extension PresentMethod {
         style: .tabBarControllerTabSwitch,
         presentHandler: { _ in },
         dismissHandler: { _ in })
+    
+    static let addingAsMasterOnSplitView: PresentMethod = PresentMethod(
+        name: "addingAsMasterOnSplitView",
+        style: .addingToSplitView,
+        presentHandler: { (context: PresentContext) in
+            
+        }, dismissHandler: { (context: DismissContext) in
+        
+        })
 }

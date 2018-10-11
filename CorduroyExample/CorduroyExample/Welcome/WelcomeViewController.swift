@@ -19,22 +19,13 @@ import Corduroy
  */
 typealias WelcomeCoordinator = WelcomeViewController
 
-final class WelcomeViewController: UIViewController, Coordinator {
+final class WelcomeViewController: UIViewController, Coordinator, UIStoryboardInitable, NavigationControllerEmbedded {
+    static let storyboardName: String = "Main"
+    
     var navigator: Navigator!
     
     @IBOutlet private weak var label: UILabel!
     @IBOutlet private weak var signupButton: UIButton!
-    
-    // Normally, we wouldn't need to implement this `Coordinator` method - a default value that creates the view
-    // controller and sets its `navigator` is provided. However, because we want to instantiate our view controller from
-    // a storyboard, we need to implement it.
-    static func create(with: (), navigator: Navigator) -> WelcomeViewController {
-        let storyboard = UIStoryboard(name: "Main", bundle: nil)
-        let welcomeViewController = storyboard.instantiateViewController(withIdentifier: "WelcomeViewController") as! WelcomeViewController
-        welcomeViewController.navigator = navigator
-        
-        return welcomeViewController
-    }
     
     @IBAction func signupPressed() {
         // When the 'Sign Up' button is pressed, kick off the signup flow coordinator. Flow coordinators are special
@@ -46,12 +37,11 @@ final class WelcomeViewController: UIViewController, Coordinator {
             guard error == nil else { return }
             
             // when signup finishes, we want to continue to our home page.
-            self.navigator.go(to: HomeCoordinator.self, by: .pushing)
+            self.navigator.goBack(toLast: HomeCoordinator.self)
         })
     }
     
     @IBAction func laterPressed() {
-        self.navigator.go(to: HomeCoordinator.self, by: .pushing)
+        self.navigator.goBack(toLast: HomeCoordinator.self)
     }
 }
-

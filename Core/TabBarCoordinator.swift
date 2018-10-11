@@ -65,7 +65,7 @@ public extension TabCoordinator where Self: UIViewController {
  custom `UITabBarController` object that you setup. If a tab bar controller instance is not given, the coordinator will
  create a `UITabBarController` itself.
  */
-public final class TabBarCoordinator: Coordinator, SubNavigating {
+@objc public final class TabBarCoordinator: NSObject, Coordinator, SubNavigating {
     /// The tab bar coordinator's navigator.
     public var navigator: Navigator!
     /// The tab bar controller given to the coordinator through its setup model that it coordinates.
@@ -120,15 +120,13 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
         self.present(self.tabBarController, context: context)
         // we wait until presentation to actually populate the 'navigation stack'
         for (i, tabCoordinator) in self.tabCoordinators.enumerated() {
-            guard let vc = self.tabBarController.viewControllers?[i] else { return }
+            self.selectedIndex = i
             let navigation = Navigation(coordinator: tabCoordinator, presentMethod: .switchingToTab, parentCoordinator: self)
-            if let navController = vc as? UINavigationController {
-                navigation.viewControllersAndPresentMethods.append((vc: navController.topViewController!, presentMethod: .switchingToTab))
-            } else {
-                navigation.viewControllersAndPresentMethods.append((vc: vc, presentMethod: .switchingToTab))
-            }
             self.stackForTabCoordinator[i].append(navigation)
+            guard let vc = self.tabBarController.viewControllers?[i] else { return }
+            tabCoordinator.present(vc, by: .switchingToTab)
         }
+        self.selectedIndex = 0
         self.activeTabCoordinator.didBecomeActive(context: context)
     }
     
@@ -143,6 +141,7 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
         // manages (i.e. should be managed by the navigator).
         return context.requestedPresentMethod.style != .addAsWindowRootViewController
             && context.requestedPresentMethod.style != .modalPresentation
+            && context.requestedPresentMethod.style != .addingToSplitView
     }
     
     internal func `switch`<T: TabCoordinator>(to tabCoordinator: T.Type) {
@@ -162,8 +161,25 @@ public final class TabBarCoordinator: Coordinator, SubNavigating {
         self.selectedIndex = index
         coordinator.didBecomeActive(context: context)
     }
-    
-    public init() { }
+}
+
+extension TabBarCoordinator: UITabBarControllerDelegate {
+    @objc func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+        for (i, tabCoordinator) in self.tabCoordinators.enumerated() {
+            if viewController === tabCoordinator.viewControllers.first {
+                let context = NavigationContext(
+                    navigator: self.navigator,
+                    from: self.activeTabCoordinator,
+                    to: tabCoordinator,
+                    by: .switchingToTab,
+                    params: .defaults)
+                self.activeTabCoordinator.didBecomeInactive(context: context)
+                self.selectedIndex = i
+                tabCoordinator.didBecomeActive(context: context)
+                break
+            }
+        }
+    }
 }
 
 public extension TabBarCoordinator {
@@ -178,7 +194,7 @@ public extension TabBarCoordinator {
             self.tabBarController = nil
         }
         
-        public init(tabCoordinators: [TabCoordinator.Type], tabBarController: UITabBarController?) {
+        public init(tabCoordinators: [TabCoordinator.Type], tabBarController: UITabBarController? = nil) {
             self.tabCoordinatorTypes = tabCoordinators
             self.tabBarController = tabBarController
         }

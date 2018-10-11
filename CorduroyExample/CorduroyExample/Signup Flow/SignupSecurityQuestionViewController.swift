@@ -2,7 +2,9 @@
 import UIKit
 import Corduroy
 
-final class SignupSecurityQuestionViewController: UIViewController {    
+final class SignupSecurityQuestionViewController: UIViewController, UIStoryboardInitable, NavigationControllerEmbedded {
+    static let storyboardName: String = "Signup"
+    
     var coordinator: SignupFlowCoordinator?
     
     private let securityQuestion: String = "What was the name of your first pet?"

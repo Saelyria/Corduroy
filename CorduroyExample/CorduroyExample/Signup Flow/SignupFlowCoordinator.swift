@@ -22,13 +22,11 @@ final class SignupFlowCoordinator: FlowCoordinator {
     private var tempPassword: String?
     private var tempSecurityQuestion: String?
     private var tempSecurityAnswer: String?
-    
-    private let storyboard = UIStoryboard(name: "Main", bundle: nil)
 
     func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, SignupInfo?) -> Void) {
         self.completion = flowCompletion
         
-        let signupVC = storyboard.instantiateViewController(withIdentifier: "SignupFormViewController") as! SignupFormViewController
+        let signupVC = SignupFormViewController.createFromStoryboard()
         signupVC.coordinator = self
         self.present(signupVC, context: context)
     }
@@ -38,9 +36,9 @@ final class SignupFlowCoordinator: FlowCoordinator {
         self.tempUsername = username
         self.tempPassword = password
         
-        let securityQuesstionVC = storyboard.instantiateViewController(withIdentifier: "SignupSecurityQuestionViewController") as! SignupSecurityQuestionViewController
+        let securityQuesstionVC = SignupSecurityQuestionViewController.createFromStoryboard()
         securityQuesstionVC.coordinator = self
-        signupFormVC.navigationController?.pushViewController(securityQuesstionVC, animated: true)
+        self.present(securityQuesstionVC, by: .pushing)
     }
     
     // When the security question view controller finishes, push the completed view controller.
@@ -48,9 +46,9 @@ final class SignupFlowCoordinator: FlowCoordinator {
         self.tempSecurityAnswer = answer
         self.tempSecurityQuestion = question
         
-        let signupCompleteVC = storyboard.instantiateViewController(withIdentifier: "SignupCompleteViewController") as! SignupCompleteViewController
+        let signupCompleteVC = SignupCompleteViewController.createFromStoryboard()
         signupCompleteVC.coordinator = self
-        securityQuestionVC.navigationController?.pushViewController(signupCompleteVC, animated: true)
+        self.present(signupCompleteVC, by: .pushing)
     }
     
     // When the user presses 'Continue' on the completed view controller, call the flow coordinator's 'completion'

@@ -111,12 +111,6 @@ public protocol AnyCoordinator: AnyObject {
 }
 
 public extension AnyCoordinator {
-    var coordinatedViewControllers: [UIViewController] {
-        let item = self.navigator.navigationStack.last(where: { $0.coordinator === self })
-        let vcs: [UIViewController]? = item?.viewControllersAndPresentMethods.map({ return $0.vc })
-        return vcs ?? []
-    }
-    
     func didBecomeActive(context: NavigationContext) { }
     
     func didBecomeInactive(context: NavigationContext) { }

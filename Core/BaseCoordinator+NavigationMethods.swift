@@ -2,6 +2,13 @@
 import UIKit
 
 public extension AnyCoordinator {
+    var navigation: Navigation {
+        guard let navigation = self.navigator.navigationStack.filter({ $0.coordinator === self }).first else {
+            fatalError("Something got mixed up - coordinator was asked for its navigation, but it wasn't on the stack")
+        }
+        return navigation
+    }
+    
     var viewControllers: [UIViewController] {
         guard let navigation: Navigation = self.navigator.navigationStack.filter({ $0.coordinator === self }).first else { return [] }
         return navigation.viewControllersAndPresentMethods.map({ $0.vc })
@@ -22,7 +29,7 @@ public extension AnyCoordinator {
      - parameter presentMethod: The presentation method to use (e.g. push or modal present).
      - parameter parameters: Additional navigation parameters. Optional.
      */
-    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: [NavigationParameter] = .defaults) {
+    func present(_ toVC: UIViewController, by presentMethod: PresentMethod, parameters: Set<NavigationParameter> = .defaults) {
         // if the present method used isn't a navigation push, put the VC in a nav controller if it expects to be
         let vcToPresent: UIViewController = self.embedInNavControllerIfNeeded(toVC, presentMethod: presentMethod)
         
@@ -53,9 +60,13 @@ public extension AnyCoordinator {
      - parameter vc: The view controller to dismiss.
      - parameter parameters: Additional navigation parameters. Optional.
      */
-    func dismiss(_ vc: UIViewController, parameters: [NavigationParameter] = .defaults) {
-        let index: Int = self.navigator.navigationStack.count - 2
-        guard let (previousVC, presentMethod) = self.navigator.navigationStack[index].viewControllersAndPresentMethods.last else {
+    func dismiss(_ vc: UIViewController, parameters: Set<NavigationParameter> = .defaults) {
+        let previousCoordinatorIndex: Int = self.navigator.navigationStack.count - 2
+        guard let (previousVC, _) = self.navigator.navigationStack[previousCoordinatorIndex].viewControllersAndPresentMethods.last else {
+            return
+        }
+        let currentIndex = self.navigator.navigationStack.count - 1
+        guard let (_, presentMethod) = self.navigator.navigationStack[currentIndex].viewControllersAndPresentMethods.last else {
             return
         }
         let context = PresentMethod.DismissContext(
@@ -81,5 +92,16 @@ internal extension AnyCoordinator {
             vcToPresent = navController
         }
         return vcToPresent
+    }
+    
+    func dismissViewController(params: Set<NavigationParameter>) {
+        for (i, viewController) in self.viewControllers.reversed().enumerated() {
+            // only animate the last view controller to be dismissed
+            var vcParams: Set<NavigationParameter> = params
+            if i < self.viewControllers.count - 1 {
+                vcParams = .noAnimation
+            }
+            self.dismiss(viewController, parameters: vcParams)
+        }
     }
 }

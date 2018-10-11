@@ -2,7 +2,9 @@
 import UIKit
 import Corduroy
 
-final class SignupFormViewController: UIViewController {
+final class SignupFormViewController: UIViewController, UIStoryboardInitable, NavigationControllerEmbedded {
+    static let storyboardName: String = "Signup"
+    
     var coordinator: SignupFlowCoordinator?
         
     @IBOutlet private var label: UILabel!

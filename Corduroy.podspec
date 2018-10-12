@@ -20,9 +20,4 @@ Pod::Spec.new do |s|
     ss.source_files = 'Core/'
     ss.ios.framework = "UIKit"
   end
-
-  s.subspec "Routing" do |ss|
-    ss.source_files = 'Routing/'
-    ss.ios.framework = "UIKit"
-  end
 end

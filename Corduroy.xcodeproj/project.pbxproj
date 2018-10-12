@@ -15,11 +15,8 @@
 		930C088F200BFA8300B0B934 /* Corduroy.h in Headers */ = {isa = PBXBuildFile; fileRef = 930C0888200BF95A00B0B934 /* Corduroy.h */; settings = {ATTRIBUTES = (Public, ); }; };
 		930C0899200C132400B0B934 /* CoordinatedNavigationController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */; };
 		9316D09C204F371600D1A5E8 /* NavigationStackManager.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D09B204F371600D1A5E8 /* NavigationStackManager.swift */; };
-		9341551220276F5B00860CE2 /* Routable.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9341551120276F5B00860CE2 /* Routable.swift */; };
-		9341551420276F9800860CE2 /* RoutingNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9341551320276F9800860CE2 /* RoutingNavigator.swift */; };
 		93580F042053A245005D96D3 /* NavigationResult.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93580F032053A245005D96D3 /* NavigationResult.swift */; };
 		936D2EDB20A15018002574CA /* NavigationControllerEmbedded.swift in Sources */ = {isa = PBXBuildFile; fileRef = 936D2EDA20A15018002574CA /* NavigationControllerEmbedded.swift */; };
-		939826D0203B3A0F00B205C0 /* RoutingURLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = 939826CF203B3A0F00B205C0 /* RoutingURLParser.swift */; };
 		93C5955B20688D21004EACA7 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */; };
 		ABA711462115D1AD0063BB71 /* UIStoryboardInitable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */; };
 		ABA71185212A04D20063BB71 /* PresentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA71184212A04D20063BB71 /* PresentMethod.swift */; };
@@ -36,11 +33,8 @@
 		930C0888200BF95A00B0B934 /* Corduroy.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = Corduroy.h; sourceTree = "<group>"; };
 		930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = CoordinatedNavigationController.swift; sourceTree = "<group>"; };
 		9316D09B204F371600D1A5E8 /* NavigationStackManager.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationStackManager.swift; sourceTree = "<group>"; };
-		9341551120276F5B00860CE2 /* Routable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routable.swift; sourceTree = "<group>"; };
-		9341551320276F9800860CE2 /* RoutingNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingNavigator.swift; sourceTree = "<group>"; };
 		93580F032053A245005D96D3 /* NavigationResult.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationResult.swift; sourceTree = "<group>"; };
 		936D2EDA20A15018002574CA /* NavigationControllerEmbedded.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = NavigationControllerEmbedded.swift; sourceTree = "<group>"; };
-		939826CF203B3A0F00B205C0 /* RoutingURLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingURLParser.swift; sourceTree = "<group>"; };
 		93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
 		ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStoryboardInitable.swift; sourceTree = "<group>"; };
 		ABA71184212A04D20063BB71 /* PresentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentMethod.swift; sourceTree = "<group>"; };
@@ -63,7 +57,6 @@
 				930C0864200BF21000B0B934 /* Info.plist */,
 				930C0888200BF95A00B0B934 /* Corduroy.h */,
 				93069164200BEE8700B1C9B9 /* Core */,
-				9341551020276F4700860CE2 /* Routing */,
 				607FACD11AFB9204008FA782 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -93,16 +86,6 @@
 				ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */,
 			);
 			path = Core;
-			sourceTree = "<group>";
-		};
-		9341551020276F4700860CE2 /* Routing */ = {
-			isa = PBXGroup;
-			children = (
-				9341551120276F5B00860CE2 /* Routable.swift */,
-				9341551320276F9800860CE2 /* RoutingNavigator.swift */,
-				939826CF203B3A0F00B205C0 /* RoutingURLParser.swift */,
-			);
-			path = Routing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -189,8 +172,6 @@
 			buildActionMask = 2147483647;
 			files = (
 				930C0899200C132400B0B934 /* CoordinatedNavigationController.swift in Sources */,
-				939826D0203B3A0F00B205C0 /* RoutingURLParser.swift in Sources */,
-				9341551420276F9800860CE2 /* RoutingNavigator.swift in Sources */,
 				93580F042053A245005D96D3 /* NavigationResult.swift in Sources */,
 				ABA71185212A04D20063BB71 /* PresentMethod.swift in Sources */,
 				930C088A200BFA1400B0B934 /* Coordinator.swift in Sources */,
@@ -202,7 +183,6 @@
 				936D2EDB20A15018002574CA /* NavigationControllerEmbedded.swift in Sources */,
 				930C088D200BFA1B00B0B934 /* NavigationPrecondition.swift in Sources */,
 				930C088E200BFA1D00B0B934 /* BaseCoordinator+NavigationMethods.swift in Sources */,
-				9341551220276F5B00860CE2 /* Routable.swift in Sources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};

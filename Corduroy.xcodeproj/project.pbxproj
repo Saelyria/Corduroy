@@ -20,6 +20,9 @@
 		93C5955B20688D21004EACA7 /* TabBarCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */; };
 		ABA711462115D1AD0063BB71 /* UIStoryboardInitable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */; };
 		ABA71185212A04D20063BB71 /* PresentMethod.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABA71184212A04D20063BB71 /* PresentMethod.swift */; };
+		ABB963452171250E00519963 /* RoutingNavigator.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB963442171250E00519963 /* RoutingNavigator.swift */; };
+		ABB963472171252600519963 /* RoutingURLParser.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB963462171252600519963 /* RoutingURLParser.swift */; };
+		ABB963492171253800519963 /* Routable.swift in Sources */ = {isa = PBXBuildFile; fileRef = ABB963482171253800519963 /* Routable.swift */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
@@ -38,6 +41,9 @@
 		93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TabBarCoordinator.swift; sourceTree = "<group>"; };
 		ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = UIStoryboardInitable.swift; sourceTree = "<group>"; };
 		ABA71184212A04D20063BB71 /* PresentMethod.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = PresentMethod.swift; sourceTree = "<group>"; };
+		ABB963442171250E00519963 /* RoutingNavigator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingNavigator.swift; sourceTree = "<group>"; };
+		ABB963462171252600519963 /* RoutingURLParser.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = RoutingURLParser.swift; sourceTree = "<group>"; };
+		ABB963482171253800519963 /* Routable.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = Routable.swift; sourceTree = "<group>"; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -57,6 +63,7 @@
 				930C0864200BF21000B0B934 /* Info.plist */,
 				930C0888200BF95A00B0B934 /* Corduroy.h */,
 				93069164200BEE8700B1C9B9 /* Core */,
+				ABB96343217124FE00519963 /* Routing */,
 				607FACD11AFB9204008FA782 /* Products */,
 			);
 			sourceTree = "<group>";
@@ -86,6 +93,16 @@
 				ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */,
 			);
 			path = Core;
+			sourceTree = "<group>";
+		};
+		ABB96343217124FE00519963 /* Routing */ = {
+			isa = PBXGroup;
+			children = (
+				ABB963442171250E00519963 /* RoutingNavigator.swift */,
+				ABB963462171252600519963 /* RoutingURLParser.swift */,
+				ABB963482171253800519963 /* Routable.swift */,
+			);
+			path = Routing;
 			sourceTree = "<group>";
 		};
 /* End PBXGroup section */
@@ -174,12 +191,15 @@
 				930C0899200C132400B0B934 /* CoordinatedNavigationController.swift in Sources */,
 				93580F042053A245005D96D3 /* NavigationResult.swift in Sources */,
 				ABA71185212A04D20063BB71 /* PresentMethod.swift in Sources */,
+				ABB963472171252600519963 /* RoutingURLParser.swift in Sources */,
+				ABB963492171253800519963 /* Routable.swift in Sources */,
 				930C088A200BFA1400B0B934 /* Coordinator.swift in Sources */,
 				930C088B200BFA1600B0B934 /* Navigator.swift in Sources */,
 				ABA711462115D1AD0063BB71 /* UIStoryboardInitable.swift in Sources */,
 				93C5955B20688D21004EACA7 /* TabBarCoordinator.swift in Sources */,
 				9316D09C204F371600D1A5E8 /* NavigationStackManager.swift in Sources */,
 				930C088C200BFA1800B0B934 /* NavigationContext.swift in Sources */,
+				ABB963452171250E00519963 /* RoutingNavigator.swift in Sources */,
 				936D2EDB20A15018002574CA /* NavigationControllerEmbedded.swift in Sources */,
 				930C088D200BFA1B00B0B934 /* NavigationPrecondition.swift in Sources */,
 				930C088E200BFA1D00B0B934 /* BaseCoordinator+NavigationMethods.swift in Sources */,

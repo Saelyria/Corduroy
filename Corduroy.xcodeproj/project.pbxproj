@@ -88,12 +88,12 @@
 				93069167200BEEBD00B1C9B9 /* NavigationPrecondition.swift */,
 				930C0898200C132400B0B934 /* CoordinatedNavigationController.swift */,
 				93C5955A20688D21004EACA7 /* TabBarCoordinator.swift */,
+				ABB963412171243F00519963 /* SplitViewCoordinator.swift */,
 				9306916A200BEEBD00B1C9B9 /* BaseCoordinator+NavigationMethods.swift */,
 				936D2EDA20A15018002574CA /* NavigationControllerEmbedded.swift */,
 				93580F032053A245005D96D3 /* NavigationResult.swift */,
 				9316D09B204F371600D1A5E8 /* NavigationStackManager.swift */,
 				ABA711452115D1AD0063BB71 /* UIStoryboardInitable.swift */,
-				ABB963412171243F00519963 /* SplitViewCoordinator.swift */,
 			);
 			path = Core;
 			sourceTree = "<group>";

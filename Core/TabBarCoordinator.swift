@@ -10,7 +10,7 @@ import UIKit
  */
 public protocol TabCoordinator: AnyCoordinator {
     /// The tab bar coordinator object that manages this coordinator.
-    var tabBarCoordinator: TabBarCoordinator! { get set }
+    var tabBarCoordinator: TabBarCoordinator? { get set }
     
     /**
      Creates an instance of the tab coordinator.

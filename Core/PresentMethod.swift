@@ -187,12 +187,23 @@ internal extension PresentMethod {
         presentHandler: { _ in },
         dismissHandler: { _ in })
     
-    static let addingAsMasterOnSplitView: PresentMethod = PresentMethod(
-        name: "addingAsMasterOnSplitView",
-        style: .addingToSplitView,
-        presentHandler: { (context: PresentContext) in
-            
-        }, dismissHandler: { (context: DismissContext) in
-        
-        })
+    static func addingAsMaster(on splitViewController: UISplitViewController) -> PresentMethod {
+        return PresentMethod(
+            name: "addingAsMasterOnSplitView",
+            style: .addingToSplitView,
+            presentHandler: { (context: PresentContext) in
+                let vc = context.viewControllerToPresent
+                splitViewController.show(vc, sender: nil)
+            }, dismissHandler: { _ in })
+    }
+    
+    static func addingAsDetail(on splitViewController: UISplitViewController) -> PresentMethod {
+        return PresentMethod(
+            name: "addingAsMasterOnSplitView",
+            style: .addingToSplitView,
+            presentHandler: { (context: PresentContext) in
+                let vc = context.viewControllerToPresent
+                splitViewController.show(vc, sender: nil)
+        }, dismissHandler: { _ in })
+    }
 }

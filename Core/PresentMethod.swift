@@ -72,6 +72,9 @@ public struct PresentMethod {
         case addAsWindowRootViewController
         /// The present method displays the view controller by switching to its tab on a `UITabBarController`.
         case tabBarControllerTabSwitch
+        /// The present method displays the view controller by adding it as either the master or detail of a
+        /// `UISplitViewController`.
+        case addingToSplitView
     }
     
     /// The name for this present method. This should be a human-readable string that can be used to identify the
@@ -183,4 +186,24 @@ internal extension PresentMethod {
         style: .tabBarControllerTabSwitch,
         presentHandler: { _ in },
         dismissHandler: { _ in })
+    
+    static func addingAsMaster(on splitViewController: UISplitViewController) -> PresentMethod {
+        return PresentMethod(
+            name: "addingAsMasterOnSplitView",
+            style: .addingToSplitView,
+            presentHandler: { (context: PresentContext) in
+                let vc = context.viewControllerToPresent
+                splitViewController.show(vc, sender: nil)
+            }, dismissHandler: { _ in })
+    }
+    
+    static func addingAsDetail(on splitViewController: UISplitViewController) -> PresentMethod {
+        return PresentMethod(
+            name: "addingAsMasterOnSplitView",
+            style: .addingToSplitView,
+            presentHandler: { (context: PresentContext) in
+                let vc = context.viewControllerToPresent
+                splitViewController.show(vc, sender: nil)
+        }, dismissHandler: { _ in })
+    }
 }

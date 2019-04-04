@@ -20,6 +20,9 @@
       location = "group:CorduroyExample/CorduroyExample.xcodeproj">
    </FileRef>
    <FileRef
-      location = "group:CorduroyRoutingExample/CorduroyRoutingExample/CorduroyRoutingExample.xcodeproj">
+      location = "group:CorduroyRoutingExample/CorduroyRoutingExample.xcodeproj">
+   </FileRef>
+   <FileRef
+      location = "group:Pods/Pods.xcodeproj">
    </FileRef>
 </Workspace>

@@ -73,7 +73,7 @@ public class NavigationResult<C: AnyCoordinator> {
      In most cases this will be called immediately; however, in the case of a coordinator that has recovering
      preconditions, the handler is called after all preconditions have passed or been recovered. The handler is not
      called if any preconditions fail and were not recoverable. This handler is guaranteed to be called before the
-     created coordinator's `presentViewController` or `presentFirstViewController` methods, so additional configuration
+     created coordinator's `start` or `start` methods, so additional configuration
      of the coordinator can be done in this handler.
      - parameter onCreated: The handler that will be called with the created coordinator.
      - returns: The navigation result object to optionally add additional handlers.

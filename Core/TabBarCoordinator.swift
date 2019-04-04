@@ -53,7 +53,7 @@ public extension TabCoordinator where Self: UIViewController {
 
 
 /**
- A coordinator that represents a tab bar controller.
+ A coordinator that encapsulates a tab bar controller.
  
  This object is used to represent a tab bar controller in the `Navigator` object's navigation stack. Each tab on this
  coordinator's managed `UITabBarController` is managed by an object conforming to `TabCoordinator`. These 'child' tab
@@ -116,7 +116,7 @@ public extension TabCoordinator where Self: UIViewController {
         return coordinator
     }
     
-    public func presentViewController(context: NavigationContext) {
+    public func start(context: NavigationContext) {
         self.present(self.tabBarController, context: context)
         // we wait until presentation to actually populate the 'navigation stack'
         for (i, tabCoordinator) in self.tabCoordinators.enumerated() {
@@ -164,7 +164,7 @@ public extension TabCoordinator where Self: UIViewController {
 }
 
 extension TabBarCoordinator: UITabBarControllerDelegate {
-    @objc func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
+    @objc public func tabBarController(_ tabBarController: UITabBarController, didSelect viewController: UIViewController) {
         for (i, tabCoordinator) in self.tabCoordinators.enumerated() {
             if viewController === tabCoordinator.viewControllers.first {
                 let context = NavigationContext(
@@ -183,7 +183,7 @@ extension TabBarCoordinator: UITabBarControllerDelegate {
 }
 
 public extension TabBarCoordinator {
-    public struct SetupModel: ExpressibleByArrayLiteral {
+    struct SetupModel: ExpressibleByArrayLiteral {
         public typealias ArrayLiteralElement = TabCoordinator.Type
         
         public let tabCoordinatorTypes: [TabCoordinator.Type]

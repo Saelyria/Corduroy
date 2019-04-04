@@ -35,10 +35,10 @@ class MyCoordinator: Coordinator {
     // coordinators are created with a factory 'create(with:navigator:)' method. A default implementation is
     // provided that creates the coordinator and sets its 'navigator', but can be implemented yourself.
 
-    // The coordinator's 'presentViewController' method is called when it is navigated to. It is passed a
+    // The coordinator's 'start' method is called when it is navigated to. It is passed a
     // 'navigation context' object, which has properties like the previous coordinator and the presentation
     // method, among other things.
-    func presentViewController(with context: NavigationContext) {
+    func start(with context: NavigationContext) {
         let myVC = MyViewController()
         myVC.coordinator = self
         self.present(myVC, asDescribedBy: context)
@@ -104,9 +104,9 @@ Flows are often used to accomplish tasks or get a value from something. To facil
 class MyFlowCoordinator: FlowCoordinator {
     typealias FlowResult = MyModel
 
-    // instead of a 'presentViewController' method, flow coordinators have 'presentFirstViewController' where,
+    // instead of a 'start' method, flow coordinators have 'start' where,
     // along with a context, they can also be passed a 'completion' closure they're expected to call.
-    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, FlowResult?) -> Void) {
+    func start(context: NavigationContext, flowCompletion: @escaping (Error?, FlowResult?) -> Void) {
         self.flowCompletion = flowCompletion //store the flow completion to call it later
         // present first view controller
     }

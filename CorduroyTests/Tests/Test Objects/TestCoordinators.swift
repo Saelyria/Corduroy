@@ -47,7 +47,7 @@ final class TestCoordinator: BaseTestCoordinator, Coordinator {
         return coordinator
     }
     
-    func presentViewController(context: NavigationContext) {
+    func start(context: NavigationContext) {
         if let vc = self.firstViewController {
             vc.coordinator = self
             self.present(vc, context: context)
@@ -78,7 +78,7 @@ final class TestCoordinatorStringSetup: BaseTestCoordinator, Coordinator {
         return coordinator
     }
     
-    func presentViewController(context: NavigationContext) {
+    func start(context: NavigationContext) {
         if let vc = self.firstViewController {
             vc.coordinator = self
             self.present(vc, context: context)
@@ -111,7 +111,7 @@ final class TestPassingPreconditionRequiringCoordinator: BaseTestCoordinator, Co
         return coordinator
     }
     
-    func presentViewController(context: NavigationContext) {
+    func start(context: NavigationContext) {
         if let vc = self.firstViewController {
             vc.coordinator = self
             self.present(vc, context: context)

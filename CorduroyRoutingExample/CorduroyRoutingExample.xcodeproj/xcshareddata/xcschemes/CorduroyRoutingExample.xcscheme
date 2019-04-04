@@ -14,10 +14,10 @@
             buildForAnalyzing = "YES">
             <BuildableReference
                BuildableIdentifier = "primary"
-               BlueprintIdentifier = "9306913D200BEC1D00B1C9B9"
-               BuildableName = "CorduroyExample.app"
-               BlueprintName = "CorduroyExample"
-               ReferencedContainer = "container:CorduroyExample.xcodeproj">
+               BlueprintIdentifier = "93D88E8C2043A5F900C9D0A9"
+               BuildableName = "CorduroyRoutingExample.app"
+               BlueprintName = "CorduroyRoutingExample"
+               ReferencedContainer = "container:CorduroyRoutingExample.xcodeproj">
             </BuildableReference>
          </BuildActionEntry>
       </BuildActionEntries>
@@ -32,10 +32,10 @@
       <MacroExpansion>
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9306913D200BEC1D00B1C9B9"
-            BuildableName = "CorduroyExample.app"
-            BlueprintName = "CorduroyExample"
-            ReferencedContainer = "container:CorduroyExample.xcodeproj">
+            BlueprintIdentifier = "93D88E8C2043A5F900C9D0A9"
+            BuildableName = "CorduroyRoutingExample.app"
+            BlueprintName = "CorduroyRoutingExample"
+            ReferencedContainer = "container:CorduroyRoutingExample.xcodeproj">
          </BuildableReference>
       </MacroExpansion>
       <AdditionalOptions>
@@ -55,10 +55,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9306913D200BEC1D00B1C9B9"
-            BuildableName = "CorduroyExample.app"
-            BlueprintName = "CorduroyExample"
-            ReferencedContainer = "container:CorduroyExample.xcodeproj">
+            BlueprintIdentifier = "93D88E8C2043A5F900C9D0A9"
+            BuildableName = "CorduroyRoutingExample.app"
+            BlueprintName = "CorduroyRoutingExample"
+            ReferencedContainer = "container:CorduroyRoutingExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
       <AdditionalOptions>
@@ -74,10 +74,10 @@
          runnableDebuggingMode = "0">
          <BuildableReference
             BuildableIdentifier = "primary"
-            BlueprintIdentifier = "9306913D200BEC1D00B1C9B9"
-            BuildableName = "CorduroyExample.app"
-            BlueprintName = "CorduroyExample"
-            ReferencedContainer = "container:CorduroyExample.xcodeproj">
+            BlueprintIdentifier = "93D88E8C2043A5F900C9D0A9"
+            BuildableName = "CorduroyRoutingExample.app"
+            BlueprintName = "CorduroyRoutingExample"
+            ReferencedContainer = "container:CorduroyRoutingExample.xcodeproj">
          </BuildableReference>
       </BuildableProductRunnable>
    </ProfileAction>

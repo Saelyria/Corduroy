@@ -12,12 +12,12 @@ import Corduroy
  To do this, all we have to do is have the coordinator conform to `NavigationPreconditionRequiring` and give it an
  array of precondition types.
  */
-final class HomeCoordinator: TabCoordinator, NavigationPreconditionRequiring {
+final class HomeCoordinator: TabCoordinator, NavigationPreconditionRequiring {    
     static var preconditions: [NavigationPrecondition] = [
         LoggedInPrecondition()
     ]
     
-    var tabBarCoordinator: TabBarCoordinator!
+    var tabBarCoordinator: TabBarCoordinator?
     var navigator: Navigator!
     
     func createViewController() -> UIViewController {

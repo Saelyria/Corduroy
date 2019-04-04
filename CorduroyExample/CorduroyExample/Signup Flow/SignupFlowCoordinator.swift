@@ -23,7 +23,7 @@ final class SignupFlowCoordinator: FlowCoordinator {
     private var tempSecurityQuestion: String?
     private var tempSecurityAnswer: String?
 
-    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, SignupInfo?) -> Void) {
+    func start(context: NavigationContext, flowCompletion: @escaping (Error?, SignupInfo?) -> Void) {
         self.completion = flowCompletion
         
         let signupVC = SignupFormViewController.createFromStoryboard()

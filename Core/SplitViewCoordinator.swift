@@ -47,11 +47,11 @@ public final class SplitViewCoordinator<MasterCoordinatorType: SplitViewMasterCo
         return self.splitViewController
     }
     
-    public func presentViewController(context: NavigationContext) {
+    public func start(context: NavigationContext) {
         self.present(self.splitViewController, context: context)
     }
     
-    internal func presentViewControllerInTabCoordinator() {
+    internal func startInTabCoordinator() {
         
     }
     

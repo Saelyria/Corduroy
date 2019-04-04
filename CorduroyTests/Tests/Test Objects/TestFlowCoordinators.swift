@@ -24,7 +24,7 @@ final class TestFlowCoordinatorVoidCompletionModel: FlowCoordinator {
         return coordinator
     }
     
-    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, ()?) -> Void) {
+    func start(context: NavigationContext, flowCompletion: @escaping (Error?, ()?) -> Void) {
         if let vc = self.firstViewController {
             vc.coordinator = self
             self.present(vc, context: context)
@@ -61,7 +61,7 @@ final class TestFlowCoordinatorStringCompletionModel: FlowCoordinator {
         return coordinator
     }
     
-    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, String?) -> Void) {
+    func start(context: NavigationContext, flowCompletion: @escaping (Error?, String?) -> Void) {
         if let vc = self.firstViewController {
             vc.coordinator = self
             self.present(vc, context: context)

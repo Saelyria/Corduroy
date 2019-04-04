@@ -1,0 +1,25 @@
+PODS:
+  - Corduroy (0.1.0):
+    - Corduroy/Core (= 0.1.0)
+  - Corduroy/Core (0.1.0)
+  - Nimble (8.0.1)
+
+DEPENDENCIES:
+  - Corduroy (from `.`)
+  - Nimble (~> 8)
+
+SPEC REPOS:
+  https://github.com/cocoapods/specs.git:
+    - Nimble
+
+EXTERNAL SOURCES:
+  Corduroy:
+    :path: "."
+
+SPEC CHECKSUMS:
+  Corduroy: afae7f229ee69bba1f5ec4f5e7093cad824b4778
+  Nimble: 45f786ae66faa9a709624227fae502db55a8bdd0
+
+PODFILE CHECKSUM: 0e1e0c0de1b59d5dac9cf578041eeb9a3772bbf8
+
+COCOAPODS: 1.6.1

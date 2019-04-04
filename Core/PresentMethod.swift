@@ -105,8 +105,8 @@ extension PresentMethod: CustomDebugStringConvertible, Hashable {
         return lhs.name == rhs.name
     }
     
-    public var hashValue: Int {
-        return self.name.hashValue
+    public func hash(into hasher: inout Hasher) {
+        hasher.combine(self.name.hashValue)
     }
     
     public var debugDescription: String {
@@ -121,7 +121,7 @@ public extension PresentMethod {
      Use of this method assumes that the current view controller that the new view controller is being pushed from is
      already contained in a navigation controller.
      */
-    public static let pushing: PresentMethod = PresentMethod(
+    static let pushing: PresentMethod = PresentMethod(
         name: "pushing",
         style: .navigationControllerPush,
         presentHandler: { (context: PresentContext) in
@@ -145,7 +145,7 @@ public extension PresentMethod {
      A present method that modally presents a view controller. This presents the view controller using the presentation
      and transition styles given in the navigation's parameters.
      */
-    public static let modallyPresenting: PresentMethod = PresentMethod(
+    static let modallyPresenting: PresentMethod = PresentMethod(
         name: "modallyPresenting",
         style: .modalPresentation,
         presentHandler: { (context: PresentContext) in
@@ -163,7 +163,7 @@ public extension PresentMethod {
             context.previousViewController.dismiss(animated: animate, completion: nil)
         })
     
-    public static let swappingRootView: PresentMethod = PresentMethod(
+    static let swappingRootView: PresentMethod = PresentMethod(
         name: "swappingRootView",
         style: .addAsWindowRootViewController,
         presentHandler: { (context: PresentContext) in

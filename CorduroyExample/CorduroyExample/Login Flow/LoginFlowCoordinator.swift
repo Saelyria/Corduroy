@@ -21,7 +21,7 @@ final class LoginFlowCoordinator: FlowCoordinator {
         return loginFlowCoordinator
     }
     
-    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, ()?) -> Void) {
+    func start(context: NavigationContext, flowCompletion: @escaping (Error?, ()?) -> Void) {
         let storyboard = UIStoryboard(name: "Main", bundle: nil)
         let loginViewController = storyboard.instantiateViewController(withIdentifier: "LoginViewController") as! LoginViewController
         

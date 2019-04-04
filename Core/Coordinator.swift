@@ -22,7 +22,7 @@ import UIKit
  
  Depending on the complexity of the view being created, you can decide to have a dedicated coordinator object that your
  view controller delegates to, or your view controller can implement `Coordinator` itself. View controllers conforming
- to `Coordinator` have a default implementation provided for `presentViewController(_:context:)` and
+ to `Coordinator` have a default implementation provided for `start(_:context:)` and
  `create(with:navigator:)`. View controllers that are created from a storyboard should always implement their static
  `create` method, as this default implementation simply creates them with their `init(nibName:bundle:)` initializer.
  */
@@ -32,11 +32,11 @@ public protocol Coordinator: AnyCoordinator, SetupModelRequiring {
      controller and push/present it from the context's `currentViewController`.
      - parameter context: A context object containing the involved coordinators and other navigation details.
      */
-    func presentViewController(context: NavigationContext)
+    func start(context: NavigationContext)
 }
 
 public extension Coordinator where Self: UIViewController {
-    func presentViewController(context: NavigationContext) {
+    func start(context: NavigationContext) {
         self.present(self, context: context)
     }
 }
@@ -56,7 +56,7 @@ public extension Coordinator where Self: UIViewController {
  as regular coordinator for managing dependencies.
  
  Flow coordinators are started by other coordinators and are expected to, once completed, call the completion closure
- passed into their `presentFirstViewController(context:flowCompletion:)` method where they will pass in either an error
+ passed into their `start(context:flowCompletion:)` method where they will pass in either an error
  if their flow 'failed' or a result object of their `FlowResult` type. This context type could be, as in the example of
  authentication, a type that contains information about whether the authentication was successful and, if so, the
  credentials for the authentication. If the flow doesn't return a model (such as a login flow), `FlowResult` can be left
@@ -74,7 +74,7 @@ public protocol FlowCoordinator: AnyCoordinator, SetupModelRequiring {
      - parameter context: A context object containing the involved coordinators and other navigation details.
      - parameter flowCompletion: A closure to call after the flow has completed.
      */
-    func presentFirstViewController(context: NavigationContext, flowCompletion: @escaping (Error?, FlowResult?) -> Void)
+    func start(context: NavigationContext, flowCompletion: @escaping (Error?, FlowResult?) -> Void)
 }
 
 
@@ -97,7 +97,7 @@ public protocol AnyCoordinator: AnyObject {
      view controller. This is called anytime one of the coordinator's underlying view controllers becomes the
      actively shown view controller, such as when it is first presented, when a view controller is dismissed to it,
      or when the view controller's tab is switched to. This method is always called after the coordinator's
-    `presentViewController` method.
+    `start` method.
      */
     func didBecomeActive(context: NavigationContext)
     /**

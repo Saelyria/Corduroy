@@ -127,7 +127,7 @@ open class Navigator {
         let stackItem = Navigation(coordinator: firstCoordinator, presentMethod: .addingAsRoot, parentCoordinator: nil)
         self.navigatorManagedNavigationStack.append(stackItem)
         let context = NavigationContext(navigator: self, from: firstCoordinator, to: firstCoordinator, by: .addingAsRoot, params: .defaults)
-        firstCoordinator.presentViewController(context: context)
+        firstCoordinator.start(context: context)
         firstCoordinator.didBecomeActive(context: context)
         
         return firstCoordinator
@@ -157,7 +157,7 @@ open class Navigator {
     open func go<T: Coordinator>(to coordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: Set<NavigationParameter> = .defaults) -> NavigationResult<T> {
         return self.go(to: coordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { coordinator, context in
-            coordinator.presentViewController(context: context)
+            coordinator.start(context: context)
             coordinator.didBecomeActive(context: context)
         })
     }
@@ -189,7 +189,7 @@ open class Navigator {
     open func go<T: FlowCoordinator>(to flowCoordinator: T.Type, by navMethod: PresentMethod, with model: T.SetupModel,
     parameters: Set<NavigationParameter> = .defaults, flowCompletion: @escaping (Error?, T.FlowResult?) -> Void) -> NavigationResult<T> {
         return self.go(to: flowCoordinator, by: navMethod, with: model, parameters: parameters, presentBlock: { flowCoordinator, context in
-            flowCoordinator.presentFirstViewController(context: context, flowCompletion: flowCompletion)
+            flowCoordinator.start(context: context, flowCompletion: flowCompletion)
             flowCoordinator.didBecomeActive(context: context)
         })
     }
@@ -319,7 +319,7 @@ open class Navigator {
         self.shouldIgnoreNavControllerPopRequests = true
         
         // get the coordinators to be removed in order from the end and call their `onDismissal(context:)` methods
-        guard let coordinatorIndex = self.navigationStack.index(where: { $0.coordinator === coordinator }) else { return }
+        guard let coordinatorIndex = self.navigationStack.firstIndex(where: { $0.coordinator === coordinator }) else { return }
         for index in stride(from: self.navigationStack.count-1, to: coordinatorIndex, by: -1) {
             let navStackItem = self.navigationStack[index]
 

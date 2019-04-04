@@ -47,14 +47,14 @@ public enum NavigationParameter: Equatable, Hashable {
     /// A custom parameter containing a flag or value specific to your application logic.
     case custom(key: String, value: Any)
     
-    public var hashValue: Int {
+    public func hash(into hasher: inout Hasher) {
         switch self {
-        case .modalTransitionStyle(_): return 0
-        case .modalPresentationStyle(_): return 1
-        case .shouldAnimateTransition(_): return 2
-        case .clearBackTo(_): return 3
-        case .addPreconditions(_): return 4
-        case .custom(let key, _): return key.hashValue
+        case .modalTransitionStyle(_): hasher.combine(0)
+        case .modalPresentationStyle(_): hasher.combine(1)
+        case .shouldAnimateTransition(_): hasher.combine(2)
+        case .clearBackTo(_): hasher.combine(3)
+        case .addPreconditions(_): hasher.combine(4)
+        case .custom(let key, _): hasher.combine(key.hashValue)
         }
     }
     
@@ -86,12 +86,12 @@ public enum NavigationParameter: Equatable, Hashable {
 
 public extension Set where Element == NavigationParameter {
     /// A convenience parameter set of all the UIKit default parameters.
-    public static var defaults: Set<NavigationParameter> {
+    static var defaults: Set<NavigationParameter> {
         return NavigationParameter.defaults
     }
     
     /// The default set of parameters with `animateTransition` set to `false`.
-    public static var noAnimation: Set<NavigationParameter> {
+    static var noAnimation: Set<NavigationParameter> {
         return NavigationParameter.noAnimation
     }
     

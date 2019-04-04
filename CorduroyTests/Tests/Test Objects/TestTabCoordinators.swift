@@ -4,7 +4,7 @@ import Corduroy
 
 final class TestTabCoordinator1: BaseTestCoordinator, TabCoordinator {
     var navigator: Navigator!
-    var tabBarCoordinator: TabBarCoordinator!
+    var tabBarCoordinator: TabBarCoordinator?
     let vc = TestEmbeddedViewController()
     
     func createViewController() -> UIViewController {
@@ -15,7 +15,7 @@ final class TestTabCoordinator1: BaseTestCoordinator, TabCoordinator {
 
 final class TestTabCoordinator2: BaseTestCoordinator, TabCoordinator {
     var navigator: Navigator!
-    var tabBarCoordinator: TabBarCoordinator!
+    var tabBarCoordinator: TabBarCoordinator?
     let vc = TestViewController()
     
     func createViewController() -> UIViewController {
@@ -26,7 +26,7 @@ final class TestTabCoordinator2: BaseTestCoordinator, TabCoordinator {
 
 final class TestTabCoordinator3: BaseTestCoordinator, TabCoordinator {
     var navigator: Navigator!
-    var tabBarCoordinator: TabBarCoordinator!
+    var tabBarCoordinator: TabBarCoordinator?
     let vc = TestEmbeddedViewController()
     
     func createViewController() -> UIViewController {

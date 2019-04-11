@@ -82,6 +82,8 @@ open class Navigator {
     
     private static var hasSwizzled: Bool = false
     
+    internal var queuedViewControllersForNavigationPush: [UIViewController] = []
+    
     /// Instantiate a new navigator.
     public required init() {
         if Navigator.useSwizzling, Navigator.hasSwizzled == false {

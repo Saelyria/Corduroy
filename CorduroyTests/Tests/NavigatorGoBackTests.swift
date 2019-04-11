@@ -234,7 +234,6 @@ class NavigatorGoBackTests: XCTestCase {
         navigator.go(to: TestCoordinator.self, by: .pushing, with: secondVC, parameters: .noAnimation)
             .configureCoordinator { secondCoordinator = $0 }
         XCTAssert(navigator.currentViewController === secondVC)
-        XCTAssert(navController?.viewControllers[safe: 1] === secondVC)
         waitUntilNextFrame()
         
         // add a pushed coordinator
@@ -243,7 +242,6 @@ class NavigatorGoBackTests: XCTestCase {
         navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (thirdVC, ""), parameters: .noAnimation)
             .configureCoordinator { thirdCoordinator = $0 }
         XCTAssert(navigator.currentViewController === thirdVC)
-        XCTAssert(navController?.viewControllers[safe: 2] === thirdVC)
         waitUntilNextFrame()
         
         // add a pushed coordinator
@@ -252,11 +250,8 @@ class NavigatorGoBackTests: XCTestCase {
         navigator.go(to: TestCoordinatorStringSetup.self, by: .pushing, with: (fourthVC, ""), parameters: .noAnimation)
             .configureCoordinator { fourthCoordinator = $0 }
         XCTAssert(navigator.currentViewController === fourthVC)
-        XCTAssert(navController?.viewControllers[safe: 3] === fourthVC)
         waitUntilNextFrame()
         
-        return
-
         expect(navigator.coordinators).toEventually(haveCount(4))
         expect(navigator.coordinators[safe: 0]).toEventually(be(firstCoordinator))
         expect(navigator.coordinators[safe: 1]).toEventually(be(secondCoordinator))

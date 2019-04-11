@@ -32,7 +32,7 @@ import UIKit
  }
  ```
  */
-public struct PresentMethod {
+public class PresentMethod {
     /// An object that is passed into a `PresentMethod`'s `presentHandler` that contains the information that the
     /// handler uses to present a view controller.
     public struct PresentContext {
@@ -133,7 +133,15 @@ public extension PresentMethod {
             }
             let animate = context.parameters.shouldAnimateTransition
             let vc = context.viewControllerToPresent
-            context.currentViewController?.navigationController?.pushViewController(vc, animated: animate)
+
+            context.navigator.queuedViewControllersForNavigationPush.append(vc)
+            if context.navigator.queuedViewControllersForNavigationPush.count > 1 { return }
+            DispatchQueue.main.async {
+                var allViewControllers = (context.currentViewController?.navigationController?.viewControllers ?? [])
+                allViewControllers.append(contentsOf: context.navigator.queuedViewControllersForNavigationPush)
+                context.currentViewController?.navigationController?.setViewControllers(allViewControllers, animated: animate)
+                context.navigator.queuedViewControllersForNavigationPush = []
+            }
         }, dismissHandler: { (context: DismissContext) in
             let animate = context.parameters.shouldAnimateTransition
             let navController = context.viewControllerToDismiss.navigationController

@@ -38,6 +38,9 @@ public extension AnyCoordinator {
             currentViewController: self.navigator.currentViewController,
             viewControllerToPresent: vcToPresent,
             parameters: parameters)
+        guard !(self.navigator.currentViewController == nil && presentMethod.style != .addAsWindowRootViewController) else {
+            fatalError("No view controller to present from")
+        }
         
         presentMethod.presentHandler(context)
         

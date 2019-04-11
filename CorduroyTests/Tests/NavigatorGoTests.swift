@@ -267,13 +267,13 @@ class NavigatorGoTests: XCTestCase {
      
      This is the expected coordinator/view controller stack:
      _________________________ ___________________________________________________________________________________________________________ _________________________
-     | TabBarCoordinator     | | TabCoordinator  -(push)-> | FlowCoordinator->Void           -(push)-> | Coordinator(String)             | | Coordinator(String)   |
+     | TabBarCoordinator     | | TabBarEmbeddable  -(push)-> | FlowCoordinator->Void           -(push)-> | Coordinator(String)             | | Coordinator(String)   |
      |-----------------------| |---------------------------|-------------------------|-----------------|---------------------------------| |-----------------------|
      | TabBarController      | | (Nav) _ _ _ _   -(push)-> | (Nav) _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _              | | (Nav) _ _ _ _         |
      |                       | | EmbeddedVC   \            | EmbeddedVC    -(push)-> | VC    -(push)-> | EmbeddedVC        \             | | EmbeddedVC   \        |
      |                       | ----------------------------------------------------------------------------------------------------------- |                       |
      |                       | ____________________________________________________________________________________________________________|                       |
-     |                       | | TabCoordinator                                                                                 -(modal)-> |                       |
+     |                       | | TabBarEmbeddable                                                                                 -(modal)-> |                       |
      |                       | |-----------------------------------------------------------------------------------------------------------|                       |
      |                       | | VC                                                                                             -(modal)-> |                       |
      |                       | |                                                                                                           |                       |
@@ -281,14 +281,15 @@ class NavigatorGoTests: XCTestCase {
      */
     func testTabBarCoordinatorStack() {
         let tabBarController = UITabBarController()
-        let tabModel = TabBarCoordinator.SetupModel(tabCoordinators: [TestTabCoordinator1.self,
-                                                                      TestTabCoordinator2.self],
-                                                    tabBarController: tabBarController)
+        let tabModel = TabBarCoordinator.SetupModel({ (embedder) in
+            embedder.embed(TestTabBarEmbeddable1.self)
+            embedder.embed(TestTabBarEmbeddable2.self)
+        }, tabBarController: tabBarController)
         let tabCoordinator = navigator.start(onWindow: window, firstCoordinator: TabBarCoordinator.self, with: tabModel)
         
         // setup the first tab
         
-        let tab1_firstCoordinator: TestTabCoordinator1 = tabCoordinator.tabCoordinators[0] as! TestTabCoordinator1
+        let tab1_firstCoordinator: TestTabBarEmbeddable1 = tabCoordinator.tabbedCoordinators[0] as! TestTabBarEmbeddable1
         let tab1_firstVC: TestEmbeddedViewController = tab1_firstCoordinator.vc
         let tab1_firstNavController = tab1_firstVC.navigationController
         
@@ -336,16 +337,16 @@ class NavigatorGoTests: XCTestCase {
         
         // check view controller relationships to one another
         expect(tab1_firstNavController).toNot(beNil())
-        expect(tab1_firstNavController?.viewControllers).to(haveCount(4))
-        expect(tab1_firstVC.navigationController).to(be(tab1_firstNavController))
-        expect(tab1_secondVC.navigationController).to(be(tab1_firstNavController))
-        expect(tab1_thirdVC.navigationController).to(be(tab1_firstNavController))
-        expect(tab1_fourthVC.navigationController).to(be(tab1_firstNavController))
+        expect(tab1_firstNavController?.viewControllers).toEventually(haveCount(4))
+        expect(tab1_firstVC.navigationController).toEventually(be(tab1_firstNavController))
+        expect(tab1_secondVC.navigationController).toEventually(be(tab1_firstNavController))
+        expect(tab1_thirdVC.navigationController).toEventually(be(tab1_firstNavController))
+        expect(tab1_fourthVC.navigationController).toEventually(be(tab1_firstNavController))
         
         // setup the second tab, then modally present the view controller
         
-        self.navigator.switch(toTabFor: TestTabCoordinator2.self)
-        let tab2_firstCoordinator: TestTabCoordinator2 = tabCoordinator.tabCoordinators[1] as! TestTabCoordinator2
+        self.navigator.switch(toTabFor: TestTabBarEmbeddable2.self)
+        let tab2_firstCoordinator: TestTabBarEmbeddable2 = tabCoordinator.tabbedCoordinators[1] as! TestTabBarEmbeddable2
         let tab2_firstVC: TestViewController = tab2_firstCoordinator.vc
         
         let tab2_secondVC = TestEmbeddedViewController()
@@ -372,7 +373,7 @@ class NavigatorGoTests: XCTestCase {
         
         // switch back to the first tab, ensuring that 1) the modally presented coordinator remains on the stack, and 2)
         // that the stack before this coordinator changes.
-        self.navigator.switch(toTabFor: TestTabCoordinator1.self)
+        self.navigator.switch(toTabFor: TestTabBarEmbeddable1.self)
         
         // check the navigator coordinator stack
         expect(self.navigator.coordinators).to(haveCount(5))

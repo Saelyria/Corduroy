@@ -28,8 +28,14 @@ import UIKit
  */
 public protocol Coordinator: AnyCoordinator, SetupModelRequiring {
     /**
-     Called when the coordinator is navigated to. In this method, the coordinator should instantiate its first view
-     controller and push/present it from the context's `currentViewController`.
+     Called when the coordinator is navigated to.
+     
+     In this method, the coordinator should instantiate its first view controller and push/present it from the context's
+     `currentViewController`. However, the coordinator can perform other asynchronous tasks like networking that factor
+     into which view controller is shown and how before presenting a view controller.
+     
+     A default implementation of this method is provided if the conforming type is a `UIViewController`.
+     
      - parameter context: A context object containing the involved coordinators and other navigation details.
      */
     func start(context: NavigationContext)

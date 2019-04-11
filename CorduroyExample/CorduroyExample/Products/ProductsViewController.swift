@@ -3,7 +3,7 @@ import Corduroy
 
 typealias ProductsCoordinator = ProductsViewController
 
-final class ProductsViewController: UIViewController, TabCoordinator, UIStoryboardInitable, NavigationControllerEmbedded {
+final class ProductsViewController: UIViewController, Coordinator, TabBarEmbeddable, UIStoryboardInitable, NavigationControllerEmbedded {
     static let storyboardName: String = "Main"
     
     var navigator: Navigator!

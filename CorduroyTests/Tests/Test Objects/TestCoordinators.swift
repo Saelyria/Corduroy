@@ -6,6 +6,15 @@ class BaseTestController: UIViewController {
     var coordinator: AnyCoordinator?
 }
 
+extension UIViewController {
+    func setup() -> Self {
+        self.loadViewIfNeeded()
+        self.viewWillAppear(false)
+        self.viewDidAppear(false)
+        return self
+    }
+}
+
 class TestViewController: BaseTestController { }
 
 class TestEmbeddedViewController: BaseTestController, NavigationControllerEmbedded { }

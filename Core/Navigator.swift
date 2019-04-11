@@ -85,6 +85,7 @@ open class Navigator {
     /// Instantiate a new navigator.
     public required init() {
         if Navigator.useSwizzling, Navigator.hasSwizzled == false {
+            Navigator.hasSwizzled = true
             swizzle(c: UINavigationController.self,
                     original: #selector(UINavigationController.popViewController(animated:)),
                     swizzled: #selector(UINavigationController.corduroy_popViewController(animated:)))
@@ -259,15 +260,15 @@ open class Navigator {
     // MARK: Tab bar navigation methods
     
     /**
-     Switch to the tab managed by the given `TabCoordinator`.
+     Switch to the tab managed by the given `TabBarEmbeddable`.
     */
-    open func `switch`<T: TabCoordinator>(toTabFor tabCoordinator: T.Type, on tabBarCoordinator: TabBarCoordinator? = nil) {
+    open func `switch`<T: TabBarEmbeddable>(toTabFor TabBarEmbeddable: T.Type, on tabBarCoordinator: TabBarCoordinator? = nil) {
         var _tabBarCoordinator: TabBarCoordinator? = tabBarCoordinator
         if _tabBarCoordinator == nil {
             for i in stride(from: self.navigatorManagedNavigationStack.count-1, through: 0, by: -1) {
                 let stackItem = self.navigatorManagedNavigationStack[i]
                 if let lastTabBarCoordinator = stackItem.coordinator as? TabBarCoordinator,
-                lastTabBarCoordinator.tabCoordinators.contains(where: { $0 is T }) {
+                lastTabBarCoordinator.tabbedCoordinators.contains(where: { $0 is T }) {
                     _tabBarCoordinator = lastTabBarCoordinator
                     break
                 }
@@ -275,11 +276,11 @@ open class Navigator {
         }
         
         guard _tabBarCoordinator != nil else {
-            print("WARNING: the navigator was asked to switch to a `TabCoordinator`, but no `TabBarCoordinator` in its stack could")
+            print("WARNING: the navigator was asked to switch to a `TabBarEmbeddable`, but no `TabBarCoordinator` in its stack could")
             return
         }
         
-        _tabBarCoordinator?.switch(to: tabCoordinator)
+        _tabBarCoordinator?.switch(to: TabBarEmbeddable)
     }
     
     // MARK: Backwards navigation methods

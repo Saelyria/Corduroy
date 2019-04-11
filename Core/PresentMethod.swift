@@ -134,8 +134,7 @@ public extension PresentMethod {
             let animate = context.parameters.shouldAnimateTransition
             let vc = context.viewControllerToPresent
             context.currentViewController?.navigationController?.pushViewController(vc, animated: animate)
-        },
-        dismissHandler: { (context: DismissContext) in
+        }, dismissHandler: { (context: DismissContext) in
             let animate = context.parameters.shouldAnimateTransition
             let navController = context.viewControllerToDismiss.navigationController
             navController?.popViewController(animated: animate)

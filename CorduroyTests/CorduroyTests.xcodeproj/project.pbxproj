@@ -17,6 +17,7 @@
 		9353956C201D5027005F584E /* TestPreconditions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539569201D5026005F584E /* TestPreconditions.swift */; };
 		9353956D201D5027005F584E /* TestCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9353956A201D5026005F584E /* TestCoordinators.swift */; };
 		9353956E201D502B005F584E /* TestFlowCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93539568201D5026005F584E /* TestFlowCoordinators.swift */; };
+		AB2B04F5225DB80200837641 /* TestUtilities.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB2B04F4225DB80200837641 /* TestUtilities.swift */; };
 		AB6762F22140EA27005C3A0F /* TestTabCoordinators.swift in Sources */ = {isa = PBXBuildFile; fileRef = AB6762F12140EA27005C3A0F /* TestTabCoordinators.swift */; };
 /* End PBXBuildFile section */
 
@@ -58,6 +59,7 @@
 		93539568201D5026005F584E /* TestFlowCoordinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestFlowCoordinators.swift; sourceTree = "<group>"; };
 		93539569201D5026005F584E /* TestPreconditions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestPreconditions.swift; sourceTree = "<group>"; };
 		9353956A201D5026005F584E /* TestCoordinators.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = TestCoordinators.swift; sourceTree = "<group>"; };
+		AB2B04F4225DB80200837641 /* TestUtilities.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestUtilities.swift; sourceTree = "<group>"; };
 		AB6762F12140EA27005C3A0F /* TestTabCoordinators.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = TestTabCoordinators.swift; sourceTree = "<group>"; };
 		ABC870D12256B68600F55F92 /* XCTest.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = XCTest.framework; path = Platforms/iPhoneOS.platform/Developer/Library/Frameworks/XCTest.framework; sourceTree = DEVELOPER_DIR; };
 		B9051118D9AF198593AC400E /* Pods_CorduroyTests.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_CorduroyTests.framework; sourceTree = BUILT_PRODUCTS_DIR; };
@@ -134,6 +136,7 @@
 				93539568201D5026005F584E /* TestFlowCoordinators.swift */,
 				93539569201D5026005F584E /* TestPreconditions.swift */,
 				AB6762F12140EA27005C3A0F /* TestTabCoordinators.swift */,
+				AB2B04F4225DB80200837641 /* TestUtilities.swift */,
 			);
 			path = "Test Objects";
 			sourceTree = "<group>";
@@ -324,6 +327,7 @@
 			files = (
 				9353956C201D5027005F584E /* TestPreconditions.swift in Sources */,
 				9353956E201D502B005F584E /* TestFlowCoordinators.swift in Sources */,
+				AB2B04F5225DB80200837641 /* TestUtilities.swift in Sources */,
 				93539566201D5020005F584E /* NavigatorGoBackTests.swift in Sources */,
 				9353956D201D5027005F584E /* TestCoordinators.swift in Sources */,
 				93539565201D5020005F584E /* NavigationContextTests.swift in Sources */,

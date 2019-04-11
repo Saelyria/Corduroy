@@ -3,7 +3,7 @@ import Corduroy
 
 typealias SettingsCoordinator = SettingsViewController
 
-final class SettingsViewController: UIViewController, TabCoordinator, UIStoryboardInitable, NavigationControllerEmbedded {
+final class SettingsViewController: UIViewController, Coordinator, TabBarEmbeddable, UIStoryboardInitable, NavigationControllerEmbedded {
     static let storyboardName: String = "Main"
     
     var tabBarCoordinator: TabBarCoordinator?

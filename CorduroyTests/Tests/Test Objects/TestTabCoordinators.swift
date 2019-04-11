@@ -2,35 +2,35 @@ import XCTest
 import Nimble
 import Corduroy
 
-final class TestTabCoordinator1: BaseTestCoordinator, TabCoordinator {
+final class TestTabBarEmbeddable1: BaseTestCoordinator, Coordinator, TabBarEmbeddable {
     var navigator: Navigator!
     var tabBarCoordinator: TabBarCoordinator?
     let vc = TestEmbeddedViewController()
     
-    func createViewController() -> UIViewController {
+    func start(context: NavigationContext, embeddingFirstViewControllerWith embed: (UIViewController) -> Void) {
         self.vc.coordinator = self
-        return self.vc
+        embed(self.vc)
     }
 }
 
-final class TestTabCoordinator2: BaseTestCoordinator, TabCoordinator {
+final class TestTabBarEmbeddable2: BaseTestCoordinator, Coordinator, TabBarEmbeddable {
     var navigator: Navigator!
     var tabBarCoordinator: TabBarCoordinator?
     let vc = TestViewController()
     
-    func createViewController() -> UIViewController {
+    func start(context: NavigationContext, embeddingFirstViewControllerWith embed: (UIViewController) -> Void) {
         self.vc.coordinator = self
-        return self.vc
+        embed(self.vc)
     }
 }
 
-final class TestTabCoordinator3: BaseTestCoordinator, TabCoordinator {
+final class TestTabBarEmbeddable3: BaseTestCoordinator, Coordinator, TabBarEmbeddable {
     var navigator: Navigator!
     var tabBarCoordinator: TabBarCoordinator?
     let vc = TestEmbeddedViewController()
     
-    func createViewController() -> UIViewController {
+    func start(context: NavigationContext, embeddingFirstViewControllerWith embed: (UIViewController) -> Void) {
         self.vc.coordinator = self
-        return self.vc
+        embed(self.vc)
     }
 }

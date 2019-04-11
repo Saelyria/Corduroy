@@ -16,8 +16,6 @@
 		9306915F200BED6D00B1C9B9 /* SignupFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9306915B200BED6D00B1C9B9 /* SignupFlowCoordinator.swift */; };
 		93069162200BED9F00B1C9B9 /* HomeCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069160200BED9F00B1C9B9 /* HomeCoordinator.swift */; };
 		93069163200BED9F00B1C9B9 /* HomeViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 93069161200BED9F00B1C9B9 /* HomeViewController.swift */; };
-		930C0891200BFC7100B0B934 /* Corduroy.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 930C0882200BF6AC00B0B934 /* Corduroy.framework */; };
-		930C0892200BFC7100B0B934 /* Corduroy.framework in Embed Frameworks */ = {isa = PBXBuildFile; fileRef = 930C0882200BF6AC00B0B934 /* Corduroy.framework */; settings = {ATTRIBUTES = (CodeSignOnCopy, RemoveHeadersOnCopy, ); }; };
 		9316D09E20520CB700D1A5E8 /* Main.storyboard in Resources */ = {isa = PBXBuildFile; fileRef = 9316D09D20520CB700D1A5E8 /* Main.storyboard */; };
 		9316D0A420538F2000D1A5E8 /* LoginFlowCoordinator.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0A320538F2000D1A5E8 /* LoginFlowCoordinator.swift */; };
 		9316D0A720538FB000D1A5E8 /* LoggedInPrecondition.swift in Sources */ = {isa = PBXBuildFile; fileRef = 9316D0A620538FB000D1A5E8 /* LoggedInPrecondition.swift */; };
@@ -29,23 +27,6 @@
 		CD8A66525B4CE6CCBDCF5902 /* Pods_CorduroyExample.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 954F4CBAAEA48633E74F5565 /* Pods_CorduroyExample.framework */; };
 /* End PBXBuildFile section */
 
-/* Begin PBXContainerItemProxy section */
-		930C0881200BF6AC00B0B934 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */;
-			proxyType = 2;
-			remoteGlobalIDString = 930C086B200BF2A600B0B934;
-			remoteInfo = Corduroy;
-		};
-		930C0893200BFC7100B0B934 /* PBXContainerItemProxy */ = {
-			isa = PBXContainerItemProxy;
-			containerPortal = 930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */;
-			proxyType = 1;
-			remoteGlobalIDString = 930C086A200BF2A600B0B934;
-			remoteInfo = Corduroy;
-		};
-/* End PBXContainerItemProxy section */
-
 /* Begin PBXCopyFilesBuildPhase section */
 		930C0895200BFC7100B0B934 /* Embed Frameworks */ = {
 			isa = PBXCopyFilesBuildPhase;
@@ -53,7 +34,6 @@
 			dstPath = "";
 			dstSubfolderSpec = 10;
 			files = (
-				930C0892200BFC7100B0B934 /* Corduroy.framework in Embed Frameworks */,
 			);
 			name = "Embed Frameworks";
 			runOnlyForDeploymentPostprocessing = 0;
@@ -73,7 +53,6 @@
 		9306915B200BED6D00B1C9B9 /* SignupFlowCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SignupFlowCoordinator.swift; sourceTree = "<group>"; };
 		93069160200BED9F00B1C9B9 /* HomeCoordinator.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeCoordinator.swift; sourceTree = "<group>"; };
 		93069161200BED9F00B1C9B9 /* HomeViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = HomeViewController.swift; sourceTree = "<group>"; };
-		930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */ = {isa = PBXFileReference; lastKnownFileType = "wrapper.pb-project"; name = Corduroy.xcodeproj; path = ../Corduroy.xcodeproj; sourceTree = "<group>"; };
 		9316D09D20520CB700D1A5E8 /* Main.storyboard */ = {isa = PBXFileReference; lastKnownFileType = file.storyboard; path = Main.storyboard; sourceTree = "<group>"; };
 		9316D0A320538F2000D1A5E8 /* LoginFlowCoordinator.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoginFlowCoordinator.swift; sourceTree = "<group>"; };
 		9316D0A620538FB000D1A5E8 /* LoggedInPrecondition.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = LoggedInPrecondition.swift; sourceTree = "<group>"; };
@@ -91,7 +70,6 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				930C0891200BFC7100B0B934 /* Corduroy.framework in Frameworks */,
 				CD8A66525B4CE6CCBDCF5902 /* Pods_CorduroyExample.framework in Frameworks */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
@@ -112,7 +90,6 @@
 		93069135200BEC1D00B1C9B9 = {
 			isa = PBXGroup;
 			children = (
-				930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */,
 				93069140200BEC1D00B1C9B9 /* CorduroyExample */,
 				9306913F200BEC1D00B1C9B9 /* Products */,
 				370768B21CC26941E17715B0 /* Pods */,
@@ -173,14 +150,6 @@
 				93069161200BED9F00B1C9B9 /* HomeViewController.swift */,
 			);
 			path = Home;
-			sourceTree = "<group>";
-		};
-		930C087E200BF6AC00B0B934 /* Products */ = {
-			isa = PBXGroup;
-			children = (
-				930C0882200BF6AC00B0B934 /* Corduroy.framework */,
-			);
-			name = Products;
 			sourceTree = "<group>";
 		};
 		9316D0A220538F0A00D1A5E8 /* Login Flow */ = {
@@ -250,7 +219,6 @@
 			buildRules = (
 			);
 			dependencies = (
-				930C0894200BFC7100B0B934 /* PBXTargetDependency */,
 			);
 			name = CorduroyExample;
 			productName = CorduroyExample;
@@ -285,28 +253,12 @@
 			mainGroup = 93069135200BEC1D00B1C9B9;
 			productRefGroup = 9306913F200BEC1D00B1C9B9 /* Products */;
 			projectDirPath = "";
-			projectReferences = (
-				{
-					ProductGroup = 930C087E200BF6AC00B0B934 /* Products */;
-					ProjectRef = 930C087D200BF6AC00B0B934 /* Corduroy.xcodeproj */;
-				},
-			);
 			projectRoot = "";
 			targets = (
 				9306913D200BEC1D00B1C9B9 /* CorduroyExample */,
 			);
 		};
 /* End PBXProject section */
-
-/* Begin PBXReferenceProxy section */
-		930C0882200BF6AC00B0B934 /* Corduroy.framework */ = {
-			isa = PBXReferenceProxy;
-			fileType = wrapper.framework;
-			path = Corduroy.framework;
-			remoteRef = 930C0881200BF6AC00B0B934 /* PBXContainerItemProxy */;
-			sourceTree = BUILT_PRODUCTS_DIR;
-		};
-/* End PBXReferenceProxy section */
 
 /* Begin PBXResourcesBuildPhase section */
 		9306913C200BEC1D00B1C9B9 /* Resources */ = {
@@ -391,14 +343,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 		};
 /* End PBXSourcesBuildPhase section */
-
-/* Begin PBXTargetDependency section */
-		930C0894200BFC7100B0B934 /* PBXTargetDependency */ = {
-			isa = PBXTargetDependency;
-			name = Corduroy;
-			targetProxy = 930C0893200BFC7100B0B934 /* PBXContainerItemProxy */;
-		};
-/* End PBXTargetDependency section */
 
 /* Begin PBXVariantGroup section */
 		9306914A200BEC1D00B1C9B9 /* LaunchScreen.storyboard */ = {

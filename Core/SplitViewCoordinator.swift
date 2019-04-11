@@ -13,7 +13,7 @@ public protocol SplitViewMasterCoordinator: AnyCoordinator {
     func presentDetailCoordinator(context: NavigationContext)
 }
 
-public final class SplitViewCoordinator<MasterCoordinatorType: SplitViewMasterCoordinator>: Coordinator, TabCoordinator, SubNavigating {
+public final class SplitViewCoordinator<MasterCoordinatorType: SplitViewMasterCoordinator>: Coordinator, TabBarEmbeddable, SubNavigating {
     public var tabBarCoordinator: TabBarCoordinator?
     
     /// The split view coordinator's navigator.
@@ -43,15 +43,19 @@ public final class SplitViewCoordinator<MasterCoordinatorType: SplitViewMasterCo
         return coordinator
     }
     
-    public func createViewController() -> UIViewController {
+    public func createViewController(forTabBar coordinator: TabBarCoordinator) -> UIViewController {
         return self.splitViewController
+    }
+    
+    public func start(context: NavigationContext, embeddingFirstViewControllerWith embed: (UIViewController) -> Void) {
+        embed(self.splitViewController)
     }
     
     public func start(context: NavigationContext) {
         self.present(self.splitViewController, context: context)
     }
     
-    internal func startInTabCoordinator() {
+    internal func startInTabBarEmbeddable() {
         
     }
     

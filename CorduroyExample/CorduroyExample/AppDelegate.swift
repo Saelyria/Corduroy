@@ -18,16 +18,17 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         window?.makeKeyAndVisible()
         
         // The only things we really need to do to get started are create a navigator (an object that will do all
-        /// navigation for the app) then tell the navigator to start with a given coordinator type.
+        // navigation for the app) then tell the navigator to start with a given coordinator type.
         self.navigator = Navigator()
-        navigator.start(onWindow: self.window!, firstCoordinator: TabBarCoordinator.self, with: [
-            HomeCoordinator.self,
-            ProductsCoordinator.self,
-            SettingsCoordinator.self
-        ])
+        let tabBarModel = TabBarCoordinator.SetupModel({ (embedder) in
+            embedder.embed(HomeCoordinator.self)
+            embedder.embed(ProductsCoordinator.self)
+            embedder.embed(SettingsCoordinator.self)
+        })
+        navigator.start(onWindow: self.window!, firstCoordinator: TabBarCoordinator.self, with: tabBarModel)
         
 //        if !AppDelegate.hasSignedUp {
-            self.navigator.go(to: WelcomeCoordinator.self, by: .modallyPresenting, parameters: [.shouldAnimateTransition(false)])
+//            self.navigator.go(to: WelcomeCoordinator.self, by: .modallyPresenting, parameters: [.shouldAnimateTransition(false)])
 //        }
         
         return true

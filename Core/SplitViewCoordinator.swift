@@ -73,6 +73,10 @@ public final class SplitViewCoordinator<MasterCoordinatorType: SplitViewMasterCo
         
     }
     
+    func remove(navigation: Navigation) {
+        
+    }
+    
     public init() { }
 }
 

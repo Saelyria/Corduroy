@@ -8,7 +8,7 @@ import UIKit
  objects are added as a kind of 'child' coordinator to a managing `TabBarCoordinator`, which is what the navigator will
  use to represent these tabbed 'child' coordinators on its navigation stack.
  */
-public protocol TabBarEmbeddable: AnyCoordinator {    
+public protocol TabBarEmbeddable: AnyCoordinator {
     /**
      Called when the coordinator is embedded as a root coordinator in a tab bar.
      
@@ -80,7 +80,7 @@ public extension TabBarEmbeddable where Self: Coordinator {
         let coordinator = TabBarCoordinator()
         coordinator.navigator = navigator
         
-        let embeddedCoordinators = model.createCoordinators(navigator)
+        let embeddedCoordinators = model.createCoordinators.map { $0.createCoordinator(navigator) }
         guard embeddedCoordinators.isEmpty == false else {
             fatalError("A TabBarCoordinator must be given at least one TabBarEmbeddable.")
         }
@@ -124,6 +124,14 @@ public extension TabBarEmbeddable where Self: Coordinator {
     
     internal func add(navigation: Navigation) {
         self.stackForTabbedCoordinators[self.selectedIndex].append(navigation)
+    }
+    
+    internal func remove(navigation: Navigation) {
+        guard let index = self.navigationStack.firstIndex(where: { $0.coordinator === navigation.coordinator }) else {
+            assertionFailure("Didn't have an index for the navigation the sub-navigating was asked to remove")
+            return
+        }
+        self.stackForTabbedCoordinators[self.selectedIndex].remove(at: index)
     }
     
     internal func canManage(navigationDescribedBy context: NavigationContext) -> Bool {
@@ -175,35 +183,39 @@ extension TabBarCoordinator: UITabBarControllerDelegate {
 }
 
 public extension TabBarCoordinator {
-    struct SetupModel {
-        public class Embedder {
-            fileprivate let navigator: Navigator
-            fileprivate var createdCoordinators: [TabBarEmbeddable] = []
+    struct SetupModel: ExpressibleByArrayLiteral {
+        public typealias ArrayLiteralElement = CreateCoordinatorModel
+        
+        public class CreateCoordinatorModel {
+            fileprivate let createCoordinator: (Navigator) -> TabBarEmbeddable
             
-            fileprivate init(navigator: Navigator) {
-                self.navigator = navigator
+            fileprivate init(createCoordinator: @escaping (Navigator) -> TabBarEmbeddable) {
+                self.createCoordinator = createCoordinator
             }
             
-            public func embed<C: Coordinator & TabBarEmbeddable>(_ coordinatorType: C.Type, model: C.SetupModel) {
-                let coordinator = coordinatorType.create(with: model, navigator: self.navigator)
-                self.createdCoordinators.append(coordinator)
+            public static func embed<C: Coordinator & TabBarEmbeddable>(_ coordinatorType: C.Type, model: C.SetupModel) -> CreateCoordinatorModel {
+                return CreateCoordinatorModel(createCoordinator: { (navigator) -> TabBarEmbeddable in
+                    return coordinatorType.create(with: model, navigator: navigator)
+                })
             }
             
-            public func embed<C: Coordinator & TabBarEmbeddable>(_ coordinatorType: C.Type) where C.SetupModel == Void {
-                let coordinator = coordinatorType.create(with: (), navigator: self.navigator)
-                self.createdCoordinators.append(coordinator)
+            public static func embed<C: Coordinator & TabBarEmbeddable>(_ coordinatorType: C.Type) -> CreateCoordinatorModel where C.SetupModel == Void {
+                return CreateCoordinatorModel(createCoordinator: { (navigator) -> TabBarEmbeddable in
+                    return coordinatorType.create(with: (), navigator: navigator)
+                })
             }
         }
         
-        internal let createCoordinators: (Navigator) -> [TabBarEmbeddable]
+        internal let createCoordinators: [CreateCoordinatorModel]
         internal let tabBarController: UITabBarController?
+        
+        public init(arrayLiteral elements: CreateCoordinatorModel...) {
+            self.createCoordinators = elements
+            self.tabBarController = nil
+        }
 
-        public init(_ createCoordinators: @escaping (Embedder) -> Void, tabBarController: UITabBarController? = nil) {
-            self.createCoordinators = { navigator in
-                let embedder = Embedder(navigator: navigator)
-                createCoordinators(embedder)
-                return embedder.createdCoordinators
-            }
+        public init(createCoordinators: [CreateCoordinatorModel], tabBarController: UITabBarController? = nil) {
+            self.createCoordinators = createCoordinators
             self.tabBarController = tabBarController
         }
     }

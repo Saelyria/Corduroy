@@ -266,25 +266,24 @@ class NavigatorGoTests: XCTestCase {
      coordinator.
      
      This is the expected coordinator/view controller stack:
-     _________________________ ___________________________________________________________________________________________________________ _________________________
+     _________________________ _____________________________________________________________________________________________________________ ________________________
      | TabBarCoordinator     | | TabBarEmbeddable  -(push)-> | FlowCoordinator->Void           -(push)-> | Coordinator(String)             | | Coordinator(String)   |
-     |-----------------------| |---------------------------|-------------------------|-----------------|---------------------------------| |-----------------------|
-     | TabBarController      | | (Nav) _ _ _ _   -(push)-> | (Nav) _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _              | | (Nav) _ _ _ _         |
-     |                       | | EmbeddedVC   \            | EmbeddedVC    -(push)-> | VC    -(push)-> | EmbeddedVC        \             | | EmbeddedVC   \        |
-     |                       | ----------------------------------------------------------------------------------------------------------- |                       |
-     |                       | ____________________________________________________________________________________________________________|                       |
-     |                       | | TabBarEmbeddable                                                                                 -(modal)-> |                       |
-     |                       | |-----------------------------------------------------------------------------------------------------------|                       |
-     |                       | | VC                                                                                             -(modal)-> |                       |
-     |                       | |                                                                                                           |                       |
-     ------------------------- -------------------------------------------------------------------------------------------------------------------------------------
+     |-----------------------| |-----------------------------|-------------------------|-----------------|---------------------------------| |-----------------------|
+     | TabBarController      | | (Nav) _ _ _ _     -(push)-> | (Nav) _ _ _ _ _ _ _ _ _ |_ _ _ _ _ _ _ _ _|_ _ _ _ _ _ _ _ _ _              | | (Nav) _ _ _ _         |
+     |                       | | EmbeddedVC   \              | EmbeddedVC    -(push)-> | VC    -(push)-> | EmbeddedVC        \             | | EmbeddedVC   \        |
+     |                       | ------------------------------------------------------------------------------------------------------------- |                       |
+     |                       | ____________________________________________________________________________________________________________  |                       |
+     |                       | | TabBarEmbeddable                                                                               -(modal)-> |                         |
+     |                       | |-----------------------------------------------------------------------------------------------------------|                         |
+     |                       | | VC                                                                                             -(modal)-> |                         |
+     |                       | |                                                                                                           |                         |
+     ------------------------- ---------------------------------------------------------------------------------------------------------------------------------------
      */
     func testTabBarCoordinatorStack() {
         let tabBarController = UITabBarController()
-        let tabModel = TabBarCoordinator.SetupModel({ (embedder) in
-            embedder.embed(TestTabBarEmbeddable1.self)
-            embedder.embed(TestTabBarEmbeddable2.self)
-        }, tabBarController: tabBarController)
+        let tabModel = TabBarCoordinator.SetupModel(createCoordinators: [
+            .embed(TestTabBarEmbeddable1.self),
+            .embed(TestTabBarEmbeddable2.self)], tabBarController: tabBarController)
         let tabCoordinator = navigator.start(onWindow: window, firstCoordinator: TabBarCoordinator.self, with: tabModel)
         
         // setup the first tab
@@ -404,6 +403,9 @@ class NavigatorGoTests: XCTestCase {
         expect(tab1_fourthVC.navigationController).to(be(tab1_firstNavController))
         
         expect(tabBarController).to(be(self.window.rootViewController))
+        
+        // pop the modal to make sure the navigator removesthe view controller/coordinator properly
+        self.navigator.goBack(toLast: TestTabBarEmbeddable1.self)
     }
 
 

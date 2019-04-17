@@ -16,6 +16,8 @@ internal protocol SubNavigating {
     func canManage(navigationDescribedBy context: NavigationContext) -> Bool
     
     func add(navigation: Navigation)
+    
+    func remove(navigation: Navigation)
 }
 
 
@@ -359,7 +361,14 @@ open class Navigator {
                 params: params)
 
             coordinatorToRemove.didDismiss(context: context)
-            self.navigatorManagedNavigationStack.remove(at: index)
+            if let subNavigating = navStackItem.parentCoordinator {
+                subNavigating.remove(navigation: navStackItem)
+            } else {
+                let numCoordinatorsThatAreSubNavigated: Int = self.navigationStack.reduce(into: 0) { (result, navigation) in
+                    result += navigation.parentCoordinator?.navigationStack.count ?? 0
+                }
+                self.navigatorManagedNavigationStack.remove(at: index - numCoordinatorsThatAreSubNavigated)
+            }
         }
         
         self.shouldIgnoreNavControllerPopRequests = false
